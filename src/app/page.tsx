@@ -12,10 +12,45 @@ import FAQ from '@/components/sections/FAQ';
 import FinalCTA from '@/components/sections/FinalCTA';
 
 export default function Home() {
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "FlowShot",
+    "applicationCategory": "BusinessApplication",
+    "description": "All-in-one project management for video creators. Manage offers, projects, teams, and clients in one visual platform.",
+    "url": "https://flowshot.app",
+    "offers": {
+      "@type": "Offer",
+      "price": "29",
+      "priceCurrency": "USD",
+      "priceValidUntil": "2025-12-31"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5.0",
+      "ratingCount": "100"
+    },
+    "author": {
+      "@type": "Person",
+      "name": "Alex Ohnevskyi",
+      "jobTitle": "Founder & Creative Director"
+    },
+    "provider": {
+      "@type": "Organization",
+      "name": "FlowShot",
+      "url": "https://flowshot.app"
+    }
+  };
+
   return (
-    <main className="min-h-screen">
-      {/* 1. Hero Section */}
-      <Hero />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+      <main className="min-h-screen">
+        {/* 1. Hero Section */}
+        <Hero />
 
       {/* 2. Problem -> Solution */}
       <ProblemSolution />
@@ -50,12 +85,13 @@ export default function Home() {
       {/* 12. Final CTA */}
       <FinalCTA />
 
-      {/* Footer */}
-      <footer className="py-12 bg-foreground text-background">
-        <div className="container mx-auto px-4 text-center">
-          <p className="text-sm opacity-70">© 2025 FlowShot. All rights reserved.</p>
-        </div>
-      </footer>
-    </main>
+        {/* Footer */}
+        <footer className="py-12 bg-foreground text-background">
+          <div className="container mx-auto px-4 text-center">
+            <p className="text-sm opacity-70">© 2025 FlowShot. All rights reserved.</p>
+          </div>
+        </footer>
+      </main>
+    </>
   );
 }

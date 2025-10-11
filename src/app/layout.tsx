@@ -18,11 +18,58 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 
 export const metadata: Metadata = {
   title: "FlowShot - Operating System for Photo & Video Studios",
-  description: "Offer catalog, production pipeline, team management and brand kit in one platform.",
+  description: "All-in-one project management for video creators. Manage offers, projects, teams, and clients in one visual platform. Built by creators, for creators. Start your free trial.",
+  keywords: [
+    "video production management",
+    "photo studio software",
+    "project management for creators",
+    "wedding videography software",
+    "production pipeline",
+    "team collaboration",
+    "client management",
+    "offer catalog",
+    "brand kit",
+    "creative workflow"
+  ],
+  authors: [{ name: "Alex Ohnevskyi" }],
+  creator: "FlowShot",
+  publisher: "FlowShot",
+  metadataBase: new URL('https://flowshot.app'),
+  alternates: {
+    canonical: '/',
+  },
   openGraph: {
     title: "FlowShot - Operating System for Photo & Video Studios",
-    description: "Offer catalog, production pipeline, team management and brand kit in one platform.",
+    description: "All-in-one project management for video creators. Manage offers, projects, teams, and clients in one visual platform.",
     type: "website",
+    locale: "en_US",
+    url: "https://flowshot.app",
+    siteName: "FlowShot",
+    images: [
+      {
+        url: "/images/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "FlowShot - Project Management for Video Creators",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "FlowShot - Operating System for Photo & Video Studios",
+    description: "All-in-one project management for video creators. Built by creators, for creators.",
+    images: ["/images/og-image.jpg"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
 };
 
