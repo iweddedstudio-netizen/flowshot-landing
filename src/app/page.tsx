@@ -1,0 +1,61 @@
+import Hero from '@/components/sections/Hero';
+import ProblemSolution from '@/components/sections/ProblemSolution';
+import ProjectJourney from '@/components/sections/ProjectJourney';
+import UseCases from '@/components/sections/UseCases';
+import StandoutFeatures from '@/components/sections/StandoutFeatures';
+import FeatureDeepDive from '@/components/sections/FeatureDeepDive';
+import Security from '@/components/sections/Security';
+import Integrations from '@/components/sections/Integrations';
+import FounderStory from '@/components/sections/FounderStory';
+import PricingTeaser from '@/components/sections/PricingTeaser';
+import FAQ from '@/components/sections/FAQ';
+import FinalCTA from '@/components/sections/FinalCTA';
+
+export default function Home() {
+  return (
+    <main className="min-h-screen">
+      {/* 1. Hero Section */}
+      <Hero />
+
+      {/* 2. Problem -> Solution */}
+      <ProblemSolution />
+
+      {/* 3. Project Journey - Interactive horizontal scroll experience */}
+      <ProjectJourney />
+
+      {/* 4. Use Cases */}
+      <UseCases />
+
+      {/* 5. Standout Features */}
+      <StandoutFeatures />
+
+      {/* 6. Feature Deep Dive */}
+      <FeatureDeepDive />
+
+      {/* 7. Security */}
+      <Security />
+
+      {/* 8. Integrations */}
+      <Integrations />
+
+      {/* 9. Founder Story */}
+      <FounderStory />
+
+      {/* 10. Pricing Teaser */}
+      <PricingTeaser />
+
+      {/* 11. FAQ */}
+      <FAQ />
+
+      {/* 12. Final CTA */}
+      <FinalCTA />
+
+      {/* Footer */}
+      <footer className="py-12 bg-foreground text-background">
+        <div className="container mx-auto px-4 text-center">
+          <p className="text-sm opacity-70">© 2025 FlowShot. All rights reserved.</p>
+        </div>
+      </footer>
+    </main>
+  );
+}
