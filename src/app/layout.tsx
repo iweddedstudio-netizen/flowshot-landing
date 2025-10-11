@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     siteName: "FlowShot",
     images: [
       {
-        url: "/images/og-image.jpg",
+        url: "/api/og",
         width: 1200,
         height: 630,
         alt: "FlowShot - Project Management for Video Creators",
@@ -58,7 +58,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "FlowShot - Operating System for Photo & Video Studios",
     description: "All-in-one project management for video creators. Built by creators, for creators.",
-    images: ["/images/og-image.jpg"],
+    images: ["/api/og"],
   },
   robots: {
     index: true,

@@ -21,17 +21,16 @@ export default function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
 
     try {
       // Отправка в Google Sheets через Google Apps Script Web App
-      // Замените URL на ваш URL от Google Apps Script
-      const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
+      const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxqT19HYWxhQHaz292LuQoNgChNuHfkEQtl7UVGzmc80T2KgftQPQSFZrIpDem2nv38/exec';
 
-      const formData = new FormData();
-      formData.append('name', name);
-      formData.append('email', email);
-      formData.append('timestamp', new Date().toISOString());
+      // Отправляем данные как URL параметры для совместимости с no-cors
+      const params = new URLSearchParams({
+        name: name,
+        email: email,
+      });
 
-      await fetch(GOOGLE_SCRIPT_URL, {
-        method: 'POST',
-        body: formData,
+      await fetch(`${GOOGLE_SCRIPT_URL}?${params.toString()}`, {
+        method: 'GET',
         mode: 'no-cors', // Необходимо для Google Apps Script
       });
 
