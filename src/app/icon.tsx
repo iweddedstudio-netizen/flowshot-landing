@@ -21,7 +21,7 @@ export default function Icon() {
         dominant-baseline="central"
         text-anchor="middle"
         font-family="system-ui, -apple-system, sans-serif"
-        font-size="24"
+        font-size="28"
         font-weight="900"
         fill="url(#gradient)"
       >F</text>
