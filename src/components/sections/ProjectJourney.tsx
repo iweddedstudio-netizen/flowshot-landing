@@ -1,12 +1,11 @@
 'use client';
 
 import { useRef, useEffect, useState } from 'react';
-import { motion, useInView, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import {
   Plus, Users, Package, MessageSquare,
-  Kanban, Archive, ArrowRight, ChevronLeft, ChevronRight,
   FileText, Calendar, Bell, CheckCircle, Video, DollarSign
 } from 'lucide-react';
 
@@ -88,103 +87,42 @@ const scenes = [
 
 const ProjectJourney = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [currentScene, setCurrentScene] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
 
-  // Detect mobile/touch devices and reduced motion preference
+  // Detect reduced motion preference
   useEffect(() => {
-    const checkMobile = () => {
-      const isSmallScreen = window.innerWidth < 1024;
-      const isTouchDevice = window.matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
-      // Если экран маленький ИЛИ это тач-устройство - используем мобильную версию
-      setIsMobile(isSmallScreen || isTouchDevice);
-    };
     const checkMotion = () => {
       const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
       setPrefersReducedMotion(mediaQuery.matches);
     };
 
-    checkMobile();
     checkMotion();
-    window.addEventListener('resize', checkMobile);
-
-    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // GSAP horizontal scroll animation for desktop
+  // GSAP vertical scroll animation with scene transitions
   useEffect(() => {
-    if (isMobile || prefersReducedMotion || !sectionRef.current || !scrollContainerRef.current) {
+    if (prefersReducedMotion || !sectionRef.current) {
       return;
     }
 
     const section = sectionRef.current;
-    const container = scrollContainerRef.current;
+    const totalScenes = scenes.length;
 
-    const sceneWidth = window.innerWidth * 0.5; // Each scene is 50vw
-    const viewportWidth = window.innerWidth;
-
-    // First scene should start centered
-    // Center of first scene (at position 0) should be at viewport center
-    // Scene center is at sceneWidth/2, viewport center is at viewportWidth/2
-    const startOffset = viewportWidth / 2 - sceneWidth / 2;
-
-    // Set initial position
-    gsap.set(container, { x: startOffset });
-
-    // Calculate end position: last scene should be centered
-    // Last scene starts at (scenes.length - 1) * sceneWidth
-    // To center it, we need its center at viewport center
-    const lastSceneStart = (scenes.length - 1) * sceneWidth;
-    const endOffset = viewportWidth / 2 - sceneWidth / 2;
-    const totalDistance = startOffset - (-lastSceneStart + endOffset);
-
-    // Адаптивный множитель для разных размеров экранов
-    // На больших экранах нужно больше места для скролла
-    const scrollMultiplier = viewportWidth >= 2560 ? 4.5 : viewportWidth >= 1920 ? 3.5 : 2.5;
-
-    // Create the horizontal scroll animation
-    const scrollTween = gsap.to(container, {
-      x: -lastSceneStart + endOffset,
-      ease: 'none',
+    // Create animation that changes scenes on scroll
+    const scrollTween = gsap.to({}, {
       scrollTrigger: {
         trigger: section,
         start: 'top top',
-        end: () => `+=${totalDistance * scrollMultiplier}`, // Адаптивная длина скролла
+        end: `+=${totalScenes * 100}%`, // Each scene = 100vh of scroll
         scrub: 1,
         pin: true,
         anticipatePin: 1,
-        invalidateOnRefresh: true,
         onUpdate: (self) => {
-          // Update active scene based on which scenes are visible on screen
+          // Calculate which scene should be active based on progress
           const progress = self.progress;
-          const containerX = startOffset - totalDistance * progress;
-
-          // Check which scenes are currently visible
-          const activeScenes: number[] = [];
-          for (let i = 0; i < scenes.length; i++) {
-            const sceneLeft = i * sceneWidth + containerX;
-            const sceneRight = sceneLeft + sceneWidth;
-
-            // Scene is visible if any part of it is on screen
-            // Left edge: sceneRight > 0 (right side of scene is past left edge of viewport)
-            // Right edge: sceneLeft < viewportWidth (left side of scene is before right edge of viewport)
-            if (sceneRight > 0 && sceneLeft < viewportWidth) {
-              activeScenes.push(i);
-            }
-          }
-
-          // Set the most centered visible scene as current
-          if (activeScenes.length > 0) {
-            const centered = activeScenes.reduce((prev, curr) => {
-              const prevCenter = Math.abs((prev * sceneWidth + containerX + sceneWidth / 2) - viewportWidth / 2);
-              const currCenter = Math.abs((curr * sceneWidth + containerX + sceneWidth / 2) - viewportWidth / 2);
-              return currCenter < prevCenter ? curr : prev;
-            });
-            setCurrentScene(centered);
-          }
+          const newScene = Math.min(Math.floor(progress * totalScenes), totalScenes - 1);
+          setCurrentScene(newScene);
         },
       },
     });
@@ -195,106 +133,82 @@ const ProjectJourney = () => {
       }
       scrollTween.kill();
     };
-  }, [isMobile, prefersReducedMotion]);
-
-  // Mobile swipe navigation
-  const handlePrevScene = () => {
-    if (currentScene > 0) {
-      setCurrentScene(currentScene - 1);
-    }
-  };
-
-  const handleNextScene = () => {
-    if (currentScene < scenes.length - 1) {
-      setCurrentScene(currentScene + 1);
-    }
-  };
-
-  // Keyboard navigation
-  useEffect(() => {
-    if (!isMobile) return;
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowLeft') handlePrevScene();
-      if (e.key === 'ArrowRight') handleNextScene();
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentScene, isMobile]);
+  }, [prefersReducedMotion]);
 
   return (
     <section
       ref={sectionRef}
       id="project-journey"
-      className="relative overflow-hidden bg-gradient-to-br from-gray-50 via-white to-gray-50"
-      style={{
-        height: isMobile ? 'auto' : '100vh',
-        minHeight: isMobile ? 'auto' : 'auto',
-      }}
+      className="relative w-full h-screen overflow-hidden bg-gradient-to-br from-gray-50 via-white to-gray-50"
     >
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.6 }}
-        className={`container mx-auto px-4 max-w-7xl text-center relative z-20 ${
-          isMobile ? 'pt-24 pb-12' : 'absolute top-12 left-0 right-0'
-        }`}
-      >
-        <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-foreground mb-4">
+      {/* Header - Always visible */}
+      <div className="absolute top-8 md:top-12 left-0 right-0 z-20 container mx-auto px-4 max-w-7xl text-center pointer-events-none">
+        <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-heading font-bold text-foreground mb-3 md:mb-4">
           See how{' '}
           <span className="bg-gradient-to-r from-primary via-purple-600 to-pink-600 bg-clip-text text-transparent">
             FlowShot
           </span>{' '}
           works
         </h2>
-        <p className="text-lg md:text-xl text-secondary max-w-2xl mx-auto">
-          {isMobile ? 'Explore' : 'Scroll through'} the complete workflow — from creating a project to delivering the final result
+        <p className="text-base md:text-lg lg:text-xl text-secondary max-w-2xl mx-auto">
+          Scroll through the complete workflow — from creating a project to delivering the final result
         </p>
-      </motion.div>
+      </div>
 
-      {/* Desktop: Horizontal Scroll Container */}
-      {!isMobile && (
-        <div
-          ref={scrollContainerRef}
-          className="flex items-center absolute inset-0"
-          style={{ width: `${scenes.length * 50}vw`, height: '100vh' }}
-        >
-          {scenes.map((scene, index) => (
-            <Scene
-              key={scene.id}
-              scene={scene}
-              index={index}
-              isActive={currentScene === index}
-              isMobile={false}
-            />
-          ))}
-        </div>
-      )}
+      {/* Scenes Container - Scenes overlay each other */}
+      <div className="absolute inset-0 flex items-center justify-center pt-32 md:pt-40">
+        {scenes.map((scene, index) => {
+          const isActive = currentScene === index;
+          const isPast = index < currentScene;
+          const isFuture = index > currentScene;
 
-      {/* Mobile: All Scenes Vertically */}
-      {isMobile && (
-        <div className="relative space-y-8 pb-12">
-          {scenes.map((scene, index) => (
+          return (
             <motion.div
               key={scene.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
+              className="absolute inset-0 w-full h-full flex items-center justify-center px-4"
+              initial={false}
+              animate={{
+                opacity: isActive ? 1 : 0,
+                scale: isActive ? 1 : isFuture ? 1.1 : 0.95,
+                y: isActive ? 0 : isFuture ? 50 : -50,
+              }}
+              transition={{
+                duration: 0.6,
+                ease: 'easeInOut',
+              }}
+              style={{
+                pointerEvents: isActive ? 'auto' : 'none',
+              }}
             >
               <Scene
                 scene={scene}
                 index={index}
-                isActive={true}
-                isMobile={true}
+                isActive={isActive}
               />
             </motion.div>
-          ))}
-        </div>
-      )}
+          );
+        })}
+      </div>
 
+      {/* Progress Indicator */}
+      <div className="absolute bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2 z-20 flex gap-2">
+        {scenes.map((_, index) => (
+          <motion.div
+            key={index}
+            animate={{
+              width: currentScene === index ? 32 : 8,
+              backgroundColor: currentScene === index ? '#3b82f6' : '#d1d5db',
+            }}
+            transition={{ duration: 0.3 }}
+            className="h-2 rounded-full"
+          />
+        ))}
+      </div>
+
+      {/* Scene Counter */}
+      <div className="absolute bottom-6 md:bottom-8 right-4 md:right-8 z-20 text-sm font-medium text-secondary">
+        {currentScene + 1} / {scenes.length}
+      </div>
     </section>
   );
 };
@@ -304,38 +218,45 @@ interface SceneProps {
   scene: typeof scenes[0];
   index: number;
   isActive: boolean;
-  isMobile: boolean;
 }
 
-const Scene = ({ scene, index, isActive, isMobile }: SceneProps) => {
+const Scene = ({ scene, index, isActive }: SceneProps) => {
   const Icon = scene.icon;
 
   return (
-    <div
-      className={`${isMobile ? 'w-full' : 'w-[50vw]'} h-full flex items-center justify-center px-4 md:px-8 relative`}
-    >
-      <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-8 md:gap-12 items-center">
-        {/* Text Content - Always visible, no fade effects */}
-        <div className="text-center md:text-left">
-          <div className="mb-4">
-            <div className="w-12 h-12 rounded-2xl bg-white shadow-lg flex items-center justify-center mx-auto md:mx-0">
-              <Icon className="w-6 h-6 text-primary" />
+    <div className="w-full max-w-7xl mx-auto px-4 md:px-8">
+      <div className="grid md:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center">
+        {/* Text Content */}
+        <motion.div
+          initial={{ opacity: 0, x: -30 }}
+          animate={isActive ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="text-center md:text-left"
+        >
+          <div className="mb-4 md:mb-6">
+            <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-white shadow-lg flex items-center justify-center mx-auto md:mx-0">
+              <Icon className="w-6 h-6 md:w-7 md:h-7 text-primary" />
             </div>
           </div>
 
-          <h3 className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-foreground mb-4">
+          <h3 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-heading font-bold text-foreground mb-3 md:mb-4">
             {scene.title}
           </h3>
-          <p className="text-xl md:text-2xl text-foreground/80 mb-3 font-medium">
+          <p className="text-lg md:text-xl lg:text-2xl text-foreground/80 mb-2 md:mb-3 font-medium">
             {scene.caption}
           </p>
-          <p className="text-base md:text-lg text-secondary">
+          <p className="text-sm md:text-base lg:text-lg text-secondary">
             {scene.subCaption}
           </p>
-        </div>
+        </motion.div>
 
-        {/* Animation/Mockup Area - Always visible container, animations inside controlled by isActive */}
-        <div className="relative">
+        {/* Animation/Mockup Area */}
+        <motion.div
+          initial={{ opacity: 0, x: 30 }}
+          animate={isActive ? { opacity: 1, x: 0 } : { opacity: 0, x: 30 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="relative"
+        >
           {index === 0 && <Scene1Animation isActive={isActive} />}
           {index === 1 && <Scene2Animation isActive={isActive} />}
           {index === 2 && <Scene3Animation isActive={isActive} />}
@@ -343,7 +264,7 @@ const Scene = ({ scene, index, isActive, isMobile }: SceneProps) => {
           {index === 4 && <Scene5Animation isActive={isActive} />}
           {index === 5 && <Scene6Animation isActive={isActive} />}
           {index === 6 && <Scene7Animation isActive={isActive} />}
-        </div>
+        </motion.div>
       </div>
     </div>
   );
