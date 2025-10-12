@@ -84,9 +84,10 @@ const FeatureDeepDive = () => {
 
                   {/* Number badge */}
                   <div className="absolute top-8 right-8">
-                    <div
-                      className={`w-14 h-14 rounded-full bg-gradient-to-br ${pillar.gradient} flex items-center justify-center text-white font-bold text-base shadow-lg transition-transform duration-700 ease-out group-hover:rotate-[360deg] group-hover:scale-110`}
-                    >
+                    {/* Static shadow */}
+                    <div className="absolute inset-0 w-14 h-14 rounded-full shadow-lg" />
+                    {/* Rotating circle */}
+                    <div className="relative w-14 h-14 rounded-full bg-white flex items-center justify-center text-gray-900 font-bold text-base transition-transform duration-700 ease-out group-hover:rotate-[360deg]">
                       {pillar.number}
                     </div>
                   </div>

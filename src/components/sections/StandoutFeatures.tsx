@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef } from 'react';
-import { motion, useScroll, useTransform, useInView } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
 import { MessageSquare, Share2, Zap, CheckSquare, Calendar, Users } from 'lucide-react';
 
 const features = [
@@ -107,11 +107,9 @@ const PriorityDemo = () => {
           transition={{ delay: 0.2 + i * 0.1 }}
           className="flex items-center gap-2 text-xs"
         >
-          <motion.div
+          <div
             className="w-2 h-2 rounded-full"
             style={{ backgroundColor: priorityColors[item.color] }}
-            animate={{ scale: [1, 1.2, 1] }}
-            transition={{ duration: 2, repeat: Infinity, delay: i * 0.3 }}
           />
           <span className="text-gray-700">{item.label}</span>
         </motion.div>
@@ -248,60 +246,25 @@ const demoComponents = {
 };
 
 const FeatureCard = ({ feature, index }: { feature: typeof features[0]; index: number }) => {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: cardRef,
-    offset: ["start end", "end start"]
-  });
-
-  // Parallax effect
-  const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
-  const rotateX = useTransform(scrollYProgress, [0, 0.5, 1], [20, 0, -20]);
-
   const Icon = feature.icon;
   const DemoComponent = demoComponents[feature.demo as keyof typeof demoComponents];
 
   return (
     <motion.div
-      ref={cardRef}
-      initial={{ opacity: 0, y: 50 }}
+      initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.3 }}
-      transition={{ duration: 0.6, delay: index * 0.1 }}
-      style={{ y }}
+      transition={{ duration: 0.5, delay: index * 0.05 }}
       className="relative group"
     >
-      <motion.div
-        whileHover={{
-          scale: 1.05,
-          rotateY: 5,
-          rotateX: -5,
-        }}
-        style={{
-          rotateX,
-          transformStyle: 'preserve-3d',
-        }}
-        className="relative bg-white rounded-3xl p-8 shadow-xl border border-gray-100 overflow-hidden h-full"
-      >
+      <div className="relative bg-white rounded-3xl p-8 shadow-xl border border-gray-100 overflow-hidden h-full transition-all duration-300 hover:shadow-2xl hover:scale-[1.02]">
         {/* Gradient overlay */}
-        <div className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`} />
+        <div className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-5 transition-opacity duration-300`} />
 
-        {/* Floating icon */}
-        <motion.div
-          animate={{
-            y: [0, -10, 0],
-            rotateZ: [0, 5, 0, -5, 0]
-          }}
-          transition={{
-            duration: 4,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-          className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${feature.color} flex items-center justify-center mb-6 shadow-lg`}
-          style={{ transformStyle: 'preserve-3d' }}
-        >
+        {/* Static icon */}
+        <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${feature.color} flex items-center justify-center mb-6 shadow-lg`}>
           <Icon className="w-8 h-8 text-white" />
-        </motion.div>
+        </div>
 
         {/* Content */}
         <h3 className="text-2xl font-heading font-semibold text-foreground mb-3">
@@ -315,24 +278,7 @@ const FeatureCard = ({ feature, index }: { feature: typeof features[0]; index: n
         <div className="mt-6 pt-6 border-t border-gray-100">
           <DemoComponent />
         </div>
-
-        {/* 3D depth effect */}
-        <motion.div
-          className="absolute -right-10 -bottom-10 w-40 h-40 rounded-full blur-3xl opacity-20"
-          style={{
-            background: `linear-gradient(to bottom right, ${feature.color.split(' ')[1]}, ${feature.color.split(' ')[3]})`,
-          }}
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.2, 0.3, 0.2],
-          }}
-          transition={{
-            duration: 3,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
-      </motion.div>
+      </div>
     </motion.div>
   );
 };
@@ -341,50 +287,17 @@ const StandoutFeatures = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
 
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"]
-  });
-
-  const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
-
   return (
     <section
       ref={sectionRef}
       id="standout-features"
-      className="py-32 relative overflow-hidden"
-      style={{ perspective: '1000px' }}
+      className="py-32 relative overflow-hidden bg-gradient-to-b from-white via-accent/[0.03] to-white"
     >
-      {/* Animated background */}
-      <motion.div
-        className="absolute inset-0 bg-gradient-to-b from-white via-accent/[0.05] to-white"
-        style={{ y: backgroundY }}
-      />
-
-      {/* Floating orbs */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(5)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-64 h-64 rounded-full blur-3xl opacity-10"
-            style={{
-              background: `linear-gradient(to right, ${['#3b82f6', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981'][i]}, transparent)`,
-              left: `${20 + i * 20}%`,
-              top: `${10 + i * 15}%`,
-            }}
-            animate={{
-              y: [0, -50, 0],
-              x: [0, 30, 0],
-              scale: [1, 1.2, 1],
-            }}
-            transition={{
-              duration: 10 + i * 2,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: i * 0.5,
-            }}
-          />
-        ))}
+      {/* Static background decoration */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-30">
+        <div className="absolute w-96 h-96 rounded-full bg-gradient-to-br from-blue-200 to-transparent blur-3xl top-10 left-10" />
+        <div className="absolute w-96 h-96 rounded-full bg-gradient-to-br from-purple-200 to-transparent blur-3xl top-40 right-20" />
+        <div className="absolute w-96 h-96 rounded-full bg-gradient-to-br from-pink-200 to-transparent blur-3xl bottom-20 left-1/3" />
       </div>
 
       <div className="container mx-auto px-4 max-w-7xl relative z-10">

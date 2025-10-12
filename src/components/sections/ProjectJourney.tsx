@@ -109,15 +109,27 @@ const ProjectJourney = () => {
     const section = sectionRef.current;
     const totalScenes = scenes.length;
 
+    // Adaptive scroll distance based on screen size
+    // Mobile needs shorter scroll distance for easier swiping
+    const getScrollMultiplier = () => {
+      const width = window.innerWidth;
+      if (width < 768) return 35; // Mobile: 35vh per scene (1 quick swipe)
+      if (width < 1024) return 60; // Tablet: 60vh per scene
+      return 100; // Desktop: 100vh per scene
+    };
+
+    const scrollMultiplier = getScrollMultiplier();
+
     // Create animation that changes scenes on scroll
     const scrollTween = gsap.to({}, {
       scrollTrigger: {
         trigger: section,
         start: 'top top',
-        end: `+=${totalScenes * 100}%`, // Each scene = 100vh of scroll
+        end: `+=${totalScenes * scrollMultiplier}%`, // Adaptive scroll distance
         scrub: 1,
         pin: true,
         anticipatePin: 1,
+        invalidateOnRefresh: true,
         onUpdate: (self) => {
           // Calculate which scene should be active based on progress
           const progress = self.progress;
@@ -127,7 +139,15 @@ const ProjectJourney = () => {
       },
     });
 
+    // Recalculate on window resize
+    const handleResize = () => {
+      ScrollTrigger.refresh();
+    };
+
+    window.addEventListener('resize', handleResize);
+
     return () => {
+      window.removeEventListener('resize', handleResize);
       if (scrollTween.scrollTrigger) {
         scrollTween.scrollTrigger.kill();
       }

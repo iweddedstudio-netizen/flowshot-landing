@@ -2,29 +2,36 @@
 
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { Shield, Lock, FileCheck, Eye } from 'lucide-react';
+import { Shield, Lock, FileCheck2, Activity } from 'lucide-react';
 
 const securityFeatures = [
   {
     icon: Shield,
     title: 'Firebase Infrastructure',
-    description: 'Built on Google Cloud with 99.9% uptime guarantee and enterprise-grade security.',
+    description: 'Built on Google Cloud with Firebase — secure hosting, fast Firestore database, and 99.9% uptime. Your projects, clients, and media files are stored safely in the same infrastructure trusted by millions of developers.',
   },
   {
     icon: Lock,
     title: 'Role-based Access',
-    description: 'Granular permissions control who sees what. Every action is logged and auditable.',
+    description: 'Add editors, assistants, or managers — each with tailored access. Every action (status change, file upload, approval) is logged for transparency and control.',
   },
   {
-    icon: FileCheck,
-    title: 'GDPR & CCPA Compliant',
-    description: 'Data protection workflows built in. Your clients privacy is our priority.',
+    icon: FileCheck2,
+    title: 'GDPR & CCPA Ready',
+    description: 'FlowShot runs on GDPR-compliant Google infrastructure. Your data never leaves Firebase — and never gets shared or sold.',
   },
   {
-    icon: Eye,
+    icon: Activity,
     title: 'Activity Tracking',
-    description: 'Full audit logs of project changes, file uploads, and team collaborations.',
+    description: 'Automatic history for each project: changes, comments, file uploads, and review approvals — all in one timeline.',
   },
+];
+
+const badges = [
+  '256-bit encryption',
+  'SOC 2 Type I',
+  'ISO 27001',
+  'GDPR-ready',
 ];
 
 const Security = () => {
@@ -32,31 +39,22 @@ const Security = () => {
   const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
 
   return (
-    <section ref={sectionRef} id="security" className="py-32 bg-gradient-to-br from-primary/[0.03] via-white to-accent/[0.02] relative overflow-hidden">
-      {/* Background Decoration */}
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-primary/20 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent/20 rounded-full blur-3xl" />
-      </div>
-
-      <div className="container mx-auto px-4 max-w-7xl relative z-10">
+    <section ref={sectionRef} id="security" className="py-20 sm:py-24 relative mx-auto max-w-7xl px-6">
+      <div className="container mx-auto max-w-7xl relative z-10">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-12"
         >
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 mb-6">
-            <Shield className="w-8 h-8 text-primary" />
-          </div>
-          <h2 className="text-4xl md:text-5xl font-heading font-semibold text-foreground mb-4">
-            Privacy-first — without enterprise complexity
+          <h2 className="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
+            Privacy-first — powered by Google Cloud
           </h2>
         </motion.div>
 
-        {/* Security Features Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        {/* Security Features Grid - 2x2 on desktop */}
+        <div className="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2">
           {securityFeatures.map((feature, index) => {
             const Icon = feature.icon;
             return (
@@ -66,15 +64,15 @@ const Security = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-white rounded-2xl p-8 shadow-lg"
+                className="rounded-3xl border border-slate-100 bg-white/70 p-6 shadow-[0_10px_30px_rgba(15,23,42,0.06)] backdrop-blur-sm"
               >
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
-                  <Icon className="w-6 h-6 text-primary" />
+                <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
+                  <Icon className="h-5 w-5" />
                 </div>
-                <h3 className="text-xl font-heading font-semibold text-foreground mb-3">
+                <h3 className="text-lg font-semibold text-slate-900 mb-2">
                   {feature.title}
                 </h3>
-                <p className="text-base leading-relaxed text-secondary">
+                <p className="text-sm leading-6 text-slate-600">
                   {feature.description}
                 </p>
               </motion.div>
@@ -82,37 +80,27 @@ const Security = () => {
           })}
         </div>
 
-        {/* Simple Plain-English Line */}
+        {/* Reassurance Line */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="mt-12 text-center"
+          className="mt-10"
         >
-          <p className="text-base text-secondary/80 max-w-3xl mx-auto mb-8">
-            We encrypt your work, never sell your data, and you can export anytime.
+          <p className="mx-auto max-w-3xl text-center text-slate-600">
+            We encrypt your data, never sell it, and you can export anytime.
           </p>
 
           {/* Compliance Badges */}
-          <div className="flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">
-            <span className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-green-500" />
-              256-bit encryption
-            </span>
-            <span className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-green-500" />
-              SOC 2 Type I
-            </span>
-            <span className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-green-500" />
-              ISO 27001
-            </span>
-            <span className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-green-500" />
-              GDPR-ready
-            </span>
-          </div>
+          <ul className="mx-auto mt-4 flex max-w-3xl flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm text-slate-500">
+            {badges.map((badge) => (
+              <li key={badge} className="flex items-center gap-2">
+                <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                <span>{badge}</span>
+              </li>
+            ))}
+          </ul>
         </motion.div>
       </div>
     </section>
