@@ -5,7 +5,7 @@ import { motion, useInView } from 'framer-motion';
 
 const Integrations = () => {
   const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
+  const isInView = useInView(sectionRef, { once: true, amount: 0.05 });
 
   return (
     <section ref={sectionRef} id="integrations" className="py-24 md:py-32 bg-background relative overflow-hidden">

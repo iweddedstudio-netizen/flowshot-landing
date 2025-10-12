@@ -41,7 +41,7 @@ function AnimatedCounter({ value, prefix = '', suffix = '', duration = 1.2 }: {
   const ref = useRef<HTMLSpanElement>(null);
   const motionValue = useMotionValue(0);
   const springValue = useSpring(motionValue, { duration: duration * 1000, bounce: 0 });
-  const isInView = useInView(ref, { once: true, amount: 0.5 });
+  const isInView = useInView(ref, { once: true, amount: 0.1 });
   const [displayValue, setDisplayValue] = useState(0);
 
   useEffect(() => {
@@ -72,7 +72,7 @@ function AnimatedCounter({ value, prefix = '', suffix = '', duration = 1.2 }: {
 
 const SocialProof = () => {
   const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
+  const isInView = useInView(sectionRef, { once: true, amount: 0.05 });
 
   return (
     <section ref={sectionRef} id="social-proof" className="py-32 bg-gradient-to-b from-white via-accent/[0.03] to-white">
@@ -124,7 +124,7 @@ const SocialProof = () => {
               key={index}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
+              viewport={{ once: true, amount: 0.05 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
               <Card className="h-full p-8 rounded-2xl shadow-lg border-0 relative">

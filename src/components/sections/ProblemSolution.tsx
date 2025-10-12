@@ -7,7 +7,7 @@ import { MessageSquare, FileSpreadsheet, Grid3x3, RefreshCw } from 'lucide-react
 // Individual Problem Item with scroll-triggered animation
 const ProblemItem = ({ problem, Icon, isEven }: any) => {
   const itemRef = useRef(null);
-  const isInView = useInView(itemRef, { once: true, amount: 0.3 });
+  const isInView = useInView(itemRef, { once: true, amount: 0.05 });
 
   return (
     <motion.div
@@ -59,7 +59,7 @@ const ProblemItem = ({ problem, Icon, isEven }: any) => {
 
 const ProblemSolution = () => {
   const sectionRef = useRef(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
+  const isInView = useInView(sectionRef, { once: true, amount: 0.05 });
 
   const problems = [
     {

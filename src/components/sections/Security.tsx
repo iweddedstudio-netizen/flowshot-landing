@@ -36,7 +36,7 @@ const badges = [
 
 const Security = () => {
   const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
+  const isInView = useInView(sectionRef, { once: true, amount: 0.05 });
 
   return (
     <section ref={sectionRef} id="security" className="py-20 sm:py-24 relative mx-auto max-w-7xl px-6">
@@ -62,7 +62,7 @@ const Security = () => {
                 key={index}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
+                viewport={{ once: true, amount: 0.05 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="rounded-3xl border border-slate-100 bg-white/70 p-6 shadow-[0_10px_30px_rgba(15,23,42,0.06)] backdrop-blur-sm"
               >
@@ -84,7 +84,7 @@ const Security = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
+          viewport={{ once: true, amount: 0.05 }}
           transition={{ duration: 0.6, delay: 0.4 }}
           className="mt-10"
         >

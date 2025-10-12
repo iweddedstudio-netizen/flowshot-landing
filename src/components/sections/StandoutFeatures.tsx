@@ -378,7 +378,7 @@ const FeatureCard = ({ feature, index }: { feature: typeof features[0]; index: n
     <motion.div
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.3 }}
+      viewport={{ once: true, amount: 0.05 }}
       transition={{ duration: 0.5, delay: index * 0.05 }}
       className="relative group"
     >
@@ -409,7 +409,7 @@ const FeatureCard = ({ feature, index }: { feature: typeof features[0]; index: n
 
 const StandoutFeatures = () => {
   const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
+  const isInView = useInView(sectionRef, { once: true, amount: 0.05 });
   const [showModal, setShowModal] = useState(false);
 
   return (

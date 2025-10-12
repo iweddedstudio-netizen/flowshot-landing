@@ -15,7 +15,7 @@ import {
 
 const PricingTeaser = () => {
   const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
+  const isInView = useInView(sectionRef, { once: true, amount: 0.05 });
   const [isWaitlistModalOpen, setIsWaitlistModalOpen] = useState(false);
   const [isDonationDialogOpen, setIsDonationDialogOpen] = useState(false);
 

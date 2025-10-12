@@ -34,7 +34,7 @@ const faqs = [
 
 const FAQ = () => {
   const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
+  const isInView = useInView(sectionRef, { once: true, amount: 0.05 });
 
   return (
     <section ref={sectionRef} id="faq" className="py-32 bg-gradient-to-b from-white via-primary/[0.01] to-white">

@@ -26,7 +26,7 @@ const pillars = [
 
 const FeaturesAndExperience = () => {
   const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
+  const isInView = useInView(sectionRef, { once: true, amount: 0.05 });
 
   return (
     <section ref={sectionRef} className="bg-background relative overflow-hidden">
@@ -61,7 +61,7 @@ const FeaturesAndExperience = () => {
                 key={pillar.number}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
+                viewport={{ once: true, amount: 0.05 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 className="group relative"
               >

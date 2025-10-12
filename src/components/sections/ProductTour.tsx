@@ -40,7 +40,7 @@ const tours = [
 const ProductTour = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
+  const isInView = useInView(sectionRef, { once: true, amount: 0.05 });
   const [activeIndex, setActiveIndex] = useState(0);
 
   const handleScroll = () => {
@@ -90,7 +90,7 @@ const ProductTour = () => {
                 key={tour.id}
                 initial={{ opacity: 0, scale: 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true, amount: 0.3 }}
+                viewport={{ once: true, amount: 0.05 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="flex-none snap-center min-w-[85vw] md:min-w-[70vw] lg:min-w-[45vw]"
               >

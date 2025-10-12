@@ -175,7 +175,7 @@ const FeatureCard3D = ({ feature, index }: { feature: typeof features[0]; index:
       ref={cardRef}
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.3 }}
+      viewport={{ once: true, amount: 0.05 }}
       transition={{ duration: 0.6, delay: index * 0.1 }}
       className="relative group"
     >
@@ -211,7 +211,7 @@ const FeatureCard3D = ({ feature, index }: { feature: typeof features[0]; index:
 
 const StandoutFeatures3D = () => {
   const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
+  const isInView = useInView(sectionRef, { once: true, amount: 0.05 });
 
   return (
     <section
@@ -255,7 +255,7 @@ const StandoutFeatures3D = () => {
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true, amount: 0.3 }}
+          viewport={{ once: true, amount: 0.05 }}
           transition={{ duration: 0.8 }}
           className="max-w-2xl mx-auto mb-20"
         >

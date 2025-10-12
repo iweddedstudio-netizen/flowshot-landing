@@ -6,7 +6,7 @@ import { Camera, MessageCircle, Zap } from 'lucide-react';
 
 const FounderStory = () => {
   const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
+  const isInView = useInView(sectionRef, { once: true, amount: 0.05 });
 
   return (
     <section ref={sectionRef} id="story" className="py-32 relative overflow-hidden">
