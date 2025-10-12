@@ -94,9 +94,14 @@ const ProjectJourney = () => {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
 
-  // Detect mobile and reduced motion preference
+  // Detect mobile/touch devices and reduced motion preference
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
+    const checkMobile = () => {
+      const isSmallScreen = window.innerWidth < 1024;
+      const isTouchDevice = window.matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
+      // Если экран маленький ИЛИ это тач-устройство - используем мобильную версию
+      setIsMobile(isSmallScreen || isTouchDevice);
+    };
     const checkMotion = () => {
       const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
       setPrefersReducedMotion(mediaQuery.matches);
