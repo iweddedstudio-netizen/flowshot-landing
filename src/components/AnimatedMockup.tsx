@@ -26,15 +26,26 @@ const AnimatedMockup = () => {
   const [currentScene, setCurrentScene] = useState(0);
   const [sceneProgress, setSceneProgress] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
-  // Check for prefers-reduced-motion
+  // Check for mobile and prefers-reduced-motion
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   const prefersReducedMotion = typeof window !== 'undefined'
     && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const totalScenes = SCENES.length;
 
+  // Second useEffect - Animation loop (MUST be called before any conditional returns)
   useEffect(() => {
-    if (prefersReducedMotion || isPaused) return;
+    if (prefersReducedMotion || isPaused || isMobile) return;
 
     const scene = SCENES[currentScene];
     if (!scene) {
@@ -42,25 +53,43 @@ const AnimatedMockup = () => {
       return;
     }
 
-    const progressInterval = 50; // Update every 50ms
+    const updateInterval = 100; // Update every 100ms (reduced from 50ms)
+    let lastUpdateTime = performance.now();
+    let animationFrameId: number;
 
-    const timer = setInterval(() => {
-      setSceneProgress((prev) => {
-        const newProgress = prev + progressInterval;
+    const animate = (currentTime: number) => {
+      const deltaTime = currentTime - lastUpdateTime;
 
-        if (newProgress >= scene.duration) {
-          // Move to next scene
-          const nextScene = (currentScene + 1) % totalScenes;
-          setCurrentScene(nextScene);
-          return 0;
-        }
+      // Only update if enough time has passed
+      if (deltaTime >= updateInterval) {
+        lastUpdateTime = currentTime;
 
-        return newProgress;
-      });
-    }, progressInterval);
+        setSceneProgress((prev) => {
+          const newProgress = prev + deltaTime;
 
-    return () => clearInterval(timer);
-  }, [currentScene, isPaused, prefersReducedMotion, totalScenes]);
+          if (newProgress >= scene.duration) {
+            // Move to next scene
+            const nextScene = (currentScene + 1) % totalScenes;
+            setCurrentScene(nextScene);
+            return 0;
+          }
+
+          return newProgress;
+        });
+      }
+
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    animationFrameId = requestAnimationFrame(animate);
+
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [currentScene, isPaused, prefersReducedMotion, totalScenes, isMobile]);
+
+  // Don't render on mobile devices (AFTER all hooks)
+  if (isMobile) {
+    return null;
+  }
 
   // Calculate progress percentage for current scene
   const progressPercent = (sceneProgress / SCENES[currentScene].duration);
@@ -234,7 +263,7 @@ const Scene1Priority = ({ progress }: { progress: number }) => {
                             <motion.div
                               className="px-2 py-1.5 rounded cursor-pointer flex items-center gap-2"
                               animate={{
-                                backgroundColor: selectHigh ? 'rgba(249, 115, 22, 0.1)' : 'transparent'
+                                backgroundColor: selectHigh ? 'rgba(249, 115, 22, 0.1)' : 'rgba(0, 0, 0, 0)'
                               }}
                             >
                               <Flame className="w-3 h-3 text-orange-500" />
@@ -656,8 +685,8 @@ const Scene4Tabs = ({ progress }: { progress: number }) => {
                 isActive ? 'bg-white text-primary shadow-sm' : 'text-gray-600'
               }`}
               animate={{
-                backgroundColor: isActive ? '#ffffff' : 'transparent',
-                color: isActive ? 'hsl(var(--primary))' : 'rgb(75, 85, 99)',
+                backgroundColor: isActive ? '#ffffff' : 'rgba(0, 0, 0, 0)',
+                color: isActive ? '#3b82f6' : 'rgb(75, 85, 99)',
                 scale: isActive ? 1.05 : 1,
                 boxShadow: isActive ? '0 4px 12px rgba(59, 130, 246, 0.2)' : '0 0 0 rgba(0,0,0,0)'
               }}
@@ -784,7 +813,7 @@ const Scene5Calendar = ({ progress }: { progress: number }) => {
               }`}
               animate={{
                 scale: isHovered ? 1.05 : 1,
-                backgroundColor: isHovered ? 'hsl(var(--primary) / 0.25)' : undefined,
+                backgroundColor: isHovered ? 'rgba(59, 130, 246, 0.25)' : undefined,
                 zIndex: isHovered ? 10 : 1
               }}
             >
@@ -847,7 +876,7 @@ const Scene5Calendar = ({ progress }: { progress: number }) => {
             <motion.label
               className="flex items-center gap-2 text-xs cursor-pointer"
               animate={{
-                backgroundColor: toggleChecked ? 'rgba(59, 130, 246, 0.1)' : 'transparent'
+                backgroundColor: toggleChecked ? 'rgba(59, 130, 246, 0.1)' : 'rgba(0, 0, 0, 0)'
               }}
             >
               <div className={`w-4 h-4 rounded border-2 flex items-center justify-center ${
@@ -961,7 +990,7 @@ const Scene6Notifications = ({ progress }: { progress: number }) => {
                 <motion.label
                   className="flex items-center gap-2 text-xs cursor-pointer"
                   animate={{
-                    backgroundColor: hoverToggle ? 'rgba(59, 130, 246, 0.05)' : 'transparent',
+                    backgroundColor: hoverToggle ? 'rgba(59, 130, 246, 0.05)' : 'rgba(0, 0, 0, 0)',
                     scale: hoverToggle ? 1.02 : 1
                   }}
                 >
@@ -1233,7 +1262,7 @@ const Scene8TeamAssign = ({ progress }: { progress: number }) => {
                     className="p-1.5 rounded-lg transition-colors"
                     animate={{
                       scale: progress > 0.25 && progress < 0.35 ? [1, 1.2, 1] : 1,
-                      backgroundColor: showDropdown ? 'rgba(59, 130, 246, 0.1)' : 'transparent'
+                      backgroundColor: showDropdown ? 'rgba(59, 130, 246, 0.1)' : 'rgba(0, 0, 0, 0)'
                     }}
                     transition={{ duration: 0.4 }}
                   >
@@ -1295,7 +1324,7 @@ const Scene8TeamAssign = ({ progress }: { progress: number }) => {
                     <motion.div
                       className="flex items-center gap-2 p-2 rounded-lg cursor-pointer"
                       animate={{
-                        backgroundColor: selectEditor ? 'rgba(139, 92, 246, 0.15)' : 'transparent',
+                        backgroundColor: selectEditor ? 'rgba(139, 92, 246, 0.15)' : 'rgba(0, 0, 0, 0)',
                         scale: selectEditor ? 1.02 : 1,
                         boxShadow: selectEditor ? '0 4px 12px rgba(139, 92, 246, 0.2)' : '0 0 0 rgba(0,0,0,0)'
                       }}
@@ -1434,7 +1463,7 @@ const Scene9Payment = ({ progress }: { progress: number }) => {
           <motion.div
             className="py-3 px-3 rounded-lg border-2"
             animate={{
-              backgroundColor: highlightPayment ? 'rgba(59, 130, 246, 0.05)' : 'transparent',
+              backgroundColor: highlightPayment ? 'rgba(59, 130, 246, 0.05)' : 'rgba(0, 0, 0, 0)',
               borderColor: highlightPayment ? 'rgba(59, 130, 246, 0.2)' : 'rgb(229, 231, 235)',
               scale: highlightPayment ? 1.02 : 1
             }}

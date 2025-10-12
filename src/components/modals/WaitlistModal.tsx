@@ -1,8 +1,9 @@
 'use client';
 
 import BaseModal from './BaseModal';
-import { Mail } from 'lucide-react';
-import { useState } from 'react';
+import { Mail, AlertCircle } from 'lucide-react';
+import { useWaitlistForm } from '@/hooks/useWaitlistForm';
+import { useRef, useEffect } from 'react';
 
 interface WaitlistModalProps {
   isOpen: boolean;
@@ -10,50 +11,36 @@ interface WaitlistModalProps {
 }
 
 export default function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
+  const nameInputRef = useRef<HTMLInputElement>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+  const {
+    name,
+    email,
+    isSubmitting,
+    isSuccess,
+    error,
+    nameError,
+    emailError,
+    handleNameChange,
+    handleEmailChange,
+    handleSubmit,
+  } = useWaitlistForm(onClose);
 
-    try {
-      // Отправка в Google Sheets через Google Apps Script Web App
-      const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxqT19HYWxhQHaz292LuQoNgChNuHfkEQtl7UVGzmc80T2KgftQPQSFZrIpDem2nv38/exec';
-
-      // Отправляем данные как URL параметры для совместимости с no-cors
-      const params = new URLSearchParams({
-        name: name,
-        email: email,
-      });
-
-      await fetch(`${GOOGLE_SCRIPT_URL}?${params.toString()}`, {
-        method: 'GET',
-        mode: 'no-cors', // Необходимо для Google Apps Script
-      });
-
-      setIsSuccess(true);
+  // Автофокус на поле имени при открытии модалки
+  useEffect(() => {
+    if (isOpen && nameInputRef.current) {
       setTimeout(() => {
-        onClose();
-        setIsSuccess(false);
-        setName('');
-        setEmail('');
-      }, 2000);
-    } catch (error) {
-      console.error('Error submitting form:', error);
-    } finally {
-      setIsSubmitting(false);
+        nameInputRef.current?.focus();
+      }, 100);
     }
-  };
+  }, [isOpen]);
 
   return (
     <BaseModal isOpen={isOpen} onClose={onClose} maxWidth="max-w-lg">
       {isSuccess ? (
         /* Success State */
-        <div className="text-center py-8">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+        <div className="text-center py-8 animate-in fade-in duration-300">
+          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 animate-in zoom-in duration-500">
             <span className="text-3xl">✓</span>
           </div>
           <h3 className="text-2xl font-bold text-foreground mb-2">
@@ -90,14 +77,21 @@ export default function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
                 Name
               </label>
               <input
+                ref={nameInputRef}
                 type="text"
                 id="name"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary focus:outline-none transition-colors"
+                onChange={(e) => handleNameChange(e.target.value)}
+                className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none transition-colors ${
+                  nameError
+                    ? 'border-red-500 focus:border-red-600'
+                    : 'border-gray-200 focus:border-primary'
+                }`}
                 placeholder="Your name"
               />
+              {nameError && (
+                <p className="text-sm text-red-600 mt-1">{nameError}</p>
+              )}
             </div>
 
             <div>
@@ -108,19 +102,33 @@ export default function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
                 type="email"
                 id="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary focus:outline-none transition-colors"
+                onChange={(e) => handleEmailChange(e.target.value)}
+                className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none transition-colors ${
+                  emailError
+                    ? 'border-red-500 focus:border-red-600'
+                    : 'border-gray-200 focus:border-primary'
+                }`}
                 placeholder="your@email.com"
               />
+              {emailError && (
+                <p className="text-sm text-red-600 mt-1">{emailError}</p>
+              )}
             </div>
+
+            {/* Error Display */}
+            {error && (
+              <div className="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-xl animate-in fade-in slide-in-from-top-2 duration-300">
+                <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                <p className="text-sm text-red-800">{error}</p>
+              </div>
+            )}
 
             <button
               type="submit"
               disabled={isSubmitting}
               className="w-full px-6 py-3 bg-primary text-white rounded-xl font-semibold hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isSubmitting ? 'Submitting...' : 'Join the waitlist'}
+              {isSubmitting ? 'Submitting...' : error ? 'Try again' : 'Join the waitlist'}
             </button>
           </form>
         </>

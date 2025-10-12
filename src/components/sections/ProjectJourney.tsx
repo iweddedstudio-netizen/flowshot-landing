@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useRef, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
@@ -30,10 +30,10 @@ const sceneBackgrounds = [
   '#E7F0FF', // Scene 1: Cool blue
   '#E9F7F2', // Scene 2: Mint green
   '#F8F4FF', // Scene 3: Lavender
-  '#FFF5EB', // Scene 4: Warm peach (mint green → soft amber)
-  '#FFF0F3', // Scene 5: Coral pink (soft amber → coral pink)
-  '#F5F0FF', // Scene 6: Light violet (coral pink → light violet)
-  '#FFF9E6', // Scene 7: Golden white (light violet → golden white)
+  '#FFF5EB', // Scene 4: Warm peach (mint green в†’ soft amber)
+  '#FFF0F3', // Scene 5: Coral pink (soft amber в†’ coral pink)
+  '#F5F0FF', // Scene 6: Light violet (coral pink в†’ light violet)
+  '#FFF9E6', // Scene 7: Golden white (light violet в†’ golden white)
 ];
 
 // Scene data
@@ -49,7 +49,7 @@ const scenes = [
   {
     id: 2,
     title: "Create Project",
-    caption: "Photo, video, or both — FlowShot adapts to your setup.",
+    caption: "Photo, video, or both вЂ” FlowShot adapts to your setup.",
     subCaption: "Turn off what you don't need. Everything stays organized.",
     icon: Plus,
     background: sceneBackgrounds[1],
@@ -73,7 +73,7 @@ const scenes = [
   {
     id: 6,
     title: "Keep your team in sync",
-    caption: "Save your style guides, asset links, and brand rules — so your editors and shooters stay aligned.",
+    caption: "Save your style guides, asset links, and brand rules вЂ” so your editors and shooters stay aligned.",
     subCaption: "",
     icon: Palette,
     background: sceneBackgrounds[5],
@@ -85,20 +85,32 @@ const ProjectJourney = () => {
   const [currentScene, setCurrentScene] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0); // 0-1 progress through current scene
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [isMobile, setIsMobile] = useState<boolean | undefined>(undefined); // undefined until client-side check
+  const [mounted, setMounted] = useState(false);
 
-  // Detect reduced motion preference
+  // Detect mobile and reduced motion preference - client-side only
   useEffect(() => {
+    setMounted(true);
+
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
     const checkMotion = () => {
       const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
       setPrefersReducedMotion(mediaQuery.matches);
     };
 
+    checkMobile();
     checkMotion();
+
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // GSAP vertical scroll animation with scene transitions
+  // GSAP vertical scroll animation with scene transitions - Desktop only
   useEffect(() => {
-    if (prefersReducedMotion || !sectionRef.current) {
+    if (prefersReducedMotion || !sectionRef.current || isMobile || !mounted) {
       return;
     }
 
@@ -154,8 +166,57 @@ const ProjectJourney = () => {
       }
       scrollTween.kill();
     };
-  }, [prefersReducedMotion]);
+  }, [prefersReducedMotion, isMobile, mounted]);
 
+  // Show loading state during hydration
+  if (!mounted || isMobile === undefined) {
+    return (
+      <section
+        id="project-journey"
+        className="relative w-full h-screen bg-gradient-to-br from-gray-900 via-gray-950 to-black"
+      >
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-center">
+            <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+            <p className="text-gray-400">Loading...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Mobile: Vertical stack layout
+  if (isMobile) {
+    return (
+      <section
+        id="project-journey"
+        className="relative w-full py-20 bg-gradient-to-br from-gray-900 via-gray-950 to-black"
+      >
+        {/* Header */}
+        <div className="container mx-auto px-4 max-w-7xl text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-heading font-bold text-white mb-3">
+            See how{' '}
+            <span className="bg-gradient-to-r from-primary via-purple-600 to-pink-600 bg-clip-text text-transparent">
+              FlowShot
+            </span>{' '}
+            works
+          </h2>
+          <p className="text-base text-gray-300 max-w-2xl mx-auto">
+            Complete workflow вЂ” from creating a project to delivering the final result
+          </p>
+        </div>
+
+        {/* Scenes as vertical cards */}
+        <div className="container mx-auto px-4 max-w-4xl space-y-8">
+          {scenes.map((scene, index) => (
+            <MobileScene key={scene.id} scene={scene} index={index} />
+          ))}
+        </div>
+      </section>
+    );
+  }
+
+  // Desktop: GSAP ScrollTrigger carousel
   return (
     <section
       ref={sectionRef}
@@ -184,7 +245,7 @@ const ProjectJourney = () => {
           works
         </h2>
         <p className="text-base md:text-lg lg:text-xl text-gray-300 max-w-2xl mx-auto">
-          Scroll through the complete workflow — from creating a project to delivering the final result
+          Scroll through the complete workflow вЂ” from creating a project to delivering the final result
         </p>
       </div>
 
@@ -244,8 +305,7 @@ const ProjectJourney = () => {
           }
 
           // Mobile-friendly vertical slide animation
-          const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-          const yOffset = isMobile ? 200 : 30; // Much larger movement on mobile - scenes slide up/down visibly
+          const yOffset = 30; // Vertical movement for scene transitions
 
           return (
             <motion.div
@@ -254,13 +314,13 @@ const ProjectJourney = () => {
               initial={false}
               animate={{
                 opacity,
-                scale: isActive ? 1 : isFuture ? (isMobile ? 1 : 1.05) : 0.98,
+                scale: isActive ? 1 : isFuture ? 1.05 : 0.98,
                 y: isActive ? 0 : isFuture ? yOffset : -yOffset,
               }}
               transition={{
-                opacity: { duration: isMobile ? 0.3 : 0.1 },
+                opacity: { duration: 0.1 },
                 scale: { duration: 0.6, ease: 'easeInOut' },
-                y: { duration: isMobile ? 0.5 : 0.6, ease: isMobile ? [0.25, 0.1, 0.25, 1] : 'easeInOut' },
+                y: { duration: 0.6, ease: 'easeInOut' },
               }}
               style={{
                 pointerEvents: isActive ? 'auto' : 'none',
@@ -757,7 +817,7 @@ const Scene2Animation = ({ isActive }: { isActive: boolean }) => {
                 <label className="text-xs text-secondary mb-1 block">Project Name</label>
                 <motion.div
                   className="w-full p-2 border-2 border-primary/30 rounded-lg bg-blue-50/30"
-                  animate={step >= 3 ? { borderColor: 'rgba(59, 130, 246, 0.6)' } : {}}
+                  animate={{ borderColor: step >= 3 ? 'rgba(59, 130, 246, 0.6)' : 'rgba(139, 92, 246, 0.3)' }}
                 >
                   <motion.span
                     initial={{ opacity: 0 }}
@@ -774,22 +834,28 @@ const Scene2Animation = ({ isActive }: { isActive: boolean }) => {
                 <label className="text-xs text-secondary mb-1 block">Type</label>
                 <div className="flex gap-2">
                   <motion.div
-                    animate={step >= 4 ? { scale: [1, 1.05, 1], borderColor: 'rgba(59, 130, 246, 1)' } : {}}
+                    animate={{
+                      scale: step >= 4 ? [1, 1.05, 1] : 1,
+                      borderColor: step >= 4 ? 'rgba(59, 130, 246, 1)' : 'rgba(229, 231, 235, 1)'
+                    }}
                     transition={{ duration: 0.3 }}
                     className={`flex-1 p-2 rounded-lg border-2 text-center text-xs font-medium ${
                       step >= 4 ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-gray-200 text-gray-600'
                     }`}
                   >
-                    📷 Photo
+                    рџ“· Photo
                   </motion.div>
                   <motion.div
-                    animate={step >= 5 ? { scale: [1, 1.05, 1], borderColor: 'rgba(139, 92, 246, 1)' } : {}}
+                    animate={{
+                      scale: step >= 5 ? [1, 1.05, 1] : 1,
+                      borderColor: step >= 5 ? 'rgba(139, 92, 246, 1)' : 'rgba(229, 231, 235, 1)'
+                    }}
                     transition={{ duration: 0.3 }}
                     className={`flex-1 p-2 rounded-lg border-2 text-center text-xs font-medium ${
                       step >= 5 ? 'border-purple-500 bg-purple-50 text-purple-700' : 'border-gray-200 text-gray-600'
                     }`}
                   >
-                    🎥 Video
+                    рџЋҐ Video
                   </motion.div>
                 </div>
               </div>
@@ -803,7 +869,7 @@ const Scene2Animation = ({ isActive }: { isActive: boolean }) => {
                 >
                   <label className="text-xs text-secondary block">Choose from presets</label>
                   <motion.div
-                    animate={step >= 6 ? { scale: [1, 1.03, 1] } : {}}
+                    animate={{ scale: step >= 6 ? [1, 1.03, 1] : 1 }}
                     className="p-2 bg-gradient-to-r from-blue-100 to-purple-100 rounded-lg border border-primary flex items-center justify-between"
                   >
                     <span className="text-xs font-bold text-foreground">Full Wedding Package</span>
@@ -826,7 +892,7 @@ const Scene2Animation = ({ isActive }: { isActive: boolean }) => {
 
               {/* Create Button */}
               <motion.button
-                animate={step >= 8 ? { scale: [1, 1.08, 1] } : {}}
+                animate={{ scale: step >= 8 ? [1, 1.08, 1] : 1 }}
                 transition={{ duration: 0.4 }}
                 className="w-full mt-4 px-4 py-2 bg-primary text-white rounded-lg font-semibold shadow-lg text-sm"
               >
@@ -845,7 +911,7 @@ const Scene2Animation = ({ isActive }: { isActive: boolean }) => {
         style={{ pointerEvents: step >= 10 ? 'auto' : 'none' }}
         className="absolute bottom-6 left-1/2 transform -translate-x-1/2 bg-foreground text-white px-4 py-2 rounded-lg shadow-lg text-xs font-medium whitespace-nowrap"
       >
-        Created using your saved presets ✓
+        Created using your saved presets вњ“
       </motion.div>
     </div>
   );
@@ -1103,7 +1169,7 @@ const Scene4Animation = ({ isActive }: { isActive: boolean }) => {
             animate={{ opacity: 1 }}
             className="text-center pt-2"
           >
-            <span className="text-xs text-primary font-medium">✓ Linked from Offer Catalog</span>
+            <span className="text-xs text-primary font-medium">вњ“ Linked from Offer Catalog</span>
           </motion.div>
         )}
       </div>
@@ -1246,7 +1312,7 @@ const Scene5Animation = ({ isActive }: { isActive: boolean }) => {
                   <div className="w-4 h-4 rounded-full bg-purple-500" />
                   <span className="text-xs font-bold">Maria</span>
                 </div>
-                <p className="text-xs text-foreground">Got it 👍</p>
+                <p className="text-xs text-foreground">Got it рџ‘Ќ</p>
               </motion.div>
             )}
           </div>
@@ -1259,15 +1325,15 @@ const Scene5Animation = ({ isActive }: { isActive: boolean }) => {
               className="mt-4"
             >
               <label className="text-xs text-secondary mb-1 block">Status</label>
-              <motion.div
-                animate={{
-                  backgroundColor: step >= 6 ? 'rgba(249, 115, 22, 0.1)' : 'transparent'
+              <div
+                className="flex items-center gap-2 p-2 rounded-lg border border-orange-200"
+                style={{
+                  backgroundColor: step >= 6 ? 'rgba(249, 115, 22, 0.1)' : 'rgba(0, 0, 0, 0)'
                 }}
-                className="flex items-center gap-2 p-2 bg-orange-50 rounded-lg border border-orange-200"
               >
                 <span className="text-xs px-2 py-1 bg-orange-500 text-white rounded font-medium">In Review</span>
-                <span className="text-xs text-orange-600">→ Synced</span>
-              </motion.div>
+                <span className="text-xs text-orange-600">в†’ Synced</span>
+              </div>
             </motion.div>
           )}
         </div>
@@ -1335,18 +1401,25 @@ const Scene6Animation = ({ isActive }: { isActive: boolean }) => {
           const event = events.find(e => e.day === day);
           const isHovered = event?.isTarget && step >= 2 && step < 4;
 
+          // Get static background color for event (without using bg-* classes in motion.div)
+          const eventBgColor = event ? (
+            event.color === 'bg-blue-100' ? 'rgba(219, 234, 254, 1)' :
+            event.color === 'bg-purple-100' ? 'rgba(243, 232, 255, 1)' :
+            'rgba(252, 231, 243, 1)' // pink-100
+          ) : 'rgba(0, 0, 0, 0)';
+
           return (
             <motion.div
               key={i}
               animate={{
-                scale: isHovered ? 1.05 : 1,
-                backgroundColor: isHovered ? 'rgba(147, 51, 234, 0.1)' : undefined
+                scale: isHovered ? 1.05 : 1
               }}
               className={`min-h-[30px] text-xs rounded flex flex-col items-center justify-center p-1 ${
                 day < 1 || day > 31 ? 'text-gray-300' :
-                event ? `${event.color} cursor-pointer font-medium border border-purple-200` :
+                event ? 'cursor-pointer font-medium border border-purple-200' :
                 'hover:bg-gray-50'
               }`}
+              style={{ backgroundColor: isHovered ? 'rgba(147, 51, 234, 0.1)' : eventBgColor }}
             >
               {day > 0 && day <= 31 && (
                 <>
@@ -1364,8 +1437,8 @@ const Scene6Animation = ({ isActive }: { isActive: boolean }) => {
                   animate={{ opacity: 1, y: 0 }}
                   className="absolute z-40 bg-foreground text-white px-2 py-1 rounded shadow-lg text-xs whitespace-nowrap mt-12"
                 >
-                  <div className="font-bold">{event.name} – Video</div>
-                  <div className="text-xs opacity-80">Editing due Oct 25 – Maria</div>
+                  <div className="font-bold">{event.name} вЂ“ Video</div>
+                  <div className="text-xs opacity-80">Editing due Oct 25 вЂ“ Maria</div>
                 </motion.div>
               )}
             </motion.div>
@@ -1389,11 +1462,11 @@ const Scene6Animation = ({ isActive }: { isActive: boolean }) => {
           <Bell className="w-4 h-4 text-primary" />
         </div>
 
-        <motion.label
-          animate={{
-            backgroundColor: step >= 6 ? 'rgba(59, 130, 246, 0.05)' : 'transparent'
-          }}
+        <label
           className="flex items-center gap-3 p-2 rounded-lg cursor-pointer"
+          style={{
+            backgroundColor: step >= 6 ? 'rgba(59, 130, 246, 0.05)' : 'rgba(0, 0, 0, 0)'
+          }}
         >
           <div className={`w-10 h-5 rounded-full transition-colors ${
             step >= 6 ? 'bg-primary' : 'bg-gray-300'
@@ -1416,7 +1489,7 @@ const Scene6Animation = ({ isActive }: { isActive: boolean }) => {
               <CheckCircle className="w-4 h-4 text-green-500" />
             </motion.div>
           )}
-        </motion.label>
+        </label>
 
         {step >= 7 && (
           <motion.div
@@ -1462,22 +1535,22 @@ const Scene7Animation = ({ isActive }: { isActive: boolean }) => {
   const brandItems = [
     {
       id: 1,
-      icon: '🎨',
-      label: 'LUT — Cinematic Base',
+      icon: 'рџЋЁ',
+      label: 'LUT вЂ” Cinematic Base',
       categoryColor: 'bg-purple-100 text-purple-700 border-purple-300',
       show: step >= 3
     },
     {
       id: 2,
-      icon: '🎵',
-      label: 'Music Library — Ambient',
+      icon: 'рџЋµ',
+      label: 'Music Library вЂ” Ambient',
       categoryColor: 'bg-blue-100 text-blue-700 border-blue-300',
       show: step >= 4
     },
     {
       id: 3,
-      icon: '📁',
-      label: 'Footage Folder — Drive',
+      icon: 'рџ“Ѓ',
+      label: 'Footage Folder вЂ” Drive',
       categoryColor: 'bg-green-100 text-green-700 border-green-300',
       show: step >= 5
     },
@@ -1605,7 +1678,7 @@ const Scene7Animation = ({ isActive }: { isActive: boolean }) => {
                           className="flex-1 aspect-square bg-gradient-to-br from-orange-200 to-pink-200 rounded border border-orange-300"
                         >
                           <div className="w-full h-full flex items-center justify-center text-xs opacity-60">
-                            📷
+                            рџ“·
                           </div>
                         </div>
                       ))}
@@ -1629,6 +1702,73 @@ const Scene7Animation = ({ isActive }: { isActive: boolean }) => {
         </div>
       </div>
     </div>
+  );
+};
+
+// Mobile Scene Component - Simple vertical card layout
+interface MobileSceneProps {
+  scene: typeof scenes[0];
+  index: number;
+}
+
+const MobileScene = ({ scene, index }: MobileSceneProps) => {
+  const Icon = scene.icon;
+  const [isVisible, setIsVisible] = useState(false);
+  const [isAnimationActive, setIsAnimationActive] = useState(false);
+
+  useEffect(() => {
+    // Trigger card animation when component mounts
+    const visibilityTimer = setTimeout(() => setIsVisible(true), index * 100);
+
+    // Trigger internal scene animation after card is visible
+    const animationTimer = setTimeout(() => setIsAnimationActive(true), index * 100 + 400);
+
+    return () => {
+      clearTimeout(visibilityTimer);
+      clearTimeout(animationTimer);
+    };
+  }, [index]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      animate={isVisible ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.6 }}
+      className="bg-gradient-to-br from-gray-800 via-gray-900 to-black rounded-2xl p-6 shadow-2xl border border-gray-700"
+    >
+      {/* Scene Header */}
+      <div className="flex items-center gap-3 mb-6">
+        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary via-purple-600 to-pink-600 flex items-center justify-center">
+          <Icon className="w-6 h-6 text-white" />
+        </div>
+        <div>
+          <h3 className="text-xl font-heading font-bold text-white">
+            {scene.title}
+          </h3>
+        </div>
+      </div>
+
+      {/* Scene Content */}
+      <div className="space-y-4">
+        <p className="text-base text-gray-200 font-medium">
+          {scene.caption}
+        </p>
+        {scene.subCaption && (
+          <p className="text-sm text-gray-400">
+            {scene.subCaption}
+          </p>
+        )}
+
+        {/* Animation/Mockup */}
+        <div className="mt-6">
+          {index === 0 && <Scene1Animation isActive={isAnimationActive} />}
+          {index === 1 && <Scene2Animation isActive={isAnimationActive} />}
+          {index === 2 && <Scene5Animation isActive={isAnimationActive} />}
+          {index === 3 && <Scene6Animation isActive={isAnimationActive} />}
+          {index === 4 && <Scene7Animation isActive={isAnimationActive} />}
+        </div>
+      </div>
+    </motion.div>
   );
 };
 
