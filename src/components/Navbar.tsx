@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState } from 'react';
+import { AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Menu, X } from 'lucide-react';
 import WaitlistModal from '@/components/modals/WaitlistModal';
@@ -15,54 +15,15 @@ const navLinks = [
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
   const [isWaitlistModalOpen, setIsWaitlistModalOpen] = useState(false);
-
-  useEffect(() => {
-    let rafId: number;
-    let lastScrollY = window.scrollY;
-
-    const handleScroll = () => {
-      // Cancel previous frame if still pending
-      if (rafId) {
-        cancelAnimationFrame(rafId);
-      }
-
-      // Schedule update for next frame
-      rafId = requestAnimationFrame(() => {
-        const currentScrollY = window.scrollY;
-        // Only update if scroll position actually changed
-        if (Math.abs(currentScrollY - lastScrollY) > 5) {
-          setIsScrolled(currentScrollY > 20);
-          lastScrollY = currentScrollY;
-        }
-      });
-    };
-
-    // Use passive listener for better mobile performance
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      if (rafId) {
-        cancelAnimationFrame(rafId);
-      }
-    };
-  }, []);
 
   const handleLinkClick = () => {
     setIsOpen(false);
   };
 
   return (
-    <motion.nav
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.5 }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? 'bg-background/95 backdrop-blur-md shadow-lg'
-          : 'bg-transparent'
-      }`}
+    <nav
+      className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md shadow-lg"
       style={{
         transform: 'translateZ(0)',
         WebkitTransform: 'translateZ(0)',
