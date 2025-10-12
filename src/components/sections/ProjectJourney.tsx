@@ -114,8 +114,8 @@ const ProjectJourney = () => {
     const getScrollMultiplier = () => {
       const width = window.innerWidth;
       if (width < 768) return 35; // Mobile: 35vh per scene (1 quick swipe)
-      if (width < 1024) return 60; // Tablet: 60vh per scene
-      return 100; // Desktop: 100vh per scene
+      if (width < 1024) return 45; // Tablet: 45vh per scene
+      return 75; // Desktop: 75vh per scene
     };
 
     const scrollMultiplier = getScrollMultiplier();
