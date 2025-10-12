@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Lock, Youtube, Mail } from 'lucide-react';
 import VideoModal from '@/components/modals/VideoModal';
 import WaitlistModal from '@/components/modals/WaitlistModal';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -18,6 +18,16 @@ const FinalCTA = () => {
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
   const [isWaitlistModalOpen, setIsWaitlistModalOpen] = useState(false);
   const [isSocialDialogOpen, setIsSocialDialogOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   return (
     <section id="cta" className="relative py-32 overflow-hidden">
@@ -38,10 +48,10 @@ const FinalCTA = () => {
 
       <div className="container mx-auto px-4 max-w-5xl relative z-10">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={isMobile ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+          whileInView={isMobile ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.05 }}
-          transition={{ duration: 0.8 }}
+          transition={isMobile ? {} : { duration: 0.8 }}
           className="text-center text-white"
         >
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-semibold mb-6 leading-tight">
@@ -54,10 +64,10 @@ const FinalCTA = () => {
 
           {/* CTAs */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={isMobile ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            whileInView={isMobile ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.05 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            transition={isMobile ? {} : { duration: 0.6, delay: 0.2 }}
             className="flex flex-col items-center"
           >
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-4">
