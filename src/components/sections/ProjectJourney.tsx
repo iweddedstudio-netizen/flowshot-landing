@@ -106,11 +106,11 @@ const ProjectJourney = () => {
     const totalScenes = scenes.length;
 
     // Adaptive scroll distance based on screen size
-    // Mobile needs shorter scroll distance for easier swiping
+    // Mobile needs longer scroll distance for smoother transitions
     const getScrollMultiplier = () => {
       const width = window.innerWidth;
-      if (width < 768) return 25; // Mobile: 25vh per scene (faster scrolling)
-      if (width < 1024) return 40; // Tablet: 40vh per scene
+      if (width < 768) return 45; // Mobile: 45vh per scene (slower, smoother)
+      if (width < 1024) return 55; // Tablet: 55vh per scene
       return 75; // Desktop: 75vh per scene
     };
 
