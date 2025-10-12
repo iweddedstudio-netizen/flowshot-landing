@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
-import { SmoothScroll } from "@/components/motion/SmoothScroll";
 import Navbar from "@/components/Navbar";
 
 const inter = Inter({
@@ -82,7 +81,7 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${plusJakartaSans.variable}`}>
       <body className="font-sans antialiased">
         <Navbar />
-        <SmoothScroll>{children}</SmoothScroll>
+        {children}
       </body>
     </html>
   );
