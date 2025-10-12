@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Menu, X } from 'lucide-react';
 import WaitlistModal from '@/components/modals/WaitlistModal';
@@ -118,7 +118,7 @@ const Navbar = () => {
 
       {/* Waitlist Modal */}
       <WaitlistModal isOpen={isWaitlistModalOpen} onClose={() => setIsWaitlistModalOpen(false)} />
-    </motion.nav>
+    </nav>
   );
 };
 
