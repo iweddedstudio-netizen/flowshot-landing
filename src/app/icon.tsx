@@ -37,18 +37,18 @@ export default function Icon() {
           }}
         />
 
-        {/* FS Text */}
+        {/* F Text */}
         <div
           style={{
             position: 'relative',
-            fontSize: '18px',
-            fontWeight: 900,
+            fontSize: '24px',
+            fontWeight: 950,
             color: 'white',
-            letterSpacing: '-0.5px',
+            letterSpacing: '0px',
             fontFamily: 'system-ui, -apple-system, sans-serif',
           }}
         >
-          FS
+          F
         </div>
       </div>
     ),
