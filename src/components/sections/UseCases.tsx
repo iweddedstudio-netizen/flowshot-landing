@@ -46,8 +46,8 @@ const UseCases = () => {
             priority={false}
           />
         </motion.div>
-        {/* Dark overlay for text readability */}
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-900/50 via-slate-900/45 to-slate-900/50" />
+        {/* White overlay with subtle blur */}
+        <div className="absolute inset-0 bg-white/60 backdrop-blur-[2px]" />
       </div>
 
       <div className="container mx-auto px-4 max-w-7xl relative z-10">
@@ -58,10 +58,10 @@ const UseCases = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <p className="text-sm font-semibold tracking-widest uppercase text-white/80 mb-4">
+          <p className="text-sm font-semibold tracking-widest uppercase text-primary mb-4">
             Who it's for
           </p>
-          <h2 className="text-4xl md:text-5xl font-heading font-semibold text-white">
+          <h2 className="text-4xl md:text-5xl font-heading font-semibold bg-gradient-to-r from-primary via-purple-600 to-pink-600 bg-clip-text text-transparent">
             Built for studios and solo creators
           </h2>
         </motion.div>

@@ -94,8 +94,8 @@ const ProblemSolution = () => {
             priority={false}
           />
         </motion.div>
-        {/* Dark overlay for text readability */}
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-900/50 via-slate-900/45 to-slate-900/50" />
+        {/* White overlay with subtle blur */}
+        <div className="absolute inset-0 bg-white/60 backdrop-blur-[2px]" />
       </div>
 
       <div className="container mx-auto px-4 max-w-7xl relative z-10">
@@ -103,7 +103,7 @@ const ProblemSolution = () => {
         <div className="text-center mb-16">
           <h2
             ref={headlineRef}
-            className="text-4xl md:text-5xl lg:text-6xl font-heading font-semibold text-white leading-tight max-w-4xl mx-auto"
+            className="text-4xl md:text-5xl lg:text-6xl font-heading font-semibold text-foreground leading-tight max-w-4xl mx-auto"
           >
             Stop juggling tools and chats
           </h2>

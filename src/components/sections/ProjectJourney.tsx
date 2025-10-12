@@ -179,7 +179,7 @@ const ProjectJourney = () => {
           const isPast = index < currentScene;
           const isFuture = index > currentScene;
 
-          // Calculate smooth opacity for crossfade effect
+          // Calculate sharp opacity for faster crossfade - more time at 100%
           let opacity = 0;
           if (isActive) {
             // Current scene: always visible, fade in after first scene
@@ -190,19 +190,34 @@ const ProjectJourney = () => {
               // Last scene stays at full opacity
               opacity = 1;
             } else {
-              // Other scenes: fade in as we scroll through them
-              opacity = 0.3 + (scrollProgress * 0.7); // 0.3 to 1.0
+              // Other scenes: quick fade-in, then stay at 100%
+              // Stay at minimum opacity until 15% scroll, then ramp quickly to 100% by 35%
+              if (scrollProgress < 0.15) {
+                opacity = 0.2;
+              } else {
+                const fadeProgress = Math.min((scrollProgress - 0.15) / 0.25, 1);
+                // Use cubic easing for sharper ramp
+                opacity = 0.2 + Math.pow(fadeProgress, 2.5) * 0.8;
+              }
             }
           } else if (index === currentScene - 1) {
             // Previous scene: fade out as we leave it (except last scene)
             if (index === scenes.length - 1) {
               opacity = 1; // Last scene stays visible
             } else {
-              opacity = 0.3 * (1 - scrollProgress); // 0.3 to 0
+              // Stay visible longer, then quick fade-out
+              // Stay at 0.2 opacity until 60% scroll, then fade out quickly by 85%
+              if (scrollProgress < 0.6) {
+                opacity = 0.2;
+              } else {
+                const fadeProgress = Math.min((scrollProgress - 0.6) / 0.25, 1);
+                // Use cubic easing for sharper ramp down
+                opacity = 0.2 * (1 - Math.pow(fadeProgress, 2.5));
+              }
             }
           } else if (index === currentScene + 1) {
             // Next scene: start fading in slightly
-            opacity = 0.1 * scrollProgress; // 0 to 0.1
+            opacity = 0.05 * scrollProgress; // 0 to 0.05
           } else if (isPast && index === scenes.length - 1) {
             // Last scene stays visible after completion
             opacity = 1;
@@ -406,12 +421,6 @@ const Scene = ({ scene, index, isActive }: SceneProps) => {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="text-center md:text-left"
         >
-          <div className="mb-4 md:mb-6">
-            <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-white shadow-lg flex items-center justify-center mx-auto md:mx-0">
-              <Icon className="w-6 h-6 md:w-7 md:h-7 text-primary" />
-            </div>
-          </div>
-
           <h3 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-heading font-bold text-foreground mb-3 md:mb-4">
             {scene.title}
           </h3>

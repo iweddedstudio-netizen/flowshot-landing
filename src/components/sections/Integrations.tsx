@@ -1,15 +1,42 @@
 'use client';
 
 import { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView, useScroll, useTransform } from 'framer-motion';
+import Image from 'next/image';
 
 const Integrations = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
 
+  // Parallax effect for background
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"]
+  });
+  const y = useTransform(scrollYProgress, [0, 1], ['-20%', '20%']);
+
   return (
-    <section ref={sectionRef} id="integrations" className="py-24 bg-gradient-to-b from-white to-gray-50">
-      <div className="container mx-auto px-4 max-w-4xl">
+    <section ref={sectionRef} id="integrations" className="py-24 relative overflow-hidden">
+      {/* Background Image with Parallax */}
+      <div className="absolute inset-0 z-0 overflow-hidden">
+        <motion.div
+          style={{ y }}
+          className="absolute w-full h-[140%] -top-[20%]"
+        >
+          <Image
+            src="/images/integrations-background.jpg"
+            alt="Integrations background"
+            fill
+            className="object-cover"
+            quality={90}
+            priority={false}
+          />
+        </motion.div>
+        {/* White overlay with subtle blur */}
+        <div className="absolute inset-0 bg-white/60 backdrop-blur-[2px]" />
+      </div>
+
+      <div className="container mx-auto px-4 max-w-4xl relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
