@@ -18,7 +18,14 @@ export function SmoothScroll({ children }: SmoothScrollProps) {
       return;
     }
 
-    // Initialize Lenis
+    // Disable Lenis on touch devices to avoid scroll conflicts
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+    if (isTouchDevice) {
+      return;
+    }
+
+    // Initialize Lenis only for desktop (mouse/wheel)
     lenisRef.current = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),

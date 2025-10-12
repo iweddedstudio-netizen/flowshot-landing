@@ -168,7 +168,7 @@ const ProjectJourney = () => {
 
       {/* Scenes Container - Scenes overlay each other */}
       <div
-        className="absolute inset-0 flex items-center justify-center pt-32 md:pt-40"
+        className="absolute inset-0 flex items-center justify-center pt-24 md:pt-28"
         style={{
           touchAction: 'pan-y',
           WebkitOverflowScrolling: 'touch'
@@ -223,6 +223,10 @@ const ProjectJourney = () => {
             opacity = 1;
           }
 
+          // Mobile-friendly vertical slide animation
+          const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+          const yOffset = isMobile ? 200 : 30; // Much larger movement on mobile - scenes slide up/down visibly
+
           return (
             <motion.div
               key={scene.id}
@@ -230,13 +234,13 @@ const ProjectJourney = () => {
               initial={false}
               animate={{
                 opacity,
-                scale: isActive ? 1 : isFuture ? 1.05 : 0.98,
-                y: isActive ? 0 : isFuture ? 30 : -30,
+                scale: isActive ? 1 : isFuture ? (isMobile ? 1 : 1.05) : 0.98,
+                y: isActive ? 0 : isFuture ? yOffset : -yOffset,
               }}
               transition={{
-                opacity: { duration: 0.1 },
+                opacity: { duration: isMobile ? 0.3 : 0.1 },
                 scale: { duration: 0.6, ease: 'easeInOut' },
-                y: { duration: 0.6, ease: 'easeInOut' },
+                y: { duration: isMobile ? 0.5 : 0.6, ease: isMobile ? [0.25, 0.1, 0.25, 1] : 'easeInOut' },
               }}
               style={{
                 pointerEvents: isActive ? 'auto' : 'none',
