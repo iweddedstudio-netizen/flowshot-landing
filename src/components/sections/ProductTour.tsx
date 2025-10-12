@@ -64,7 +64,7 @@ const ProductTour = () => {
     <section
       ref={sectionRef}
       id="product-tour"
-      className="py-32 bg-gradient-to-b from-white via-primary/[0.02] to-white overflow-hidden"
+      className="py-16 md:py-24 bg-gradient-to-b from-white via-primary/[0.02] to-white overflow-hidden"
     >
       <div className="container mx-auto px-4 max-w-7xl mb-12">
         <motion.div

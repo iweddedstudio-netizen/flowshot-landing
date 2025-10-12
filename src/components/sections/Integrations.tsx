@@ -8,7 +8,7 @@ const Integrations = () => {
   const isInView = useInView(sectionRef, { once: true, amount: 0.05 });
 
   return (
-    <section ref={sectionRef} id="integrations" className="py-24 md:py-32 bg-background relative overflow-hidden">
+    <section ref={sectionRef} id="integrations" className="py-12 md:py-20 bg-background relative overflow-hidden">
       {/* Decorative blurs - same as FeatureDeepDive */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-10 w-72 h-72 bg-primary/5 rounded-full blur-3xl" />

@@ -39,7 +39,7 @@ const Security = () => {
   const isInView = useInView(sectionRef, { once: true, amount: 0.05 });
 
   return (
-    <section ref={sectionRef} id="security" className="py-20 sm:py-24 relative mx-auto max-w-7xl px-6">
+    <section ref={sectionRef} id="security" className="py-12 sm:py-16 relative mx-auto max-w-7xl px-6">
       <div className="container mx-auto max-w-7xl relative z-10">
         {/* Section Header */}
         <motion.div

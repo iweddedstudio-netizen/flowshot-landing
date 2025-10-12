@@ -30,7 +30,7 @@ const FinalCTA = () => {
   }, []);
 
   return (
-    <section id="cta" className="relative py-32 overflow-hidden">
+    <section id="cta" className="relative py-16 md:py-24 overflow-hidden">
       {/* Static background - optimized for mobile */}
       <div className="absolute inset-0">
         {/* Dark gradient background */}

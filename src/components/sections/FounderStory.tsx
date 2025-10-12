@@ -19,7 +19,7 @@ const FounderStory = () => {
   }, []);
 
   return (
-    <section ref={sectionRef} id="story" className="py-32 relative overflow-hidden">
+    <section ref={sectionRef} id="story" className="py-16 md:py-24 relative overflow-hidden">
       {/* Dark gradient background */}
       <div className="absolute inset-0 bg-black" />
       <div className="absolute inset-0 bg-gradient-to-br from-blue-950/30 via-cyan-950/20 to-transparent" />

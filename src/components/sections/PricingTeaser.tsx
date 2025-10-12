@@ -23,7 +23,7 @@ const PricingTeaser = () => {
     <section
       ref={sectionRef}
       id="pricing"
-      className="py-32 bg-gradient-to-b from-primary/5 via-accent/5 to-white relative overflow-hidden"
+      className="py-16 md:py-24 bg-gradient-to-b from-primary/5 via-accent/5 to-white relative overflow-hidden"
     >
       {/* Background decoration */}
       <div className="absolute inset-0 opacity-30">

@@ -49,7 +49,7 @@ const Hero = () => {
         <div className="absolute bottom-20 left-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl" />
       </div>
 
-      <div className="container mx-auto px-4 py-20 lg:py-32 relative z-10">
+      <div className="container mx-auto px-4 py-12 md:py-16 lg:py-24 relative z-10">
         {/* Headline - Centered at top */}
         <motion.div
           variants={stagger}

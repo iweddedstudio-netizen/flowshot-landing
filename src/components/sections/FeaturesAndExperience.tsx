@@ -37,7 +37,7 @@ const FeaturesAndExperience = () => {
       </div>
 
       {/* Feature Deep Dive Section */}
-      <div className="py-24 md:py-32 relative z-10">
+      <div className="py-12 md:py-20 relative z-10">
         <div className="container mx-auto px-4 max-w-6xl">
           {/* Section Header */}
           <motion.div
@@ -108,7 +108,7 @@ const FeaturesAndExperience = () => {
       </div>
 
       {/* Stylish Divider */}
-      <div className="relative z-10 py-16">
+      <div className="relative z-10 py-4 md:py-10">
         <div className="container mx-auto px-4 max-w-6xl">
           <motion.div
             initial={{ opacity: 0 }}
@@ -132,7 +132,7 @@ const FeaturesAndExperience = () => {
       </div>
 
       {/* Integrations Section */}
-      <div className="py-24 md:py-32 relative z-10">
+      <div className="py-12 md:py-20 relative z-10">
         <div className="container mx-auto px-4 max-w-6xl">
           <motion.div
             initial={{ opacity: 0, y: 30 }}

@@ -88,7 +88,7 @@ const ProblemSolution = () => {
     <section
       ref={sectionRef}
       id="problem-solution"
-      className="relative py-16 overflow-hidden bg-gradient-to-b from-background via-primary/[0.015] to-background"
+      className="relative py-10 md:py-12 overflow-hidden bg-gradient-to-b from-background via-primary/[0.015] to-background"
     >
       {/* Subtle background decorations */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -111,7 +111,7 @@ const ProblemSolution = () => {
         </motion.div>
 
         {/* Problems - Alternating Layout */}
-        <div className="max-w-4xl mx-auto space-y-20">
+        <div className="max-w-4xl mx-auto space-y-8 md:space-y-12">
           {problems.map((problem, index) => {
             const Icon = problem.icon;
             const isEven = index % 2 === 0;

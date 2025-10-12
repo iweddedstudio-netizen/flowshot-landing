@@ -416,7 +416,7 @@ const StandoutFeatures = () => {
     <section
       ref={sectionRef}
       id="standout-features"
-      className="py-32 relative overflow-hidden"
+      className="py-16 md:py-24 relative overflow-hidden"
     >
       {/* Static background - optimized for mobile */}
       <div className="absolute inset-0">

@@ -25,7 +25,7 @@ const UseCases = () => {
   const sectionRef = useRef<HTMLElement>(null);
 
   return (
-    <section ref={sectionRef} id="use-cases" className="py-32 relative overflow-hidden">
+    <section ref={sectionRef} id="use-cases" className="py-16 md:py-24 relative overflow-hidden">
       {/* Minimal gradient background with soft blurred spots */}
       <div className="absolute inset-0 z-0 bg-gradient-to-b from-purple-50/30 via-pink-50/20 to-white/50">
         <div className="absolute top-20 left-1/4 w-96 h-96 bg-purple-300/20 rounded-full blur-[120px]" />

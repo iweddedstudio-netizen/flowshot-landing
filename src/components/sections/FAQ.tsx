@@ -37,7 +37,7 @@ const FAQ = () => {
   const isInView = useInView(sectionRef, { once: true, amount: 0.05 });
 
   return (
-    <section ref={sectionRef} id="faq" className="py-32 bg-gradient-to-b from-white via-primary/[0.01] to-white">
+    <section ref={sectionRef} id="faq" className="py-16 md:py-24 bg-gradient-to-b from-white via-primary/[0.01] to-white">
       <div className="container mx-auto px-4 max-w-4xl">
         <motion.div
           initial={{ opacity: 0, y: 30 }}

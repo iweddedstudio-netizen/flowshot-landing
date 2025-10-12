@@ -190,7 +190,7 @@ const ProjectJourney = () => {
     return (
       <section
         id="project-journey"
-        className="relative w-full py-20 bg-gradient-to-br from-gray-900 via-gray-950 to-black"
+        className="relative w-full py-12 md:py-16 bg-gradient-to-br from-gray-900 via-gray-950 to-black"
       >
         {/* Header */}
         <div className="container mx-auto px-4 max-w-7xl text-center mb-12">
