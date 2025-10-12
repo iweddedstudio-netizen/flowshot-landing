@@ -44,17 +44,17 @@ const Hero = () => {
             variants={stagger}
             initial="initial"
             animate="animate"
-            className="text-center lg:text-left"
+            className="text-center"
           >
             {/* Headline */}
             <motion.h1
               variants={fadeUp}
-              className="font-heading font-semibold text-foreground tracking-tight mx-auto lg:mx-0"
+              className="font-heading mx-auto"
             >
-              <div className="text-5xl md:text-6xl lg:text-7xl leading-[1.1] uppercase">
+              <div className="text-6xl md:text-7xl lg:text-8xl leading-[1.1] uppercase font-black tracking-[0.15em] bg-gradient-to-r from-primary via-purple-600 to-pink-600 bg-clip-text text-transparent">
                 Workflow
               </div>
-              <div className="text-2xl md:text-3xl lg:text-4xl leading-[1.1] mt-2 lowercase first-letter:uppercase">
+              <div className="text-2xl md:text-3xl lg:text-4xl leading-[1.1] mt-2 lowercase first-letter:uppercase font-semibold text-foreground">
                 built for photo & video projects
               </div>
             </motion.h1>
@@ -62,7 +62,7 @@ const Hero = () => {
             {/* Subheadline */}
             <motion.p
               variants={fadeUp}
-              className="text-lg md:text-xl text-secondary mt-8 leading-[1.5] max-w-[52ch] mx-auto lg:mx-0"
+              className="text-lg md:text-xl text-secondary mt-8 leading-[1.5] max-w-[52ch] mx-auto lg:mx-0 lg:text-left"
             >
               FlowShot is ready out of the box — everything's pre-configured for studios and solo creators.
             </motion.p>
@@ -70,9 +70,9 @@ const Hero = () => {
             {/* Secondary tagline */}
             <motion.p
               variants={fadeUp}
-              className="text-base md:text-lg text-muted-foreground mt-4 max-w-[52ch] mx-auto lg:mx-0"
+              className="text-base md:text-lg text-muted-foreground mt-4 max-w-[52ch] mx-auto lg:mx-0 lg:text-left"
             >
-              Skip the setup. Start creating.
+              From shoot to client approval
             </motion.p>
 
             {/* CTA Cluster */}

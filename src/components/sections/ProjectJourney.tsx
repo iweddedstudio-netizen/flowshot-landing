@@ -38,8 +38,8 @@ const scenes = [
   {
     id: 2,
     title: "Create Project",
-    caption: "Start your next shoot using saved presets — photo, video, or both.",
-    subCaption: "Create once, manage everything together.",
+    caption: "Photo, video, or both — FlowShot adapts to your setup.",
+    subCaption: "Turn off what you don't need. Everything stays organized.",
     icon: Plus,
     background: sceneBackgrounds[1],
   },

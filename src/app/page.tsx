@@ -1,5 +1,6 @@
 import Hero from '@/components/sections/Hero';
 import ProblemSolution from '@/components/sections/ProblemSolution';
+// import AppleMotionTypography from '@/components/sections/AppleMotionTypography';
 import ProjectJourney from '@/components/sections/ProjectJourney';
 import UseCases from '@/components/sections/UseCases';
 import StandoutFeatures from '@/components/sections/StandoutFeatures';
@@ -53,6 +54,7 @@ export default function Home() {
 
       {/* 2. Problem -> Solution */}
       <ProblemSolution />
+      {/* <AppleMotionTypography /> */}
 
       {/* 3. Project Journey - Interactive horizontal scroll experience */}
       <ProjectJourney />
