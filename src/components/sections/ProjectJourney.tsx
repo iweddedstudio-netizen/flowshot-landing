@@ -271,7 +271,7 @@ const ProjectJourney = () => {
 
       {/* Mobile: Swipeable Scenes */}
       {isMobile && (
-        <div className="relative h-full pb-32">
+        <div className="relative h-full pb-20">
           <AnimatePresence mode="wait">
             <motion.div
               key={currentScene}
@@ -290,7 +290,7 @@ const ProjectJourney = () => {
           </AnimatePresence>
 
           {/* Mobile Navigation */}
-          <div className="fixed bottom-8 left-0 right-0 z-30 flex items-center justify-center gap-4 px-4">
+          <div className="fixed bottom-6 left-0 right-0 z-30 flex items-center justify-center gap-4 px-4">
             <button
               onClick={handlePrevScene}
               disabled={currentScene === 0}
