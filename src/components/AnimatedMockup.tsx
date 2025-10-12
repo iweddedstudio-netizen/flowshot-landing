@@ -51,7 +51,6 @@ const AnimatedMockup = () => {
         if (newProgress >= scene.duration) {
           // Move to next scene
           const nextScene = (currentScene + 1) % totalScenes;
-          console.log(`Moving from scene ${currentScene} to ${nextScene}`);
           setCurrentScene(nextScene);
           return 0;
         }
@@ -65,11 +64,6 @@ const AnimatedMockup = () => {
 
   // Calculate progress percentage for current scene
   const progressPercent = (sceneProgress / SCENES[currentScene].duration);
-
-  // Debug log
-  useEffect(() => {
-    console.log('Current Scene:', currentScene, 'Progress:', Math.round(progressPercent * 100) + '%');
-  }, [currentScene, progressPercent]);
 
   return (
     <div
@@ -139,16 +133,6 @@ const AnimatedMockup = () => {
           </motion.p>
         </AnimatePresence>
       </motion.div>
-
-      {/* Caption */}
-      <motion.p
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5, duration: 0.6 }}
-        className="text-sm text-secondary/80 text-center mt-4"
-      >
-        Watch FlowShot in action — manage projects without the chaos
-      </motion.p>
     </div>
   );
 };
@@ -401,7 +385,7 @@ const Scene2DragDrop = ({ progress }: { progress: number }) => {
           className="bg-gray-50 rounded-lg p-3 min-h-[120px] relative"
           animate={{
             backgroundColor: currentColumn === 0 && (draggingToReview || pickingUp) ? 'rgba(59, 130, 246, 0.08)' : 'rgb(249, 250, 251)',
-            borderColor: currentColumn === 0 && (draggingToReview || pickingUp) ? 'rgba(59, 130, 246, 0.4)' : 'transparent'
+            borderColor: currentColumn === 0 && (draggingToReview || pickingUp) ? 'rgba(59, 130, 246, 0.4)' : 'rgba(0, 0, 0, 0)'
           }}
           style={{ border: '2px dashed transparent' }}
         >
@@ -425,7 +409,7 @@ const Scene2DragDrop = ({ progress }: { progress: number }) => {
           className="bg-gray-50 rounded-lg p-3 min-h-[120px]"
           animate={{
             backgroundColor: currentColumn === 1 && isMoving ? 'rgba(59, 130, 246, 0.08)' : 'rgb(249, 250, 251)',
-            borderColor: currentColumn === 1 && isMoving ? 'rgba(59, 130, 246, 0.4)' : 'transparent'
+            borderColor: currentColumn === 1 && isMoving ? 'rgba(59, 130, 246, 0.4)' : 'rgba(0, 0, 0, 0)'
           }}
           style={{ border: '2px dashed transparent' }}
         >
@@ -437,7 +421,7 @@ const Scene2DragDrop = ({ progress }: { progress: number }) => {
           className="bg-gray-50 rounded-lg p-3 min-h-[120px] relative"
           animate={{
             backgroundColor: currentColumn === 2 && isMoving ? 'rgba(59, 130, 246, 0.08)' : 'rgb(249, 250, 251)',
-            borderColor: currentColumn === 2 && isMoving ? 'rgba(59, 130, 246, 0.4)' : 'transparent'
+            borderColor: currentColumn === 2 && isMoving ? 'rgba(59, 130, 246, 0.4)' : 'rgba(0, 0, 0, 0)'
           }}
           style={{ border: '2px dashed transparent' }}
         >

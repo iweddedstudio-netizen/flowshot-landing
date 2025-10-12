@@ -79,13 +79,6 @@ export default function Home() {
 
       {/* 11. Final CTA */}
       <FinalCTA />
-
-        {/* Footer */}
-        <footer className="py-12 bg-foreground text-background">
-          <div className="container mx-auto px-4 text-center">
-            <p className="text-sm opacity-70">© 2025 FlowShot. All rights reserved.</p>
-          </div>
-        </footer>
       </main>
     </>
   );

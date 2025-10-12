@@ -107,6 +107,30 @@ const FeaturesAndExperience = () => {
         </div>
       </div>
 
+      {/* Stylish Divider */}
+      <div className="relative z-10 py-16">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="relative flex items-center justify-center"
+          >
+            {/* Left line */}
+            <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-200 to-gray-300" />
+
+            {/* Center dot */}
+            <div className="relative px-6">
+              <div className="w-1.5 h-1.5 rounded-full bg-gray-300" />
+            </div>
+
+            {/* Right line */}
+            <div className="flex-1 h-px bg-gradient-to-l from-transparent via-gray-200 to-gray-300" />
+          </motion.div>
+        </div>
+      </div>
+
       {/* Integrations Section */}
       <div className="py-24 md:py-32 relative z-10">
         <div className="container mx-auto px-4 max-w-6xl">

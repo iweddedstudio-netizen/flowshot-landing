@@ -1,8 +1,9 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView, useScroll, useTransform } from 'framer-motion';
 import { MessageSquare, Share2, Zap, CheckSquare, Download, Users } from 'lucide-react';
+import VideoTourModal from '@/components/modals/VideoTourModal';
 
 const features = [
   {
@@ -123,7 +124,7 @@ const PriorityDemo = () => {
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.25 + i * 0.08 }}
-            className="px-3 py-2 hover:bg-white/5 transition-colors cursor-pointer border-b border-white/5 last:border-b-0 flex items-center gap-2"
+            className="px-3 py-2 border-b border-white/5 last:border-b-0 flex items-center gap-2"
           >
             <span className={`text-sm font-medium ${priority.color}`}>
               {priority.label}
@@ -182,14 +183,13 @@ const ChecklistDemo = () => {
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.2 + i * 0.1 }}
-          className="flex items-start gap-2 p-2 rounded-lg hover:bg-white/5 transition-colors"
+          className="flex items-start gap-2 p-2 rounded-lg"
         >
           {/* Checkbox */}
-          <motion.div
+          <div
             className={`flex-shrink-0 w-4 h-4 rounded border-2 flex items-center justify-center mt-0.5 ${
               item.done ? 'bg-blue-500 border-blue-500' : 'border-gray-500'
             }`}
-            whileHover={{ scale: 1.1 }}
           >
             {item.done && (
               <motion.svg
@@ -208,7 +208,7 @@ const ChecklistDemo = () => {
                 />
               </motion.svg>
             )}
-          </motion.div>
+          </div>
 
           {/* Time and label */}
           <div className="flex-1 min-w-0">
@@ -237,32 +237,6 @@ const DeliveryDemo = () => {
         transition={{ delay: 0.1 }}
         className="relative w-full h-32 bg-gradient-to-br from-indigo-900/40 via-purple-900/30 to-pink-900/40 rounded-lg overflow-hidden border border-white/10"
       >
-        {/* Couple silhouettes */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="flex items-end gap-2">
-            {/* Bride */}
-            <motion.div
-              initial={{ y: 5, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.3 }}
-              className="relative"
-            >
-              <div className="w-7 h-10 bg-gradient-to-b from-pink-300/30 to-pink-400/20 rounded-t-full" />
-              <div className="w-9 h-12 bg-gradient-to-b from-pink-400/20 to-pink-500/10 rounded-b-lg -mt-1" style={{ clipPath: 'polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%)' }} />
-            </motion.div>
-            {/* Groom */}
-            <motion.div
-              initial={{ y: 5, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.4 }}
-              className="relative"
-            >
-              <div className="w-7 h-10 bg-gradient-to-b from-indigo-300/30 to-indigo-400/20 rounded-t-full" />
-              <div className="w-8 h-12 bg-gradient-to-b from-indigo-400/20 to-indigo-500/10 rounded-b-lg -mt-1" />
-            </motion.div>
-          </div>
-        </div>
-
         {/* Play button overlay */}
         <motion.div
           initial={{ scale: 0 }}
@@ -270,7 +244,7 @@ const DeliveryDemo = () => {
           transition={{ delay: 0.5, type: 'spring' }}
           className="absolute inset-0 flex items-center justify-center"
         >
-          <div className="w-9 h-9 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center hover:bg-white/30 transition-colors cursor-pointer">
+          <div className="w-9 h-9 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center">
             <svg className="w-4 h-4 text-white ml-0.5" fill="currentColor" viewBox="0 0 20 20">
               <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
             </svg>
@@ -291,9 +265,7 @@ const DeliveryDemo = () => {
           initial={{ opacity: 0, y: 5 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          className="flex items-center justify-center gap-1.5 px-2 py-1.5 bg-gradient-to-r from-indigo-500 to-blue-500 text-white rounded text-xs font-semibold shadow-md hover:shadow-indigo-500/50 transition-shadow"
+          className="flex items-center justify-center gap-1.5 px-2 py-1.5 bg-gradient-to-r from-indigo-500 to-blue-500 text-white rounded text-xs font-semibold shadow-md"
         >
           <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -305,9 +277,7 @@ const DeliveryDemo = () => {
           initial={{ opacity: 0, y: 5 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.7 }}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          className="flex items-center justify-center gap-1.5 px-2 py-1.5 bg-white/10 border border-white/20 text-gray-200 rounded text-xs font-semibold hover:bg-white/15 transition-colors"
+          className="flex items-center justify-center gap-1.5 px-2 py-1.5 bg-white/10 border border-white/20 text-gray-200 rounded text-xs font-semibold"
         >
           <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
@@ -451,61 +421,82 @@ const StandoutFeatures = () => {
   const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
   const [showModal, setShowModal] = useState(false);
 
+  // Parallax effect for background
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"]
+  });
+
+  // Background moves slower than content, creating depth effect
+  const backgroundY = useTransform(scrollYProgress, [0, 1], [0, -120]);
+
   return (
     <section
       ref={sectionRef}
       id="standout-features"
       className="py-32 relative overflow-hidden"
     >
-      {/* Dark gradient background - unique carousel-inspired style */}
-      <div className="absolute inset-0 bg-black" />
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-950/30 via-cyan-950/20 to-transparent" />
-      <div className="absolute inset-0 bg-gradient-to-tl from-indigo-950/25 via-transparent to-blue-950/20" />
+      {/* Parallax background - moves slower, creating depth effect */}
+      <motion.div
+        style={{
+          y: backgroundY,
+          willChange: 'transform'
+        }}
+        className="absolute inset-0 w-full h-[120%] -top-[10%]"
+      >
+        {/* Dark gradient background - unique carousel-inspired style */}
+        <div className="absolute inset-0 bg-black" style={{ transform: 'translate3d(0,0,0)' }} />
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-950/30 via-cyan-950/20 to-transparent" style={{ transform: 'translate3d(0,0,0)' }} />
+        <div className="absolute inset-0 bg-gradient-to-tl from-indigo-950/25 via-transparent to-blue-950/20" style={{ transform: 'translate3d(0,0,0)' }} />
 
-      {/* Animated gradient orbs for depth */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <motion.div
-          animate={{
-            x: [0, 100, 0],
-            y: [0, 50, 0],
-            scale: [1, 1.1, 1],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="absolute w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-500/20 via-cyan-500/10 to-transparent blur-3xl -top-40 -left-40"
-        />
-        <motion.div
-          animate={{
-            x: [0, -80, 0],
-            y: [0, 100, 0],
-            scale: [1, 1.15, 1],
-          }}
-          transition={{
-            duration: 25,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 2,
-          }}
-          className="absolute w-[700px] h-[700px] rounded-full bg-gradient-to-br from-purple-500/25 via-pink-500/15 to-transparent blur-3xl top-20 right-0"
-        />
-        <motion.div
-          animate={{
-            x: [0, -50, 0],
-            y: [0, -80, 0],
-            scale: [1, 1.2, 1],
-          }}
-          transition={{
-            duration: 30,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 5,
-          }}
-          className="absolute w-[500px] h-[500px] rounded-full bg-gradient-to-br from-orange-500/20 via-rose-500/12 to-transparent blur-3xl bottom-0 left-1/3"
-        />
-      </div>
+        {/* Animated gradient orbs for depth */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ transform: 'translate3d(0,0,0)' }}>
+          <motion.div
+            animate={{
+              x: [0, 100, 0],
+              y: [0, 50, 0],
+              scale: [1, 1.1, 1],
+            }}
+            transition={{
+              duration: 20,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            style={{ willChange: 'transform' }}
+            className="absolute w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-500/20 via-cyan-500/10 to-transparent blur-3xl -top-40 -left-40"
+          />
+          <motion.div
+            animate={{
+              x: [0, -80, 0],
+              y: [0, 100, 0],
+              scale: [1, 1.15, 1],
+            }}
+            transition={{
+              duration: 25,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 2,
+            }}
+            style={{ willChange: 'transform' }}
+            className="absolute w-[700px] h-[700px] rounded-full bg-gradient-to-br from-purple-500/25 via-pink-500/15 to-transparent blur-3xl top-20 right-0"
+          />
+          <motion.div
+            animate={{
+              x: [0, -50, 0],
+              y: [0, -80, 0],
+              scale: [1, 1.2, 1],
+            }}
+            transition={{
+              duration: 30,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 5,
+            }}
+            style={{ willChange: 'transform' }}
+            className="absolute w-[500px] h-[500px] rounded-full bg-gradient-to-br from-orange-500/20 via-rose-500/12 to-transparent blur-3xl bottom-0 left-1/3"
+          />
+        </div>
+      </motion.div>
 
       <div className="container mx-auto px-4 max-w-7xl relative z-10">
         {/* Section Title */}
@@ -552,9 +543,6 @@ const StandoutFeatures = () => {
           transition={{ duration: 0.6 }}
           className="text-center mt-20"
         >
-          <p className="text-lg text-gray-300 mb-6">
-            And we're just getting started...
-          </p>
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -569,48 +557,8 @@ const StandoutFeatures = () => {
         </motion.div>
       </div>
 
-      {/* Modal */}
-      {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.3 }}
-            className="relative bg-gradient-to-br from-gray-900 to-black border border-white/20 rounded-2xl p-8 max-w-md w-full shadow-2xl"
-          >
-            {/* Close button */}
-            <button
-              onClick={() => setShowModal(false)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-
-            {/* Content */}
-            <div className="text-center">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 flex items-center justify-center">
-                <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" />
-                </svg>
-              </div>
-
-              <h3 className="text-2xl font-bold text-white mb-4">
-                Coming Soon
-              </h3>
-
-              <p className="text-gray-300 leading-relaxed mb-6">
-                We're preparing a comprehensive video tour of FlowShot. It will showcase all features and workflows in action.
-              </p>
-
-              <p className="text-sm text-gray-400">
-                Stay tuned for updates!
-              </p>
-            </div>
-          </motion.div>
-        </div>
-      )}
+      {/* Video Tour Modal */}
+      <VideoTourModal isOpen={showModal} onClose={() => setShowModal(false)} />
     </section>
   );
 };

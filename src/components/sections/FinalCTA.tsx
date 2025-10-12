@@ -1,67 +1,91 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Lock } from 'lucide-react';
+import { Lock, Youtube, Mail } from 'lucide-react';
 import VideoModal from '@/components/modals/VideoModal';
 import WaitlistModal from '@/components/modals/WaitlistModal';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
 const FinalCTA = () => {
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
   const [isWaitlistModalOpen, setIsWaitlistModalOpen] = useState(false);
+  const [isSocialDialogOpen, setIsSocialDialogOpen] = useState(false);
+
+  // Parallax effect for background
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"]
+  });
+
+  // Background moves slower than content, creating depth effect
+  const backgroundY = useTransform(scrollYProgress, [0, 1], [0, -100]);
 
   return (
-    <section id="cta" className="relative py-32 overflow-hidden">
-      {/* Dark gradient background */}
-      <div className="absolute inset-0 bg-black" />
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-950/30 via-cyan-950/20 to-transparent" />
-      <div className="absolute inset-0 bg-gradient-to-tl from-indigo-950/25 via-transparent to-blue-950/20" />
+    <section ref={sectionRef} id="cta" className="relative py-32 overflow-hidden">
+      {/* Parallax background - moves slower, creating depth effect */}
+      <motion.div
+        style={{ y: backgroundY }}
+        className="absolute inset-0 w-full h-[120%] -top-[10%]"
+      >
+        {/* Dark gradient background */}
+        <div className="absolute inset-0 bg-black" />
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-950/30 via-cyan-950/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-tl from-indigo-950/25 via-transparent to-blue-950/20" />
 
-      {/* Animated gradient orbs for depth */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <motion.div
-          animate={{
-            x: [0, 100, 0],
-            y: [0, 50, 0],
-            scale: [1, 1.1, 1],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="absolute w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-500/20 via-cyan-500/10 to-transparent blur-3xl -top-40 -left-40"
-        />
-        <motion.div
-          animate={{
-            x: [0, -80, 0],
-            y: [0, 100, 0],
-            scale: [1, 1.15, 1],
-          }}
-          transition={{
-            duration: 25,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 2,
-          }}
-          className="absolute w-[700px] h-[700px] rounded-full bg-gradient-to-br from-purple-500/25 via-pink-500/15 to-transparent blur-3xl top-20 right-0"
-        />
-        <motion.div
-          animate={{
-            x: [0, -50, 0],
-            y: [0, -80, 0],
-            scale: [1, 1.2, 1],
-          }}
-          transition={{
-            duration: 30,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 5,
-          }}
-          className="absolute w-[500px] h-[500px] rounded-full bg-gradient-to-br from-orange-500/20 via-rose-500/12 to-transparent blur-3xl bottom-0 left-1/3"
-        />
-      </div>
+        {/* Animated gradient orbs for depth */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <motion.div
+            animate={{
+              x: [0, 100, 0],
+              y: [0, 50, 0],
+              scale: [1, 1.1, 1],
+            }}
+            transition={{
+              duration: 20,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className="absolute w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-500/20 via-cyan-500/10 to-transparent blur-3xl -top-40 -left-40"
+          />
+          <motion.div
+            animate={{
+              x: [0, -80, 0],
+              y: [0, 100, 0],
+              scale: [1, 1.15, 1],
+            }}
+            transition={{
+              duration: 25,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 2,
+            }}
+            className="absolute w-[700px] h-[700px] rounded-full bg-gradient-to-br from-purple-500/25 via-pink-500/15 to-transparent blur-3xl top-20 right-0"
+          />
+          <motion.div
+            animate={{
+              x: [0, -50, 0],
+              y: [0, -80, 0],
+              scale: [1, 1.2, 1],
+            }}
+            transition={{
+              duration: 30,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 5,
+            }}
+            className="absolute w-[500px] h-[500px] rounded-full bg-gradient-to-br from-orange-500/20 via-rose-500/12 to-transparent blur-3xl bottom-0 left-1/3"
+          />
+        </div>
+      </motion.div>
 
       <div className="container mx-auto px-4 max-w-5xl relative z-10">
         <motion.div
@@ -72,11 +96,11 @@ const FinalCTA = () => {
           className="text-center text-white"
         >
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-semibold mb-6 leading-tight">
-            Ready to orchestrate your studio?
+            Start your <span className="font-bold bg-gradient-to-r from-primary via-purple-600 to-pink-600 bg-clip-text text-transparent">FlowShot</span> today.
           </h2>
 
           <p className="text-xl md:text-2xl mb-10 text-gray-300 leading-relaxed max-w-3xl mx-auto">
-            Join 100+ teams already using FlowShot — free onboarding included.
+            Try FlowShot free — no setup, no card, just pure workflow.
           </p>
 
           {/* CTAs */}
@@ -115,12 +139,55 @@ const FinalCTA = () => {
         </motion.div>
       </div>
 
-      {/* Decorative Wave (optional) */}
-      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/50 to-transparent pointer-events-none" />
+      {/* Footer */}
+      <div className="container mx-auto px-4 text-center relative z-10 mt-20">
+        {/* Social Icons */}
+        <div className="flex items-center justify-center gap-6 mb-6">
+          <button
+            onClick={() => setIsSocialDialogOpen(true)}
+            className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 transition-all flex items-center justify-center group"
+            aria-label="YouTube"
+          >
+            <Youtube className="w-5 h-5 text-white/70 group-hover:text-white transition-colors" />
+          </button>
+
+          <button
+            onClick={() => setIsSocialDialogOpen(true)}
+            className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 transition-all flex items-center justify-center group"
+            aria-label="TikTok"
+          >
+            <svg className="w-5 h-5 text-white/70 group-hover:text-white transition-colors" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+            </svg>
+          </button>
+
+          <button
+            onClick={() => setIsSocialDialogOpen(true)}
+            className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 transition-all flex items-center justify-center group"
+            aria-label="Email"
+          >
+            <Mail className="w-5 h-5 text-white/70 group-hover:text-white transition-colors" />
+          </button>
+        </div>
+
+        <p className="text-sm text-white/50">© 2025 FlowShot — built with love for creators.</p>
+      </div>
 
       {/* Modals */}
       <VideoModal isOpen={isVideoModalOpen} onClose={() => setIsVideoModalOpen(false)} />
       <WaitlistModal isOpen={isWaitlistModalOpen} onClose={() => setIsWaitlistModalOpen(false)} />
+
+      {/* Social Media Dialog */}
+      <Dialog open={isSocialDialogOpen} onOpenChange={setIsSocialDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-2xl">Coming Soon!</DialogTitle>
+            <DialogDescription className="text-base leading-relaxed pt-4">
+              We're working on our social media presence. Follow us soon for updates, tips, and behind-the-scenes content!
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 };
