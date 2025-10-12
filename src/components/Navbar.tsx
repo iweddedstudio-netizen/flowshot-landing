@@ -19,12 +19,34 @@ const Navbar = () => {
   const [isWaitlistModalOpen, setIsWaitlistModalOpen] = useState(false);
 
   useEffect(() => {
+    let rafId: number;
+    let lastScrollY = window.scrollY;
+
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      // Cancel previous frame if still pending
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+      }
+
+      // Schedule update for next frame
+      rafId = requestAnimationFrame(() => {
+        const currentScrollY = window.scrollY;
+        // Only update if scroll position actually changed
+        if (Math.abs(currentScrollY - lastScrollY) > 5) {
+          setIsScrolled(currentScrollY > 20);
+          lastScrollY = currentScrollY;
+        }
+      });
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    // Use passive listener for better mobile performance
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+      }
+    };
   }, []);
 
   const handleLinkClick = () => {
@@ -41,6 +63,10 @@ const Navbar = () => {
           ? 'bg-background/95 backdrop-blur-md shadow-lg'
           : 'bg-transparent'
       }`}
+      style={{
+        transform: 'translateZ(0)',
+        WebkitTransform: 'translateZ(0)',
+      }}
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16 lg:h-20">
