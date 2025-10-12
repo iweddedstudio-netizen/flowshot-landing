@@ -15,6 +15,13 @@ const plusJakartaSans = Plus_Jakarta_Sans({
   display: "swap",
 });
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  themeColor: '#fcfcfd',
+};
+
 export const metadata: Metadata = {
   title: "FlowShot - Operating System for Photo & Video Studios",
   description: "All-in-one project management for video creators. Manage offers, projects, teams, and clients in one visual platform. Built by creators, for creators. Start your free trial.",
@@ -79,6 +86,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} ${plusJakartaSans.variable}`}>
+      <head>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="theme-color" content="#fcfcfd" />
+      </head>
       <body className="font-sans antialiased">
         <Navbar />
         {children}
