@@ -344,13 +344,10 @@ const Scene = ({ scene, index, isActive, isMobile }: SceneProps) => {
       <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-8 md:gap-12 items-center">
         {/* Text Content - Always visible, no fade effects */}
         <div className="text-center md:text-left">
-          <div className="inline-flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 rounded-2xl bg-white shadow-lg flex items-center justify-center">
+          <div className="mb-4">
+            <div className="w-12 h-12 rounded-2xl bg-white shadow-lg flex items-center justify-center mx-auto md:mx-0">
               <Icon className="w-6 h-6 text-primary" />
             </div>
-            <span className="text-sm font-bold text-primary tracking-wider">
-              STEP {index + 1}
-            </span>
           </div>
 
           <h3 className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-foreground mb-4">
