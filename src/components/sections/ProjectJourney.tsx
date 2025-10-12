@@ -230,7 +230,7 @@ const ProjectJourney = () => {
       className="relative overflow-hidden bg-gradient-to-br from-gray-50 via-white to-gray-50"
       style={{
         height: isMobile ? 'auto' : '100vh',
-        minHeight: isMobile ? '100vh' : 'auto',
+        minHeight: isMobile ? 'auto' : 'auto',
       }}
     >
       {/* Header */}
