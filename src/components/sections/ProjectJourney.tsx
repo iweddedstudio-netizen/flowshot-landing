@@ -141,6 +141,10 @@ const ProjectJourney = () => {
     const endOffset = viewportWidth / 2 - sceneWidth / 2;
     const totalDistance = startOffset - (-lastSceneStart + endOffset);
 
+    // Адаптивный множитель для разных размеров экранов
+    // На больших экранах нужно больше места для скролла
+    const scrollMultiplier = viewportWidth >= 2560 ? 4.5 : viewportWidth >= 1920 ? 3.5 : 2.5;
+
     // Create the horizontal scroll animation
     const scrollTween = gsap.to(container, {
       x: -lastSceneStart + endOffset,
@@ -148,7 +152,7 @@ const ProjectJourney = () => {
       scrollTrigger: {
         trigger: section,
         start: 'top top',
-        end: () => `+=${totalDistance * 2.5}`, // Long scroll for smooth progression
+        end: () => `+=${totalDistance * scrollMultiplier}`, // Адаптивная длина скролла
         scrub: 1,
         pin: true,
         anticipatePin: 1,
