@@ -153,7 +153,7 @@ const ProjectJourney = () => {
       style={{ touchAction: 'pan-y' }}
     >
       {/* Header - Always visible */}
-      <div className="absolute top-8 md:top-12 left-0 right-0 z-20 container mx-auto px-4 max-w-7xl text-center pointer-events-none">
+      <div className="absolute top-6 md:top-8 left-0 right-0 z-20 container mx-auto px-4 max-w-7xl text-center pointer-events-none">
         <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-heading font-bold text-foreground mb-3 md:mb-4">
           See how{' '}
           <span className="bg-gradient-to-r from-primary via-purple-600 to-pink-600 bg-clip-text text-transparent">
@@ -168,7 +168,7 @@ const ProjectJourney = () => {
 
       {/* Scenes Container - Scenes overlay each other */}
       <div
-        className="absolute inset-0 flex items-center justify-center pt-24 md:pt-28"
+        className="absolute inset-0 flex items-center justify-center pt-32 md:pt-36"
         style={{
           touchAction: 'pan-y',
           WebkitOverflowScrolling: 'touch'
