@@ -1,11 +1,11 @@
+import dynamic from 'next/dynamic';
 import Hero from '@/components/sections/Hero';
 import ProblemSolution from '@/components/sections/ProblemSolution';
 // import AppleMotionTypography from '@/components/sections/AppleMotionTypography';
-import ProjectJourney from '@/components/sections/ProjectJourney';
+const ProjectJourney = dynamic(() => import('@/components/sections/ProjectJourney'), { ssr: false });
 import UseCases from '@/components/sections/UseCases';
 import StandoutFeatures from '@/components/sections/StandoutFeatures';
-import FeatureDeepDive from '@/components/sections/FeatureDeepDive';
-import Integrations from '@/components/sections/Integrations';
+import FeaturesAndExperience from '@/components/sections/FeaturesAndExperience';
 import FounderStory from '@/components/sections/FounderStory';
 import PricingTeaser from '@/components/sections/PricingTeaser';
 import FAQ from '@/components/sections/FAQ';
@@ -65,11 +65,8 @@ export default function Home() {
       {/* 5. Standout Features */}
       <StandoutFeatures />
 
-      {/* 6. Feature Deep Dive */}
-      <FeatureDeepDive />
-
-      {/* 7. Integrations */}
-      <Integrations />
+      {/* 6-7. Features and Experience - Unified Section */}
+      <FeaturesAndExperience />
 
       {/* 8. Founder Story */}
       <FounderStory />

@@ -46,33 +46,32 @@ const FounderStory = () => {
         />
       </div>
 
-      <div className="container mx-auto px-4 max-w-7xl relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+      <div className="container mx-auto px-4 max-w-6xl relative z-10">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center justify-items-center">
           {/* Content Column */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.6 }}
           >
-            <div className="text-sm font-semibold text-cyan-400 tracking-wider mb-4">
+            <h2 className="text-4xl md:text-5xl font-heading font-bold text-white mb-8">
               OUR STORY
-            </div>
-
-            <h2 className="text-4xl md:text-5xl font-heading font-semibold text-white mb-6">
-              Built from 10 years of real creative chaos
             </h2>
 
-            <div className="text-base leading-relaxed text-gray-300 space-y-4">
+            <p className="text-xl md:text-2xl font-bold text-white mb-6 leading-relaxed">
+              Hi, I'm Alex — a creator, just like you.
+            </p>
+
+            <div className="text-lg leading-relaxed text-gray-300 space-y-4">
               <p>
-                For over a decade, I've worked with dozens of regular clients — from large studios to solo videographers — filming, editing, and managing projects across weddings, events, and commercials.
-                Many teams had no proper workflow. Projects got lost, deadlines slipped, and communication scattered across chats and spreadsheets.
+                After 10 years in the industry,
               </p>
               <p>
-                Over the years, I've collected everything that worked best — from my clients, my own experience, and my team's insights — and turned it into one streamlined system.
-                FlowShot is built from 10 years of real creative practice — designed to be simple, visual, and ready out of the box.
+                I realized that creative people need tools made by creatives — not by tech companies.
               </p>
               <p>
-                Together with my team, led by me, <strong className="text-white font-semibold">Alex Ohnevskyi</strong>, we built the tool we always needed — so you can focus on creating, not managing chaos.
+                That's why we built <strong className="text-white font-semibold">FlowShot</strong> — a space designed for real production life,
+                where everything finally feels connected.
               </p>
             </div>
 
@@ -95,15 +94,19 @@ const FounderStory = () => {
             initial={{ opacity: 0, x: 50 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="relative"
+            className="relative max-w-xs mx-auto lg:mx-0 hidden lg:block"
           >
             {/* Founder Photo */}
             <div className="relative">
-              <div className="relative aspect-[4/5] rounded-2xl overflow-hidden bg-gradient-to-br from-blue-900/30 via-purple-900/30 to-gray-900 shadow-2xl border border-white/10">
+              <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-gradient-to-br from-blue-900/30 via-purple-900/30 to-gray-900 shadow-2xl">
                 <img
                   src="/images/Screenshot_1.png"
                   alt="Alex Ohnevskyi - Founder & Creative Director"
                   className="w-full h-full object-cover"
+                  style={{
+                    maskImage: 'radial-gradient(ellipse 90% 90% at 50% 40%, black 40%, transparent 100%)',
+                    WebkitMaskImage: 'radial-gradient(ellipse 90% 90% at 50% 40%, black 40%, transparent 100%)'
+                  }}
                   onError={(e) => {
                     // Fallback if image doesn't exist yet
                     e.currentTarget.style.display = 'none';
@@ -125,16 +128,6 @@ const FounderStory = () => {
                     }
                   }}
                 />
-              </div>
-
-              {/* Caption */}
-              <div className="mt-4 text-center">
-                <p className="text-base font-semibold text-white">
-                  Alex Ohnevskyi
-                </p>
-                <p className="text-sm text-gray-400">
-                  Founder & Creative Director
-                </p>
               </div>
             </div>
 

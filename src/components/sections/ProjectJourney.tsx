@@ -1,18 +1,29 @@
 'use client';
 
 import { useRef, useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import {
   Plus, Package, MessageSquare, Users,
-  Calendar, Bell, CheckCircle, Video, DollarSign
+  Calendar, Bell, CheckCircle, Video, DollarSign, Palette
 } from 'lucide-react';
 
 // Register GSAP plugins
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
 }
+
+// Hook to prevent hydration errors
+const useClientOnly = () => {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  return mounted;
+};
 
 // Scene backgrounds
 const sceneBackgrounds = [
@@ -61,10 +72,10 @@ const scenes = [
   },
   {
     id: 6,
-    title: "Approve & Complete",
-    caption: "Mark client approval, confirm payments, and celebrate completion.",
-    subCaption: "Your dashboard updates automatically.",
-    icon: CheckCircle,
+    title: "Keep your team in sync",
+    caption: "Save your style guides, asset links, and brand rules — so your editors and shooters stay aligned.",
+    subCaption: "",
+    icon: Palette,
     background: sceneBackgrounds[5],
   },
 ];
@@ -151,6 +162,7 @@ const ProjectJourney = () => {
       id="project-journey"
       className="relative w-full h-screen overflow-hidden bg-gradient-to-br from-gray-900 via-gray-950 to-black"
       style={{ touchAction: 'pan-y' }}
+      suppressHydrationWarning
     >
       {/* Gradient overlays for visual interest */}
       <div className="absolute inset-0 pointer-events-none">
@@ -186,7 +198,7 @@ const ProjectJourney = () => {
           const isPast = index < currentScene;
           const isFuture = index > currentScene;
 
-          // Calculate sharp opacity for faster crossfade - more time at 100%
+          // Ultra-fast crossfade - scenes are either fully visible or fully hidden
           let opacity = 0;
           if (isActive) {
             // Current scene: always visible, fade in after first scene
@@ -197,14 +209,13 @@ const ProjectJourney = () => {
               // Last scene stays at full opacity
               opacity = 1;
             } else {
-              // Other scenes: quick fade-in, then stay at 100%
-              // Stay at minimum opacity until 15% scroll, then ramp quickly to 100% by 35%
-              if (scrollProgress < 0.15) {
-                opacity = 0.2;
+              // Ultra-fast fade-in: 0-10% of scroll, then stay at 100%
+              if (scrollProgress < 0.1) {
+                const fadeProgress = scrollProgress / 0.1;
+                // Sharp easing for instant transition feel
+                opacity = Math.pow(fadeProgress, 3);
               } else {
-                const fadeProgress = Math.min((scrollProgress - 0.15) / 0.25, 1);
-                // Use cubic easing for sharper ramp
-                opacity = 0.2 + Math.pow(fadeProgress, 2.5) * 0.8;
+                opacity = 1;
               }
             }
           } else if (index === currentScene - 1) {
@@ -212,19 +223,18 @@ const ProjectJourney = () => {
             if (index === scenes.length - 1) {
               opacity = 1; // Last scene stays visible
             } else {
-              // Stay visible longer, then quick fade-out
-              // Stay at 0.2 opacity until 60% scroll, then fade out quickly by 85%
-              if (scrollProgress < 0.6) {
-                opacity = 0.2;
+              // Stay at 100% until 90%, then ultra-fast fade-out 90-100%
+              if (scrollProgress < 0.9) {
+                opacity = 1;
               } else {
-                const fadeProgress = Math.min((scrollProgress - 0.6) / 0.25, 1);
-                // Use cubic easing for sharper ramp down
-                opacity = 0.2 * (1 - Math.pow(fadeProgress, 2.5));
+                const fadeProgress = (scrollProgress - 0.9) / 0.1;
+                // Sharp easing for instant transition feel
+                opacity = 1 - Math.pow(fadeProgress, 3);
               }
             }
           } else if (index === currentScene + 1) {
-            // Next scene: start fading in slightly
-            opacity = 0.05 * scrollProgress; // 0 to 0.05
+            // Next scene: barely visible hint
+            opacity = 0.02 * scrollProgress; // 0 to 0.02
           } else if (isPast && index === scenes.length - 1) {
             // Last scene stays visible after completion
             opacity = 1;
@@ -508,7 +518,7 @@ const Scene1Animation = ({ isActive }: { isActive: boolean }) => {
   ];
 
   return (
-    <div className="relative aspect-[4/3] bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl shadow-2xl p-6 overflow-hidden">
+    <div className="relative aspect-[4/3] bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl shadow-2xl p-6 overflow-hidden" suppressHydrationWarning>
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <h4 className="text-xl font-bold text-foreground flex items-center gap-2">
@@ -530,19 +540,20 @@ const Scene1Animation = ({ isActive }: { isActive: boolean }) => {
         <div>
           <label className="text-xs font-bold text-secondary mb-2 block uppercase tracking-wide">Event Type</label>
           <div className="flex flex-wrap gap-2">
-            <AnimatePresence>
-              {tags.filter(t => t.category === 'Event Type' && t.show).map((tag) => (
-                <motion.div
-                  key={tag.id}
-                  initial={{ scale: 0, opacity: 0, y: -10 }}
-                  animate={{ scale: 1, opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, ease: 'easeOut' }}
-                  className={`px-3 py-1.5 rounded-md text-xs font-medium border ${tag.color} shadow-sm`}
-                >
-                  {tag.name}
-                </motion.div>
-              ))}
-            </AnimatePresence>
+            {tags.filter(t => t.category === 'Event Type').map((tag) => (
+              <motion.div
+                key={tag.id}
+                animate={{
+                  scale: tag.show ? 1 : 0,
+                  opacity: tag.show ? 1 : 0,
+                  y: tag.show ? 0 : -10
+                }}
+                transition={{ duration: 0.3, ease: 'easeOut' }}
+                className={`px-3 py-1.5 rounded-md text-xs font-medium border ${tag.color} shadow-sm`}
+              >
+                {tag.name}
+              </motion.div>
+            ))}
           </div>
         </div>
 
@@ -550,19 +561,20 @@ const Scene1Animation = ({ isActive }: { isActive: boolean }) => {
         <div>
           <label className="text-xs font-bold text-secondary mb-2 block uppercase tracking-wide">Service</label>
           <div className="flex flex-wrap gap-2">
-            <AnimatePresence>
-              {tags.filter(t => t.category === 'Service' && t.show).map((tag) => (
-                <motion.div
-                  key={tag.id}
-                  initial={{ scale: 0, opacity: 0, x: -10 }}
-                  animate={{ scale: 1, opacity: 1, x: 0 }}
-                  transition={{ duration: 0.3, ease: 'easeOut' }}
-                  className={`px-3 py-1.5 rounded-md text-xs font-medium border ${tag.color} shadow-sm`}
-                >
-                  {tag.name}
-                </motion.div>
-              ))}
-            </AnimatePresence>
+            {tags.filter(t => t.category === 'Service').map((tag) => (
+              <motion.div
+                key={tag.id}
+                animate={{
+                  scale: tag.show ? 1 : 0,
+                  opacity: tag.show ? 1 : 0,
+                  x: tag.show ? 0 : -10
+                }}
+                transition={{ duration: 0.3, ease: 'easeOut' }}
+                className={`px-3 py-1.5 rounded-md text-xs font-medium border ${tag.color} shadow-sm`}
+              >
+                {tag.name}
+              </motion.div>
+            ))}
           </div>
         </div>
 
@@ -570,19 +582,20 @@ const Scene1Animation = ({ isActive }: { isActive: boolean }) => {
         <div>
           <label className="text-xs font-bold text-secondary mb-2 block uppercase tracking-wide">Package</label>
           <div className="flex flex-wrap gap-2">
-            <AnimatePresence>
-              {tags.filter(t => t.category === 'Package' && t.show).map((tag) => (
-                <motion.div
-                  key={tag.id}
-                  initial={{ scale: 0, opacity: 0, rotate: -10 }}
-                  animate={{ scale: 1, opacity: 1, rotate: 0 }}
-                  transition={{ duration: 0.3, ease: 'easeOut' }}
-                  className={`px-3 py-1.5 rounded-md text-xs font-medium border ${tag.color} shadow-sm`}
-                >
-                  {tag.name}
-                </motion.div>
-              ))}
-            </AnimatePresence>
+            {tags.filter(t => t.category === 'Package').map((tag) => (
+              <motion.div
+                key={tag.id}
+                animate={{
+                  scale: tag.show ? 1 : 0,
+                  opacity: tag.show ? 1 : 0,
+                  rotate: tag.show ? 0 : -10
+                }}
+                transition={{ duration: 0.3, ease: 'easeOut' }}
+                className={`px-3 py-1.5 rounded-md text-xs font-medium border ${tag.color} shadow-sm`}
+              >
+                {tag.name}
+              </motion.div>
+            ))}
           </div>
         </div>
 
@@ -590,20 +603,20 @@ const Scene1Animation = ({ isActive }: { isActive: boolean }) => {
         <div>
           <label className="text-xs font-bold text-secondary mb-2 block uppercase tracking-wide">Editor</label>
           <div className="flex flex-wrap gap-2">
-            <AnimatePresence>
-              {tags.filter(t => t.category === 'Editor' && t.show).map((tag) => (
-                <motion.div
-                  key={tag.id}
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ duration: 0.3, ease: 'easeOut' }}
-                  className={`px-3 py-1.5 rounded-md text-xs font-medium border ${tag.color} shadow-sm flex items-center gap-1`}
-                >
-                  <div className="w-2 h-2 rounded-full bg-current opacity-50" />
-                  {tag.name}
-                </motion.div>
-              ))}
-            </AnimatePresence>
+            {tags.filter(t => t.category === 'Editor').map((tag) => (
+              <motion.div
+                key={tag.id}
+                animate={{
+                  scale: tag.show ? 1 : 0,
+                  opacity: tag.show ? 1 : 0
+                }}
+                transition={{ duration: 0.3, ease: 'easeOut' }}
+                className={`px-3 py-1.5 rounded-md text-xs font-medium border ${tag.color} shadow-sm flex items-center gap-1`}
+              >
+                <div className="w-2 h-2 rounded-full bg-current opacity-50" />
+                {tag.name}
+              </motion.div>
+            ))}
           </div>
         </div>
 
@@ -611,19 +624,20 @@ const Scene1Animation = ({ isActive }: { isActive: boolean }) => {
         <div>
           <label className="text-xs font-bold text-secondary mb-2 block uppercase tracking-wide">Add-on</label>
           <div className="flex flex-wrap gap-2">
-            <AnimatePresence>
-              {tags.filter(t => t.category === 'Add-on' && t.show).map((tag) => (
-                <motion.div
-                  key={tag.id}
-                  initial={{ scale: 0, opacity: 0, x: 10 }}
-                  animate={{ scale: 1, opacity: 1, x: 0 }}
-                  transition={{ duration: 0.3, ease: 'easeOut' }}
-                  className={`px-3 py-1.5 rounded-md text-xs font-medium border ${tag.color} shadow-sm`}
-                >
-                  + {tag.name}
-                </motion.div>
-              ))}
-            </AnimatePresence>
+            {tags.filter(t => t.category === 'Add-on').map((tag) => (
+              <motion.div
+                key={tag.id}
+                animate={{
+                  scale: tag.show ? 1 : 0,
+                  opacity: tag.show ? 1 : 0,
+                  x: tag.show ? 0 : 10
+                }}
+                transition={{ duration: 0.3, ease: 'easeOut' }}
+                className={`px-3 py-1.5 rounded-md text-xs font-medium border ${tag.color} shadow-sm`}
+              >
+                + {tag.name}
+              </motion.div>
+            ))}
           </div>
         </div>
 
@@ -631,19 +645,20 @@ const Scene1Animation = ({ isActive }: { isActive: boolean }) => {
         <div>
           <label className="text-xs font-bold text-secondary mb-2 block uppercase tracking-wide">Format</label>
           <div className="flex flex-wrap gap-2">
-            <AnimatePresence>
-              {tags.filter(t => t.category === 'Format' && t.show).map((tag) => (
-                <motion.div
-                  key={tag.id}
-                  initial={{ scale: 0, opacity: 0, rotate: 10 }}
-                  animate={{ scale: 1, opacity: 1, rotate: 0 }}
-                  transition={{ duration: 0.3, ease: 'easeOut' }}
-                  className={`px-3 py-1.5 rounded-md text-xs font-medium border ${tag.color} shadow-sm`}
-                >
-                  {tag.name}
-                </motion.div>
-              ))}
-            </AnimatePresence>
+            {tags.filter(t => t.category === 'Format').map((tag) => (
+              <motion.div
+                key={tag.id}
+                animate={{
+                  scale: tag.show ? 1 : 0,
+                  opacity: tag.show ? 1 : 0,
+                  rotate: tag.show ? 0 : 10
+                }}
+                transition={{ duration: 0.3, ease: 'easeOut' }}
+                className={`px-3 py-1.5 rounded-md text-xs font-medium border ${tag.color} shadow-sm`}
+              >
+                {tag.name}
+              </motion.div>
+            ))}
           </div>
         </div>
       </div>
@@ -677,7 +692,7 @@ const Scene2Animation = ({ isActive }: { isActive: boolean }) => {
   }, [isActive]);
 
   return (
-    <div className="relative aspect-[4/3] bg-gradient-to-br from-green-50 to-purple-50 rounded-2xl shadow-2xl p-6 overflow-hidden">
+    <div className="relative aspect-[4/3] bg-gradient-to-br from-green-50 to-purple-50 rounded-2xl shadow-2xl p-6 overflow-hidden" suppressHydrationWarning>
       {/* Dashboard Header */}
       <div className="flex items-center justify-between mb-6">
         <h4 className="text-xl font-bold text-foreground">Active Projects</h4>
@@ -693,48 +708,45 @@ const Scene2Animation = ({ isActive }: { isActive: boolean }) => {
       </div>
 
       {/* Project Card (appears at end) */}
-      <AnimatePresence>
-        {step >= 9 && (
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0, y: -20 }}
-            animate={{
-              scale: step >= 9 ? [0.8, 1.05, 1] : 1,
-              opacity: 1,
-              y: 0
-            }}
-            transition={{ duration: 0.5, ease: 'easeOut' }}
-            className="p-4 bg-white rounded-xl border-2 border-primary/20 shadow-lg"
-          >
-            <div className="flex items-start justify-between mb-2">
-              <div>
-                <h5 className="font-bold text-foreground">Emma & Ryan</h5>
-                <div className="flex gap-2 mt-1">
-                  <span className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded">Photo</span>
-                  <span className="text-xs px-2 py-1 bg-purple-100 text-purple-700 rounded">Video</span>
-                </div>
-              </div>
-              <motion.div
-                animate={{ scale: [1, 1.2, 1] }}
-                transition={{ repeat: 2, duration: 0.5 }}
-                className="w-3 h-3 bg-green-500 rounded-full"
-              />
+      <motion.div
+        animate={{
+          scale: step >= 9 ? 1 : 0.8,
+          opacity: step >= 9 ? 1 : 0,
+          y: step >= 9 ? 0 : -20
+        }}
+        transition={{ duration: 0.5, ease: 'easeOut' }}
+        className="p-4 bg-white rounded-xl border-2 border-primary/20 shadow-lg"
+        style={{ pointerEvents: step >= 9 ? 'auto' : 'none' }}
+      >
+        <div className="flex items-start justify-between mb-2">
+          <div>
+            <h5 className="font-bold text-foreground">Emma & Ryan</h5>
+            <div className="flex gap-2 mt-1">
+              <span className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded">Photo</span>
+              <span className="text-xs px-2 py-1 bg-purple-100 text-purple-700 rounded">Video</span>
             </div>
-            <p className="text-xs text-secondary">Full Wedding Package + Add-on</p>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </div>
+          <motion.div
+            animate={{ scale: step >= 9 ? [1, 1.2, 1] : 1 }}
+            transition={{ repeat: 2, duration: 0.5 }}
+            className="w-3 h-3 bg-green-500 rounded-full"
+          />
+        </div>
+        <p className="text-xs text-secondary">Full Wedding Package + Add-on</p>
+      </motion.div>
 
       {/* Modal */}
-      <AnimatePresence>
-        {step >= 2 && step < 9 && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 30 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: -30 }}
-            transition={{ duration: 0.4, ease: 'easeOut' }}
-            className="absolute inset-4 bg-white rounded-xl shadow-2xl p-5 border-2 border-primary/20 overflow-hidden"
-          >
-            <h4 className="text-lg font-bold mb-4 text-foreground">Create New Project</h4>
+      <motion.div
+        animate={{
+          opacity: step >= 2 && step < 9 ? 1 : 0,
+          scale: step >= 2 && step < 9 ? 1 : 0.9,
+          y: step >= 2 && step < 9 ? 0 : 30
+        }}
+        transition={{ duration: 0.4, ease: 'easeOut' }}
+        style={{ pointerEvents: step >= 2 && step < 9 ? 'auto' : 'none' }}
+        className="absolute inset-4 bg-white rounded-xl shadow-2xl p-5 border-2 border-primary/20 overflow-hidden"
+      >
+        <h4 className="text-lg font-bold mb-4 text-foreground">Create New Project</h4>
 
             <div className="space-y-3">
               {/* Project Name */}
@@ -818,23 +830,20 @@ const Scene2Animation = ({ isActive }: { isActive: boolean }) => {
                 Create Project
               </motion.button>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      </motion.div>
 
       {/* Tooltip */}
-      <AnimatePresence>
-        {step >= 10 && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            className="absolute bottom-6 left-1/2 transform -translate-x-1/2 bg-foreground text-white px-4 py-2 rounded-lg shadow-lg text-xs font-medium whitespace-nowrap"
-          >
-            Created using your saved presets ✓
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <motion.div
+        animate={{
+          opacity: step >= 10 ? 1 : 0,
+          y: step >= 10 ? 0 : 10
+        }}
+        transition={{ duration: 0.3 }}
+        style={{ pointerEvents: step >= 10 ? 'auto' : 'none' }}
+        className="absolute bottom-6 left-1/2 transform -translate-x-1/2 bg-foreground text-white px-4 py-2 rounded-lg shadow-lg text-xs font-medium whitespace-nowrap"
+      >
+        Created using your saved presets ✓
+      </motion.div>
     </div>
   );
 };
@@ -864,7 +873,7 @@ const Scene3Animation = ({ isActive }: { isActive: boolean }) => {
   ];
 
   return (
-    <div className="relative aspect-[4/3] bg-gradient-to-br from-purple-50 to-blue-50 rounded-2xl shadow-2xl p-6 overflow-hidden">
+    <div className="relative aspect-[4/3] bg-gradient-to-br from-purple-50 to-blue-50 rounded-2xl shadow-2xl p-6 overflow-hidden" suppressHydrationWarning>
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <h4 className="text-xl font-bold text-foreground flex items-center gap-2">
@@ -882,14 +891,21 @@ const Scene3Animation = ({ isActive }: { isActive: boolean }) => {
 
       {/* Team Cards */}
       <div className="space-y-3">
-        <AnimatePresence>
-          {teamMembers.filter(m => members.includes(m.id)).map((member, index) => (
+        {teamMembers.map((member, index) => {
+          const isVisible = members.includes(member.id);
+          const isLastAdded = isVisible && index === members.findIndex(m => m === member.id) + members.length - 1;
+
+          return (
             <motion.div
               key={member.id}
-              initial={{ opacity: 0, x: -20, scale: 0.9 }}
-              animate={{ opacity: 1, x: 0, scale: 1 }}
+              animate={{
+                opacity: isVisible ? 1 : 0,
+                x: isVisible ? 0 : -20,
+                scale: isVisible ? 1 : 0.9
+              }}
               transition={{ duration: 0.4, ease: 'easeOut' }}
               className="bg-white rounded-xl p-4 shadow-md border border-gray-100 hover:shadow-lg transition-shadow"
+              style={{ pointerEvents: isVisible ? 'auto' : 'none' }}
             >
               <div className="flex items-center gap-3">
                 {/* Avatar */}
@@ -908,7 +924,7 @@ const Scene3Animation = ({ isActive }: { isActive: boolean }) => {
                 </div>
 
                 {/* Status indicator - appears on last added member */}
-                {index === members.length - 1 && (
+                {members.includes(member.id) && index === members.length - 1 && (
                   <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: [0, 1.2, 1] }}
@@ -918,8 +934,8 @@ const Scene3Animation = ({ isActive }: { isActive: boolean }) => {
                 )}
               </div>
             </motion.div>
-          ))}
-        </AnimatePresence>
+          );
+        })}
 
         {/* Add Member Button */}
         {members.length < 3 && (
@@ -960,7 +976,7 @@ const Scene4Animation = ({ isActive }: { isActive: boolean }) => {
   }, [isActive]);
 
   return (
-    <div className="relative aspect-[4/3] bg-gradient-to-br from-green-50 to-orange-50 rounded-2xl shadow-2xl p-6 overflow-hidden">
+    <div className="relative aspect-[4/3] bg-gradient-to-br from-green-50 to-orange-50 rounded-2xl shadow-2xl p-6 overflow-hidden" suppressHydrationWarning>
       <div className="flex items-center justify-between mb-4">
         <h4 className="text-lg font-bold text-foreground">Project Info</h4>
         {step >= 7 && (
@@ -979,25 +995,29 @@ const Scene4Animation = ({ isActive }: { isActive: boolean }) => {
         {/* Package Field */}
         <div>
           <label className="text-xs text-secondary mb-1 block">Package</label>
-          <AnimatePresence>
+          <motion.div
+            animate={{
+              scale: step >= 2 ? 1 : 0.9,
+              opacity: step >= 2 ? 1 : (step === 1 ? 0.5 : 1),
+              borderColor: step === 1 ? 'rgba(59, 130, 246, 0.4)' : step >= 2 ? 'rgba(59, 130, 246, 1)' : 'rgb(229, 231, 235)'
+            }}
+            transition={{ duration: 0.3 }}
+            className={`p-2 rounded-lg h-10 flex items-center justify-center ${
+              step >= 2
+                ? 'bg-gradient-to-r from-blue-100 to-purple-100 border border-primary'
+                : 'border-2 border-dashed border-gray-200'
+            }`}
+            style={{ pointerEvents: step >= 2 ? 'auto' : 'none' }}
+          >
             {step >= 2 ? (
-              <motion.div
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                className="p-2 bg-gradient-to-r from-blue-100 to-purple-100 rounded-lg border border-primary flex items-center justify-between"
-              >
+              <div className="flex items-center justify-between w-full">
                 <span className="text-xs font-bold text-foreground">Full Wedding Package</span>
                 <span className="text-xs font-bold text-primary">$2,500</span>
-              </motion.div>
+              </div>
             ) : (
-              <motion.div
-                animate={{ borderColor: step === 1 ? 'rgba(59, 130, 246, 0.4)' : 'rgb(229, 231, 235)' }}
-                className="p-2 border-2 border-dashed border-gray-200 rounded-lg h-10 flex items-center justify-center"
-              >
-                <span className="text-xs text-gray-400">Drag from catalog</span>
-              </motion.div>
+              <span className="text-xs text-gray-400">Drag from catalog</span>
             )}
-          </AnimatePresence>
+          </motion.div>
         </div>
 
         {/* Add-on */}
@@ -1122,7 +1142,7 @@ const Scene5Animation = ({ isActive }: { isActive: boolean }) => {
   }, [isActive]);
 
   return (
-    <div className="relative aspect-[4/3] bg-gradient-to-br from-orange-50 to-pink-50 rounded-2xl shadow-2xl p-6 overflow-hidden">
+    <div className="relative aspect-[4/3] bg-gradient-to-br from-orange-50 to-pink-50 rounded-2xl shadow-2xl p-6 overflow-hidden" suppressHydrationWarning>
       {/* Tab Header */}
       <div className="flex items-center gap-2 mb-4 pb-3 border-b">
         <span className="text-xs px-2 py-1 bg-gray-100 rounded">Project Info</span>
@@ -1282,7 +1302,7 @@ const Scene6Animation = ({ isActive }: { isActive: boolean }) => {
   ];
 
   return (
-    <div className="relative aspect-[4/3] bg-gradient-to-br from-pink-50 to-purple-50 rounded-2xl shadow-2xl p-6 overflow-hidden">
+    <div className="relative aspect-[4/3] bg-gradient-to-br from-pink-50 to-purple-50 rounded-2xl shadow-2xl p-6 overflow-hidden" suppressHydrationWarning>
       <div className="flex items-center justify-between mb-4">
         <h4 className="text-lg font-bold text-foreground flex items-center gap-2">
           <Calendar className="w-5 h-5 text-primary" />
@@ -1351,288 +1371,260 @@ const Scene6Animation = ({ isActive }: { isActive: boolean }) => {
       </div>
 
       {/* Notification Settings Modal */}
-      <AnimatePresence>
-        {step >= 5 && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            className="absolute inset-x-4 bottom-4 bg-white rounded-xl shadow-2xl p-4 border-2 border-primary/20"
-          >
-            <div className="flex items-center justify-between mb-3">
-              <h5 className="text-sm font-bold text-foreground">Notification Settings</h5>
-              <Bell className="w-4 h-4 text-primary" />
-            </div>
+      <motion.div
+        animate={{
+          opacity: step >= 5 ? 1 : 0,
+          scale: step >= 5 ? 1 : 0.9,
+          y: step >= 5 ? 0 : 20
+        }}
+        transition={{ duration: 0.3 }}
+        style={{ pointerEvents: step >= 5 ? 'auto' : 'none' }}
+        className="absolute inset-x-4 bottom-4 bg-white rounded-xl shadow-2xl p-4 border-2 border-primary/20"
+      >
+        <div className="flex items-center justify-between mb-3">
+          <h5 className="text-sm font-bold text-foreground">Notification Settings</h5>
+          <Bell className="w-4 h-4 text-primary" />
+        </div>
 
-            <motion.label
+        <motion.label
+          animate={{
+            backgroundColor: step >= 6 ? 'rgba(59, 130, 246, 0.05)' : 'transparent'
+          }}
+          className="flex items-center gap-3 p-2 rounded-lg cursor-pointer"
+        >
+          <div className={`w-10 h-5 rounded-full transition-colors ${
+            step >= 6 ? 'bg-primary' : 'bg-gray-300'
+          } relative`}>
+            <motion.div
               animate={{
-                backgroundColor: step >= 6 ? 'rgba(59, 130, 246, 0.05)' : 'transparent'
+                left: step >= 6 ? '20px' : '2px'
               }}
-              className="flex items-center gap-3 p-2 rounded-lg cursor-pointer"
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
+              className="absolute top-0.5 w-4 h-4 bg-white rounded-full shadow-sm"
+            />
+          </div>
+          <span className="text-xs text-foreground">Notify me when status = Uploaded</span>
+          {step >= 6 && (
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              className="ml-auto"
             >
-              <div className={`w-10 h-5 rounded-full transition-colors ${
-                step >= 6 ? 'bg-primary' : 'bg-gray-300'
-              } relative`}>
-                <motion.div
-                  animate={{
-                    left: step >= 6 ? '20px' : '2px'
-                  }}
-                  transition={{ duration: 0.3, ease: 'easeInOut' }}
-                  className="absolute top-0.5 w-4 h-4 bg-white rounded-full shadow-sm"
-                />
-              </div>
-              <span className="text-xs text-foreground">Notify me when status = Uploaded</span>
-              {step >= 6 && (
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  className="ml-auto"
-                >
-                  <CheckCircle className="w-4 h-4 text-green-500" />
-                </motion.div>
-              )}
-            </motion.label>
+              <CheckCircle className="w-4 h-4 text-green-500" />
+            </motion.div>
+          )}
+        </motion.label>
 
-            {step >= 7 && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="mt-2 text-xs text-green-600 font-medium flex items-center gap-1"
-              >
-                <CheckCircle className="w-3 h-3" />
-                Alert set successfully
-              </motion.div>
-            )}
+        {step >= 7 && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-2 text-xs text-green-600 font-medium flex items-center gap-1"
+          >
+            <CheckCircle className="w-3 h-3" />
+            Alert set successfully
           </motion.div>
         )}
-      </AnimatePresence>
+      </motion.div>
     </div>
   );
 };
 
 const Scene7Animation = ({ isActive }: { isActive: boolean }) => {
   const [step, setStep] = useState(0);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    if (!isActive) {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isActive || !mounted) {
       setStep(0);
       return;
     }
 
     const timers = [
-      setTimeout(() => setStep(1), 200),   // Show project details
-      setTimeout(() => setStep(2), 500),   // Open status dropdown
-      setTimeout(() => setStep(3), 900),   // Select Client Approved
-      setTimeout(() => setStep(4), 1400),  // Toggle Editor Payment
-      setTimeout(() => setStep(5), 2000),  // Fade to dashboard
-      setTimeout(() => setStep(6), 2400),  // Show dashboard
-      setTimeout(() => setStep(7), 2800),  // Increment counter
-      setTimeout(() => setStep(8), 3200),  // Confetti/glow
+      setTimeout(() => setStep(1), 300),   // Show title "Brand Kit"
+      setTimeout(() => setStep(2), 600),   // Add video card
+      setTimeout(() => setStep(3), 1000),  // Add LUT pill
+      setTimeout(() => setStep(4), 1300),  // Add Music Library pill
+      setTimeout(() => setStep(5), 1600),  // Add Footage Folder pill
+      setTimeout(() => setStep(6), 1900),  // Add Photo Examples
     ];
 
     return () => timers.forEach(clearTimeout);
-  }, [isActive]);
+  }, [isActive, mounted]);
+
+  const brandItems = [
+    {
+      id: 1,
+      icon: '🎨',
+      label: 'LUT — Cinematic Base',
+      categoryColor: 'bg-purple-100 text-purple-700 border-purple-300',
+      show: step >= 3
+    },
+    {
+      id: 2,
+      icon: '🎵',
+      label: 'Music Library — Ambient',
+      categoryColor: 'bg-blue-100 text-blue-700 border-blue-300',
+      show: step >= 4
+    },
+    {
+      id: 3,
+      icon: '📁',
+      label: 'Footage Folder — Drive',
+      categoryColor: 'bg-green-100 text-green-700 border-green-300',
+      show: step >= 5
+    },
+    {
+      id: 4,
+      type: 'photos',
+      label: 'Photo Editing Examples',
+      categoryColor: 'bg-orange-100 text-orange-700 border-orange-300',
+      show: step >= 6
+    },
+  ];
+
+  if (!mounted) {
+    return (
+      <div className="relative aspect-[4/3] bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl shadow-2xl p-6 overflow-hidden">
+        <div className="flex items-center mb-4">
+          <h4 className="text-xl font-bold text-foreground flex items-center gap-2">
+            <Palette className="w-5 h-5 text-primary" />
+            Brand Kit
+          </h4>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="relative aspect-[4/3] bg-gradient-to-br from-purple-50 to-yellow-50 rounded-2xl shadow-2xl p-6 overflow-hidden">
-      <AnimatePresence mode="wait">
-        {step < 5 ? (
-          // Project Detail View
-          <motion.div
-            key="project"
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="space-y-4"
-          >
-            <h4 className="text-lg font-bold text-foreground mb-4">Emma & Ryan Project</h4>
+    <div className="relative aspect-[4/3] bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl shadow-2xl p-6 overflow-hidden" suppressHydrationWarning>
+      {/* Floating glow effect */}
+      <motion.div
+        animate={{
+          opacity: [0.3, 0.6, 0.3],
+          scale: [1, 1.1, 1],
+        }}
+        transition={{
+          duration: 4,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+        className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded-full blur-3xl"
+      />
 
-            {/* Status */}
-            <div>
-              <label className="text-xs text-secondary mb-1 block">Status</label>
-              {step < 3 ? (
-                <motion.div
-                  animate={{
-                    scale: step === 2 ? [1, 1.02, 1] : 1
-                  }}
-                  transition={{ duration: 0.5, repeat: step === 2 ? Infinity : 0 }}
-                  className="p-2 bg-yellow-50 border border-yellow-300 rounded-lg"
-                >
-                  <span className="text-xs px-2 py-1 bg-yellow-400 text-yellow-900 rounded font-medium">
-                    Ready for Client
-                  </span>
-                </motion.div>
-              ) : (
-                <motion.div
-                  initial={{ scale: 0.95 }}
-                  animate={{ scale: [0.95, 1.05, 1] }}
-                  className="p-2 bg-green-50 border border-green-300 rounded-lg"
-                >
-                  <span className="text-xs px-2 py-1 bg-green-500 text-white rounded font-medium flex items-center gap-1">
-                    <CheckCircle className="w-3 h-3" />
-                    Client Approved
-                  </span>
-                </motion.div>
-              )}
-            </div>
+      {/* Header */}
+      <div className="flex items-center mb-4">
+        <motion.h4
+          initial={{ opacity: 0, x: -20 }}
+          animate={step >= 1 ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
+          transition={{ duration: 0.4 }}
+          className="text-xl font-bold text-foreground flex items-center gap-2"
+        >
+          <Palette className="w-5 h-5 text-primary" />
+          Brand Kit
+        </motion.h4>
+      </div>
 
-            {/* Editor Payment */}
-            {step >= 4 && (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-              >
-                <label className="text-xs text-secondary mb-1 block">Editor Payment</label>
-                <motion.div
-                  animate={{
-                    backgroundColor: step >= 4 ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)'
-                  }}
-                  className="p-3 rounded-lg border-2 border-green-200"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <DollarSign className="w-4 h-4 text-green-600" />
-                      <span className="text-xs text-foreground font-medium">Maria (Editor)</span>
-                    </div>
-                    <motion.span
-                      animate={{
-                        color: step >= 4 ? 'rgb(22, 163, 74)' : 'rgb(220, 38, 38)'
-                      }}
-                      className="text-xs font-bold"
-                    >
-                      {step >= 4 ? 'Paid ✓' : 'Unpaid'}
-                    </motion.span>
-                  </div>
-                  {step >= 4 && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
-                      className="mt-2 text-xs text-green-600 font-medium"
-                    >
-                      Payment confirmed
-                    </motion.div>
-                  )}
-                </motion.div>
-              </motion.div>
-            )}
-          </motion.div>
-        ) : (
-          // Dashboard View
-          <motion.div
-            key="dashboard"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6 }}
-            className="space-y-4"
-          >
-            <h4 className="text-lg font-bold text-foreground mb-4">Dashboard</h4>
-
-            {/* Stats Cards */}
-            <div className="grid grid-cols-3 gap-3">
-              <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
-                <div className="text-xs text-secondary mb-1">Active</div>
-                <div className="text-2xl font-bold text-primary">8</div>
+      {/* Layout: Video left, items right */}
+      <div className="flex gap-3 h-[calc(100%-3rem)]">
+        {/* Video Card - Left side, 16:9 aspect ratio */}
+        <motion.div
+          animate={{
+            opacity: step >= 2 ? 1 : 0,
+            x: step >= 2 ? 0 : -20,
+            scale: step >= 2 ? 1 : 0.95
+          }}
+          transition={{
+            duration: 0.5,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+          className="flex-1 relative"
+          style={{ pointerEvents: step >= 2 ? 'auto' : 'none' }}
+        >
+          <div className="relative bg-white/90 backdrop-blur-sm rounded-lg overflow-hidden border-2 border-purple-200 shadow-lg h-full flex flex-col">
+            {/* Video thumbnail - 16:9 */}
+            <div className="relative flex-1 bg-gradient-to-br from-purple-500 to-pink-500">
+              <div className="absolute inset-0 flex items-center justify-center">
+                <Video className="w-10 h-10 text-white/80" />
               </div>
-              <div className="p-3 bg-orange-50 rounded-lg border border-orange-200">
-                <div className="text-xs text-secondary mb-1">In Progress</div>
-                <div className="text-2xl font-bold text-orange-600">5</div>
-              </div>
-              <motion.div
-                animate={{
-                  scale: step >= 7 ? [1, 1.08, 1] : 1,
-                  borderColor: step >= 8 ? 'rgb(34, 197, 94)' : 'rgb(187, 247, 208)'
-                }}
-                transition={{ duration: 0.5 }}
-                className="p-3 bg-green-50 rounded-lg border-2 border-green-200 relative overflow-hidden"
-              >
-                <div className="text-xs text-secondary mb-1">Ready</div>
-                <motion.div
-                  animate={{
-                    scale: step >= 7 ? [1, 1.2, 1] : 1
-                  }}
-                  className="text-2xl font-bold text-green-600"
-                >
-                  {step >= 7 ? '13' : '12'}
-                </motion.div>
 
-                {/* Glow effect */}
-                {step >= 8 && (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: [0, 0.5, 0] }}
-                    transition={{ duration: 1.5, repeat: 2 }}
-                    className="absolute inset-0 bg-green-400 rounded-lg"
-                    style={{ filter: 'blur(10px)' }}
-                  />
-                )}
-              </motion.div>
-            </div>
-
-            {/* Recent Projects */}
-            <div className="mt-4">
-              <div className="text-xs text-secondary mb-2">Recent Completions</div>
-              <div className="space-y-2">
-                {step >= 7 && (
-                  <motion.div
-                    initial={{ x: -20, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    className="p-2 bg-white rounded-lg border border-green-200 shadow-sm"
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-medium text-foreground">Emma & Ryan</span>
-                      <span className="text-xs px-2 py-1 bg-green-100 text-green-700 rounded font-medium">
-                        Completed
-                      </span>
-                    </div>
-                  </motion.div>
-                )}
-                <div className="p-2 bg-white rounded-lg border border-gray-200">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-medium text-foreground">Sarah & James</span>
-                    <span className="text-xs px-2 py-1 bg-green-100 text-green-700 rounded font-medium">
-                      Completed
-                    </span>
-                  </div>
+              {/* Play button overlay */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                  <div className="w-0 h-0 border-l-[16px] border-l-white border-t-[10px] border-t-transparent border-b-[10px] border-b-transparent ml-1" />
                 </div>
               </div>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
-      {/* Confetti sparkles */}
-      {step >= 8 && (
-        <div className="absolute inset-0 pointer-events-none">
-          {[...Array(15)].map((_, i) => (
-            <motion.div
-              key={i}
-              initial={{ y: -20, opacity: 1, scale: 0 }}
-              animate={{
-                y: [0, 300],
-                opacity: [1, 0],
-                scale: [0, 1, 0.5],
-                x: [0, (Math.random() - 0.5) * 200],
-                rotate: [0, Math.random() * 360],
-              }}
-              transition={{
-                duration: 1.5,
-                delay: Math.random() * 0.3,
-              }}
-              className="absolute"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: '50%',
-              }}
-            >
-              <div
-                className="w-2 h-2 rounded-full"
-                style={{
-                  backgroundColor: ['#3b82f6', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981'][i % 5],
+            {/* Label */}
+            <div className="p-2.5 bg-white">
+              <p className="text-xs font-semibold text-foreground text-center">
+                Example of style
+              </p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Brand Items - Right side as pills */}
+        <div className="flex flex-col gap-2 justify-center w-[45%]">
+          {brandItems.map((item, index) => {
+            const visibleItems = brandItems.filter(i => i.show);
+            const visibleIndex = visibleItems.findIndex(i => i.id === item.id);
+
+            return (
+              <motion.div
+                key={item.id}
+                animate={{
+                  opacity: item.show ? 1 : 0,
+                  x: item.show ? 0 : 20,
+                  scale: item.show ? 1 : 0.9
                 }}
-              />
-            </motion.div>
-          ))}
+                transition={{
+                  duration: 0.4,
+                  ease: [0.22, 1, 0.36, 1],
+                  delay: visibleIndex >= 0 ? visibleIndex * 0.1 : 0
+                }}
+                style={{ pointerEvents: item.show ? 'auto' : 'none' }}
+              >
+                {item.type === 'photos' ? (
+                  // Photo Examples Card
+                  <div className={`relative bg-white/80 backdrop-blur-sm rounded-lg p-2 border ${item.categoryColor} shadow-sm hover:shadow-md transition-all`}>
+                    <p className="text-[10px] font-semibold text-foreground mb-2">{item.label}</p>
+                    <div className="flex gap-1">
+                      {/* Photo thumbnails */}
+                      {[1, 2, 3].map((photoIndex) => (
+                        <div
+                          key={photoIndex}
+                          className="flex-1 aspect-square bg-gradient-to-br from-orange-200 to-pink-200 rounded border border-orange-300"
+                        >
+                          <div className="w-full h-full flex items-center justify-center text-xs opacity-60">
+                            📷
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  // Regular pill
+                  <div className={`relative bg-white/80 backdrop-blur-sm rounded-full px-3 py-2 border ${item.categoryColor} shadow-sm hover:shadow-md transition-all flex items-center gap-2`}>
+                    {/* Icon */}
+                    <span className="text-lg flex-shrink-0">{item.icon}</span>
+
+                    {/* Label */}
+                    <span className="text-[10px] font-semibold text-foreground truncate flex-1">
+                      {item.label}
+                    </span>
+                  </div>
+                )}
+              </motion.div>
+            );
+          })}
         </div>
-      )}
+      </div>
     </div>
   );
 };

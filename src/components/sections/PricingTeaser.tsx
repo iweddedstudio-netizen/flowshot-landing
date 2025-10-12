@@ -3,82 +3,21 @@
 import { useRef, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Check, Sparkles } from 'lucide-react';
+import { Heart } from 'lucide-react';
 import WaitlistModal from '@/components/modals/WaitlistModal';
-
-const pricingTiers = [
-  {
-    name: 'Solo',
-    description: 'For freelancers and small creators',
-    monthlyPrice: 29,
-    popular: false,
-    features: [
-      '1 user',
-      'Up to 50 projects/month',
-      '2 brands',
-      'Basic catalog',
-      'Kanban board & calendar',
-      '10 GB storage • upgrade anytime',
-    ],
-    cta: 'Try for free',
-    ctaVariant: 'outline' as const,
-  },
-  {
-    name: 'Studio',
-    description: 'For production teams and growing studios',
-    monthlyPrice: 99,
-    popular: true,
-    features: [
-      'Up to 10 users',
-      'Unlimited projects & brands',
-      'Full catalog with templates',
-      'Project Drawer + client chat (threaded)',
-      'Venue & crew management',
-      '100 GB storage',
-      'Roles & permissions',
-      'Priority support',
-    ],
-    cta: 'Try for free',
-    ctaVariant: 'default' as const,
-  },
-  {
-    name: 'Enterprise',
-    description: 'For agencies and larger organizations',
-    monthlyPrice: 0,
-    popular: false,
-    features: [
-      'Unlimited users',
-      'Everything in Studio +',
-      'Dedicated success manager',
-      'SSO / SAML authentication',
-      'Advanced audit logs',
-      '24/7 priority support',
-      'Custom integrations & API',
-      'Unlimited storage',
-      'SLA 99.9%',
-    ],
-    cta: 'Contact us',
-    ctaVariant: 'outline' as const,
-  },
-];
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
 const PricingTeaser = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
-  const [isYearly, setIsYearly] = useState(false);
   const [isWaitlistModalOpen, setIsWaitlistModalOpen] = useState(false);
-
-  const getPrice = (tier: typeof pricingTiers[0]) => {
-    if (tier.name === 'Enterprise') return 'Custom';
-    const yearlyPrice = Math.round(tier.monthlyPrice * 12 * 0.8); // 20% discount, rounded
-    return isYearly ? `$${yearlyPrice}` : `$${tier.monthlyPrice}`;
-  };
-
-  const getPeriod = (tier: typeof pricingTiers[0]) => {
-    if (tier.name === 'Enterprise') return '';
-    return isYearly ? '/year' : '/month';
-  };
+  const [isDonationDialogOpen, setIsDonationDialogOpen] = useState(false);
 
   return (
     <section
@@ -92,7 +31,7 @@ const PricingTeaser = () => {
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent/20 rounded-full blur-3xl" />
       </div>
 
-      <div className="container mx-auto px-4 max-w-7xl relative z-10">
+      <div className="container mx-auto px-4 max-w-4xl relative z-10">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -100,168 +39,110 @@ const PricingTeaser = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <h2 className="text-4xl md:text-5xl font-heading font-semibold text-foreground mb-4">
-            Choose your plan
+          <h2 className="text-4xl md:text-5xl font-heading font-bold text-foreground mb-4">
+            FlowShot is currently <span className="bg-gradient-to-r from-primary via-purple-600 to-pink-600 bg-clip-text text-transparent">free</span>
           </h2>
-          <p className="text-lg text-secondary max-w-2xl mx-auto">
-            Transparent pricing for studios of any size. Start your 14-day free trial — no credit card required.
-          </p>
         </motion.div>
 
-        {/* Billing Toggle */}
+        {/* Main Card */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="flex items-center justify-center gap-3 mb-12"
+          className="relative bg-white rounded-3xl shadow-2xl p-8 md:p-10 max-w-lg mx-auto"
         >
-          <span className={`text-sm transition-colors ${!isYearly ? 'text-foreground font-semibold' : 'text-secondary'}`}>Monthly</span>
-          <button
-            onClick={() => setIsYearly(!isYearly)}
-            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-              isYearly ? 'bg-primary' : 'bg-gray-200 hover:bg-gray-300'
-            }`}
-          >
-            <span className={`inline-block h-4 w-4 transform rounded-full bg-white shadow-sm transition-transform ${
-              isYearly ? 'translate-x-6' : 'translate-x-1'
-            }`} />
-          </button>
-          <span className={`text-sm transition-colors ${isYearly ? 'text-foreground font-semibold' : 'text-secondary'}`}>
-            Yearly <span className="text-primary font-semibold">(save 20%)</span>
-          </span>
-        </motion.div>
+          {/* Header */}
+          <div className="text-center mb-8">
+            <h3 className="text-2xl font-heading font-bold text-foreground mb-2">
+              Beta Access
+            </h3>
+            <p className="text-sm text-secondary">
+              Free for early adopters
+            </p>
+          </div>
 
-        {/* Pricing Cards */}
-        <div className="grid lg:grid-cols-3 gap-8 mb-12">
-          {pricingTiers.map((tier, index) => (
-            <motion.div
-              key={tier.name}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className={`relative bg-white rounded-3xl shadow-xl p-8 flex flex-col ${
-                tier.popular ? 'ring-2 ring-primary lg:scale-105' : ''
-              }`}
+          {/* Price */}
+          <div className="text-center mb-8">
+            <div className="flex items-baseline justify-center gap-1 mb-2">
+              <span className="text-6xl md:text-7xl font-heading font-black bg-gradient-to-r from-primary via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                $0
+              </span>
+              <span className="text-2xl text-secondary">/forever</span>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              During beta phase
+            </p>
+          </div>
+
+          {/* Description */}
+          <div className="space-y-4 text-base leading-relaxed text-secondary mb-8 border-t border-b py-8">
+            <p>
+              We're building FlowShot together with creators like you.
+            </p>
+            <p>
+              All features are unlocked — no limits, no credit card.
+            </p>
+            <p>
+              If you'd like to support the project, you can donate anytime.
+            </p>
+            <p className="text-sm text-muted-foreground">
+              In the future, we'll announce fair pricing — transparent, affordable, and built for creators.
+            </p>
+          </div>
+
+          {/* CTA Buttons */}
+          <div className="space-y-3">
+            <Button
+              size="lg"
+              className="w-full text-base py-6 rounded-xl shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all"
+              onClick={() => setIsWaitlistModalOpen(true)}
             >
-              {/* Popular Badge */}
-              {tier.popular && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                  <Badge className="bg-primary text-primary-foreground px-4 py-1.5 shadow-lg">
-                    <Sparkles className="w-3 h-3 mr-1" />
-                    Popular
-                  </Badge>
-                </div>
-              )}
-
-              {/* Header */}
-              <div className="mb-6">
-                <h3 className="text-2xl font-heading font-bold text-foreground mb-2">
-                  {tier.name}
-                </h3>
-                <p className="text-sm text-secondary leading-relaxed">
-                  {tier.description}
-                </p>
-              </div>
-
-              {/* Price */}
-              <div className="mb-8">
-                <div className="flex items-baseline gap-1">
-                  <span className="text-5xl font-heading font-bold text-foreground">
-                    {getPrice(tier)}
-                  </span>
-                  {getPeriod(tier) && (
-                    <span className="text-lg text-secondary">{getPeriod(tier)}</span>
-                  )}
-                </div>
-              </div>
-
-              {/* Features */}
-              <ul className="space-y-3 mb-8 flex-grow">
-                {tier.features.map((feature, featureIndex) => (
-                  <li key={featureIndex} className="flex items-start gap-3">
-                    <div className="flex-shrink-0 w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center mt-0.5">
-                      <Check className="w-3 h-3 text-primary" />
-                    </div>
-                    <span className="text-sm text-secondary leading-relaxed">
-                      {feature}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-
-              {/* CTA - always at bottom */}
-              <div className="mt-auto">
-                {tier.name === 'Enterprise' ? (
-                  <Button
-                    size="lg"
-                    variant={tier.ctaVariant}
-                    className="w-full rounded-xl"
-                    asChild
-                  >
-                    <a href="mailto:hello@flowshot.app">
-                      {tier.cta}
-                    </a>
-                  </Button>
-                ) : (
-                  <Button
-                    size="lg"
-                    variant={tier.ctaVariant}
-                    className="w-full rounded-xl"
-                    onClick={() => setIsWaitlistModalOpen(true)}
-                  >
-                    {tier.cta}
-                  </Button>
-                )}
-                {tier.name !== 'Enterprise' && (
-                  <p className="text-xs text-muted-foreground text-center mt-3">
-                    14-day free trial — no card required
-                  </p>
-                )}
-              </div>
-            </motion.div>
-          ))}
-        </div>
+              Get Started Free
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              className="w-full text-base py-6 rounded-xl border-2 border-primary/30 hover:bg-primary/10 transition-all"
+              onClick={() => setIsDonationDialogOpen(true)}
+            >
+              <Heart className="w-4 h-4 mr-2" />
+              Support the Project
+            </Button>
+          </div>
+        </motion.div>
 
         {/* Additional Info */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-center"
+          className="text-center mt-8"
         >
-          <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-8 max-w-3xl mx-auto">
-            <p className="text-sm text-secondary mb-6">
-              All plans include a 14-day free trial. No credit card required.
-              <br />
-              Cancel anytime and export your data with one click.
-            </p>
-
-            <div className="flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">
-              <span className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-green-500" />
-                14 days free
-              </span>
-              <span className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-green-500" />
-                No card required
-              </span>
-              <span className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-green-500" />
-                Cancel anytime
-              </span>
-              <span className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-green-500" />
-                Data export
-              </span>
-            </div>
-          </div>
+          <p className="text-sm text-muted-foreground">
+            No credit card required • Cancel anytime • Full data export
+          </p>
         </motion.div>
       </div>
 
       {/* Waitlist Modal */}
       <WaitlistModal isOpen={isWaitlistModalOpen} onClose={() => setIsWaitlistModalOpen(false)} />
+
+      {/* Donation Dialog */}
+      <Dialog open={isDonationDialogOpen} onOpenChange={setIsDonationDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-2xl flex items-center gap-2">
+              <Heart className="w-6 h-6 text-primary" />
+              Thank You!
+            </DialogTitle>
+            <DialogDescription className="text-base leading-relaxed pt-4">
+              We truly appreciate your interest in supporting FlowShot!
+              <br /><br />
+              We're currently setting up donation options and will announce them very soon. Stay tuned!
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 };
