@@ -49,9 +49,14 @@ const Hero = () => {
             {/* Headline */}
             <motion.h1
               variants={fadeUp}
-              className="text-3xl md:text-4xl lg:text-5xl font-heading font-semibold text-foreground leading-[1.05] tracking-tight mx-auto lg:mx-0 uppercase"
+              className="font-heading font-semibold text-foreground tracking-tight mx-auto lg:mx-0 uppercase"
             >
-              Workflow platform for photo & video projects
+              <div className="text-4xl md:text-5xl lg:text-6xl leading-[1.1]">
+                Workflow platform
+              </div>
+              <div className="text-2xl md:text-3xl lg:text-4xl leading-[1.1] mt-2">
+                for photo & video projects
+              </div>
             </motion.h1>
 
             {/* Subheadline */}
