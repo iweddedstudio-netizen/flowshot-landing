@@ -5,8 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import {
-  Plus, Users, Package, MessageSquare,
-  FileText, Calendar, Bell, CheckCircle, Video, DollarSign
+  Plus, Package, MessageSquare, Users,
+  Calendar, Bell, CheckCircle, Video, DollarSign
 } from 'lucide-react';
 
 // Register GSAP plugins
@@ -44,50 +44,35 @@ const scenes = [
     background: sceneBackgrounds[1],
   },
   {
-    id: 3,
-    title: "Add Team",
-    caption: "Invite editors, second shooters, or assistants.",
-    subCaption: "Everyone has role-based access.",
-    icon: Users,
-    background: sceneBackgrounds[2],
-  },
-  {
     id: 4,
-    title: "Manage Project Details",
-    caption: "Drag packages, add-ons, and set output profiles in one place.",
-    subCaption: "Everything linked from your Offer Catalog.",
-    icon: FileText,
-    background: sceneBackgrounds[3],
-  },
-  {
-    id: 5,
     title: "Collaborate & Review",
     caption: "Preview videos, leave timeline comments, and update status in real time.",
     subCaption: "Team communication that stays synced.",
     icon: MessageSquare,
-    background: sceneBackgrounds[4],
+    background: sceneBackgrounds[3],
   },
   {
-    id: 6,
+    id: 5,
     title: "Schedule & Notify",
     caption: "Calendar view with smart notifications for every deadline.",
     subCaption: "Never miss an editing deadline or client approval.",
     icon: Calendar,
-    background: sceneBackgrounds[5],
+    background: sceneBackgrounds[4],
   },
   {
-    id: 7,
+    id: 6,
     title: "Approve & Complete",
     caption: "Mark client approval, confirm payments, and celebrate completion.",
     subCaption: "Your dashboard updates automatically.",
     icon: CheckCircle,
-    background: sceneBackgrounds[6],
+    background: sceneBackgrounds[5],
   },
 ];
 
 const ProjectJourney = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [currentScene, setCurrentScene] = useState(0);
+  const [scrollProgress, setScrollProgress] = useState(0); // 0-1 progress through current scene
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   // Detect reduced motion preference
@@ -134,7 +119,12 @@ const ProjectJourney = () => {
           // Calculate which scene should be active based on progress
           const progress = self.progress;
           const newScene = Math.min(Math.floor(progress * totalScenes), totalScenes - 1);
+
+          // Calculate progress within current scene (0-1)
+          const sceneProgress = (progress * totalScenes) % 1;
+
           setCurrentScene(newScene);
+          setScrollProgress(sceneProgress);
         },
       },
     });
@@ -160,6 +150,7 @@ const ProjectJourney = () => {
       ref={sectionRef}
       id="project-journey"
       className="relative w-full h-screen overflow-hidden bg-gradient-to-br from-gray-50 via-white to-gray-50"
+      style={{ touchAction: 'pan-y' }}
     >
       {/* Header - Always visible */}
       <div className="absolute top-8 md:top-12 left-0 right-0 z-20 container mx-auto px-4 max-w-7xl text-center pointer-events-none">
@@ -176,11 +167,46 @@ const ProjectJourney = () => {
       </div>
 
       {/* Scenes Container - Scenes overlay each other */}
-      <div className="absolute inset-0 flex items-center justify-center pt-32 md:pt-40">
+      <div
+        className="absolute inset-0 flex items-center justify-center pt-32 md:pt-40"
+        style={{
+          touchAction: 'pan-y',
+          WebkitOverflowScrolling: 'touch'
+        }}
+      >
         {scenes.map((scene, index) => {
           const isActive = currentScene === index;
           const isPast = index < currentScene;
           const isFuture = index > currentScene;
+
+          // Calculate smooth opacity for crossfade effect
+          let opacity = 0;
+          if (isActive) {
+            // Current scene: always visible, fade in after first scene
+            if (index === 0 && currentScene === 0) {
+              // First scene starts at full opacity
+              opacity = 1;
+            } else if (index === scenes.length - 1 && currentScene === scenes.length - 1) {
+              // Last scene stays at full opacity
+              opacity = 1;
+            } else {
+              // Other scenes: fade in as we scroll through them
+              opacity = 0.3 + (scrollProgress * 0.7); // 0.3 to 1.0
+            }
+          } else if (index === currentScene - 1) {
+            // Previous scene: fade out as we leave it (except last scene)
+            if (index === scenes.length - 1) {
+              opacity = 1; // Last scene stays visible
+            } else {
+              opacity = 0.3 * (1 - scrollProgress); // 0.3 to 0
+            }
+          } else if (index === currentScene + 1) {
+            // Next scene: start fading in slightly
+            opacity = 0.1 * scrollProgress; // 0 to 0.1
+          } else if (isPast && index === scenes.length - 1) {
+            // Last scene stays visible after completion
+            opacity = 1;
+          }
 
           return (
             <motion.div
@@ -188,13 +214,14 @@ const ProjectJourney = () => {
               className="absolute inset-0 w-full h-full flex items-center justify-center px-4"
               initial={false}
               animate={{
-                opacity: isActive ? 1 : 0,
-                scale: isActive ? 1 : isFuture ? 1.1 : 0.95,
-                y: isActive ? 0 : isFuture ? 50 : -50,
+                opacity,
+                scale: isActive ? 1 : isFuture ? 1.05 : 0.98,
+                y: isActive ? 0 : isFuture ? 30 : -30,
               }}
               transition={{
-                duration: 0.6,
-                ease: 'easeInOut',
+                opacity: { duration: 0.1 },
+                scale: { duration: 0.6, ease: 'easeInOut' },
+                y: { duration: 0.6, ease: 'easeInOut' },
               }}
               style={{
                 pointerEvents: isActive ? 'auto' : 'none',
@@ -210,25 +237,151 @@ const ProjectJourney = () => {
         })}
       </div>
 
-      {/* Progress Indicator */}
-      <div className="absolute bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2 z-20 flex gap-2">
-        {scenes.map((_, index) => (
-          <motion.div
-            key={index}
-            animate={{
-              width: currentScene === index ? 32 : 8,
-              backgroundColor: currentScene === index ? '#3b82f6' : '#d1d5db',
-            }}
-            transition={{ duration: 0.3 }}
-            className="h-2 rounded-full"
-          />
-        ))}
+      {/* Vertical Progress Indicator - Desktop only */}
+      <div className="hidden md:block absolute right-8 top-1/2 -translate-y-1/2 z-20">
+        <div className="flex flex-col items-center gap-3">
+          {scenes.map((scene, index) => {
+            const isActive = currentScene === index;
+            const isPast = index < currentScene;
+            const Icon = scene.icon;
+
+            return (
+              <div key={index} className="relative flex items-center gap-3">
+                {/* Line connector with gradient fill */}
+                {index < scenes.length - 1 && (
+                  <div className="absolute left-1/2 top-full -translate-x-1/2 w-0.5 h-3 bg-gray-300 overflow-hidden rounded-full">
+                    <motion.div
+                      className="w-full bg-gradient-to-b from-primary via-purple-600 to-pink-600"
+                      initial={{ height: '0%' }}
+                      animate={{
+                        height: isPast ? '100%' : isActive ? `${scrollProgress * 100}%` : '0%'
+                      }}
+                      transition={{
+                        duration: 0.05,
+                        ease: "linear"
+                      }}
+                    />
+                  </div>
+                )}
+
+                {/* Scene dot with icon */}
+                <div className="relative w-10 h-10">
+                  {/* Background gray circle */}
+                  <div className="absolute inset-0 rounded-full bg-gray-200 shadow-lg" />
+
+                  {/* Gradient fill circle - liquid animation */}
+                  <motion.div
+                    className="absolute inset-0 rounded-full bg-gradient-to-br from-primary via-purple-600 to-pink-600 shadow-lg overflow-hidden"
+                    initial={{ clipPath: 'inset(100% 0% 0% 0%)' }}
+                    animate={{
+                      clipPath: isPast
+                        ? 'inset(0% 0% 0% 0%)'
+                        : isActive
+                          ? `inset(${(1 - scrollProgress) * 100}% 0% 0% 0%)`
+                          : 'inset(100% 0% 0% 0%)',
+                      scale: isActive ? 1.15 : 1,
+                    }}
+                    transition={{
+                      clipPath: { duration: 0.05, ease: "linear" },
+                      scale: { duration: 0.3, ease: "easeOut" }
+                    }}
+                  />
+
+                  {/* Icon */}
+                  <div className="absolute inset-0 flex items-center justify-center z-10">
+                    <Icon className={`w-5 h-5 transition-colors ${
+                      isPast || (isActive && scrollProgress > 0.5) ? 'text-white' : 'text-gray-400'
+                    }`} />
+                  </div>
+
+                  {/* Circular progress ring for active scene */}
+                  {isActive && (
+                    <svg className="absolute inset-0 w-full h-full -rotate-90 z-20">
+                      <defs>
+                        <linearGradient id={`gradient-${index}`} x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="#3b82f6" />
+                          <stop offset="50%" stopColor="#9333ea" />
+                          <stop offset="100%" stopColor="#ec4899" />
+                        </linearGradient>
+                      </defs>
+                      <circle
+                        cx="20"
+                        cy="20"
+                        r="18"
+                        fill="none"
+                        stroke={`url(#gradient-${index})`}
+                        strokeWidth="2"
+                        strokeDasharray={`${2 * Math.PI * 18}`}
+                        strokeDashoffset={`${2 * Math.PI * 18 * (1 - scrollProgress)}`}
+                        className="transition-all duration-50"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
 
-      {/* Scene Counter */}
-      <div className="absolute bottom-6 md:bottom-8 right-4 md:right-8 z-20 text-sm font-medium text-secondary">
+      {/* Bottom Progress Dots with larger touch target on mobile */}
+      <div className="absolute bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2 z-20 flex gap-2 md:py-0 py-4">
+        {scenes.map((_, index) => {
+          const isActive = currentScene === index;
+          const isPast = index < currentScene;
+
+          return (
+            <div key={index} className="relative h-2 flex items-center">
+              {/* Background gray dot */}
+              <motion.div
+                animate={{
+                  width: isActive ? 32 : 8,
+                }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                className="h-2 rounded-full bg-gray-300 overflow-hidden shadow-sm"
+              >
+                {/* Gradient fill with liquid effect */}
+                <motion.div
+                  className="h-full bg-gradient-to-r from-primary via-purple-600 to-pink-600"
+                  initial={{ width: '0%' }}
+                  animate={{
+                    width: isPast ? '100%' : isActive ? `${scrollProgress * 100}%` : '0%'
+                  }}
+                  transition={{
+                    duration: 0.05,
+                    ease: "linear"
+                  }}
+                />
+              </motion.div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Scene Counter - Mobile only */}
+      <div className="md:hidden absolute bottom-6 right-4 z-20 text-sm font-medium text-secondary">
         {currentScene + 1} / {scenes.length}
       </div>
+
+      {/* Mobile Scroll Hint - Only on first scene */}
+      {currentScene === 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: [0.4, 1, 0.4], y: [0, 8, 0] }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+          className="md:hidden absolute bottom-20 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2 pointer-events-none"
+        >
+          <span className="text-xs text-secondary font-medium">Swipe to explore</span>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-primary">
+            <path d="M12 5v14M19 12l-7 7-7-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </motion.div>
+      )}
     </section>
   );
 };
@@ -279,11 +432,9 @@ const Scene = ({ scene, index, isActive }: SceneProps) => {
         >
           {index === 0 && <Scene1Animation isActive={isActive} />}
           {index === 1 && <Scene2Animation isActive={isActive} />}
-          {index === 2 && <Scene3Animation isActive={isActive} />}
-          {index === 3 && <Scene4Animation isActive={isActive} />}
-          {index === 4 && <Scene5Animation isActive={isActive} />}
-          {index === 5 && <Scene6Animation isActive={isActive} />}
-          {index === 6 && <Scene7Animation isActive={isActive} />}
+          {index === 2 && <Scene5Animation isActive={isActive} />}
+          {index === 3 && <Scene6Animation isActive={isActive} />}
+          {index === 4 && <Scene7Animation isActive={isActive} />}
         </motion.div>
       </div>
     </div>

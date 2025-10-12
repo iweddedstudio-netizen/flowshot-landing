@@ -258,14 +258,6 @@ const FeatureCard = ({ feature, index }: { feature: typeof features[0]; index: n
       className="relative group"
     >
       <div className="relative bg-white rounded-3xl p-8 shadow-xl border border-gray-100 overflow-hidden h-full transition-all duration-300 hover:shadow-2xl hover:scale-[1.02]">
-        {/* Gradient overlay */}
-        <div className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-5 transition-opacity duration-300`} />
-
-        {/* Static icon */}
-        <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${feature.color} flex items-center justify-center mb-6 shadow-lg`}>
-          <Icon className="w-8 h-8 text-white" />
-        </div>
-
         {/* Content */}
         <h3 className="text-2xl font-heading font-semibold text-foreground mb-3">
           {feature.title}

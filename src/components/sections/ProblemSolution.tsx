@@ -1,11 +1,12 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView, useScroll, useTransform } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import SplitType from 'split-type';
 import { Package, Calendar, Shield } from 'lucide-react';
+import Image from 'next/image';
 
 // Register GSAP plugin
 if (typeof window !== 'undefined') {
@@ -16,6 +17,13 @@ const ProblemSolution = () => {
   const headlineRef = useRef<HTMLHeadingElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.3 });
+
+  // Parallax effect for background
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"]
+  });
+  const y = useTransform(scrollYProgress, [0, 1], ['-20%', '20%']);
 
   useEffect(() => {
     // Check for reduced motion preference
@@ -69,14 +77,33 @@ const ProblemSolution = () => {
     <section
       ref={sectionRef}
       id="problem-solution"
-      className="py-24 bg-white"
+      className="py-24 relative overflow-hidden"
     >
-      <div className="container mx-auto px-4 max-w-7xl">
+      {/* Background Image with Parallax */}
+      <div className="absolute inset-0 z-0 overflow-hidden">
+        <motion.div
+          style={{ y }}
+          className="absolute w-full h-[140%] -top-[20%]"
+        >
+          <Image
+            src="/images/problem-background.jpg"
+            alt="Problem background"
+            fill
+            className="object-cover"
+            quality={90}
+            priority={false}
+          />
+        </motion.div>
+        {/* Dark overlay for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-900/50 via-slate-900/45 to-slate-900/50" />
+      </div>
+
+      <div className="container mx-auto px-4 max-w-7xl relative z-10">
         {/* Problem Statement */}
         <div className="text-center mb-16">
           <h2
             ref={headlineRef}
-            className="text-4xl md:text-5xl lg:text-6xl font-heading font-semibold text-foreground leading-tight max-w-4xl mx-auto"
+            className="text-4xl md:text-5xl lg:text-6xl font-heading font-semibold text-white leading-tight max-w-4xl mx-auto"
           >
             Stop juggling tools and chats
           </h2>
@@ -92,12 +119,10 @@ const ProblemSolution = () => {
           {/* Offer Catalog */}
           <motion.div
             variants={fadeUp}
-            className="group"
+            className="group p-8 rounded-2xl bg-white/90 backdrop-blur-sm border border-white/10 shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5)] transition-all duration-300"
           >
             <div className="mb-6">
-              <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-all duration-300 group-hover:scale-105">
-                <Package className="w-7 h-7 text-primary transition-all duration-300 group-hover:scale-110 group-hover:text-primary/80" />
-              </div>
+              <Package className="w-8 h-8 text-slate-700 transition-colors duration-300 group-hover:text-primary" strokeWidth={1.5} />
             </div>
             <h3 className="text-2xl font-heading font-semibold text-foreground mb-3">
               Offer Catalog
@@ -110,12 +135,10 @@ const ProblemSolution = () => {
           {/* Unified Timeline */}
           <motion.div
             variants={fadeUp}
-            className="group"
+            className="group p-8 rounded-2xl bg-white/90 backdrop-blur-sm border border-white/10 shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5)] transition-all duration-300"
           >
             <div className="mb-6">
-              <div className="w-14 h-14 rounded-2xl bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-all duration-300 group-hover:scale-105">
-                <Calendar className="w-7 h-7 text-accent transition-all duration-300 group-hover:scale-110 group-hover:text-accent/80" />
-              </div>
+              <Calendar className="w-8 h-8 text-slate-700 transition-colors duration-300 group-hover:text-primary" strokeWidth={1.5} />
             </div>
             <h3 className="text-2xl font-heading font-semibold text-foreground mb-3">
               Unified Timeline
@@ -128,12 +151,10 @@ const ProblemSolution = () => {
           {/* Role-based Invites */}
           <motion.div
             variants={fadeUp}
-            className="group md:col-span-2 lg:col-span-1"
+            className="group md:col-span-2 lg:col-span-1 p-8 rounded-2xl bg-white/90 backdrop-blur-sm border border-white/10 shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5)] transition-all duration-300"
           >
             <div className="mb-6">
-              <div className="w-14 h-14 rounded-2xl bg-green-100 flex items-center justify-center group-hover:bg-green-200 transition-all duration-300 group-hover:scale-105">
-                <Shield className="w-7 h-7 text-green-600 transition-all duration-300 group-hover:scale-110 group-hover:text-green-700" />
-              </div>
+              <Shield className="w-8 h-8 text-slate-700 transition-colors duration-300 group-hover:text-primary" strokeWidth={1.5} />
             </div>
             <h3 className="text-2xl font-heading font-semibold text-foreground mb-3">
               Role-based Invites

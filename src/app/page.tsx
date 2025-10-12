@@ -4,7 +4,6 @@ import ProjectJourney from '@/components/sections/ProjectJourney';
 import UseCases from '@/components/sections/UseCases';
 import StandoutFeatures from '@/components/sections/StandoutFeatures';
 import FeatureDeepDive from '@/components/sections/FeatureDeepDive';
-import Security from '@/components/sections/Security';
 import Integrations from '@/components/sections/Integrations';
 import FounderStory from '@/components/sections/FounderStory';
 import PricingTeaser from '@/components/sections/PricingTeaser';
@@ -67,22 +66,19 @@ export default function Home() {
       {/* 6. Feature Deep Dive */}
       <FeatureDeepDive />
 
-      {/* 7. Security */}
-      <Security />
-
-      {/* 8. Integrations */}
+      {/* 7. Integrations */}
       <Integrations />
 
-      {/* 9. Founder Story */}
+      {/* 8. Founder Story */}
       <FounderStory />
 
-      {/* 10. Pricing Teaser */}
+      {/* 9. Pricing Teaser */}
       <PricingTeaser />
 
-      {/* 11. FAQ */}
+      {/* 10. FAQ */}
       <FAQ />
 
-      {/* 12. Final CTA */}
+      {/* 11. Final CTA */}
       <FinalCTA />
 
         {/* Footer */}
