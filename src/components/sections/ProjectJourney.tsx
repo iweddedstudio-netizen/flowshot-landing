@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useEffect, useState } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import {
@@ -86,15 +86,6 @@ const ProjectJourney = () => {
   const [scrollProgress, setScrollProgress] = useState(0); // 0-1 progress through current scene
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
-  // Параллакс эффект для фона
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"]
-  });
-
-  // Фон движется медленнее контента, создавая эффект глубины
-  const backgroundY = useTransform(scrollYProgress, [0, 1], [0, -150]);
-
   // Detect reduced motion preference
   useEffect(() => {
     const checkMotion = () => {
@@ -173,18 +164,15 @@ const ProjectJourney = () => {
       style={{ touchAction: 'pan-y' }}
       suppressHydrationWarning
     >
-      {/* Параллакс фон - движется медленнее, создавая эффект глубины */}
-      <motion.div
-        style={{ y: prefersReducedMotion ? 0 : backgroundY }}
-        className="absolute inset-0 w-full h-[120%] -top-[10%] bg-gradient-to-br from-gray-900 via-gray-950 to-black"
-      >
+      {/* Static background - optimized for mobile */}
+      <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-950 to-black">
         {/* Gradient overlays for visual interest */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
-          <div className="absolute top-1/3 right-1/4 w-80 h-80 bg-purple-600/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-1/4 left-1/3 w-72 h-72 bg-pink-600/10 rounded-full blur-3xl" />
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
+          <div className="absolute top-1/3 right-1/4 w-80 h-80 bg-purple-600/5 rounded-full blur-3xl" />
+          <div className="absolute bottom-1/4 left-1/3 w-72 h-72 bg-pink-600/5 rounded-full blur-3xl" />
         </div>
-      </motion.div>
+      </div>
 
       {/* Header - Always visible */}
       <div className="absolute top-20 md:top-24 left-0 right-0 z-20 container mx-auto px-4 max-w-7xl text-center pointer-events-none">

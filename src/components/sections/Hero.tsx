@@ -31,55 +31,22 @@ const Hero = () => {
       id="hero"
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
     >
-      {/* Parallax Gradient Background */}
-      <motion.div
+      {/* Static Gradient Background */}
+      <div
         className="absolute inset-0 pointer-events-none"
         style={{
           background: 'linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%)',
-          opacity: 0.15,
-        }}
-        initial={{ scale: 1.1 }}
-        animate={{
-          scale: [1.1, 1.2, 1.1],
-          rotate: [0, 2, 0]
-        }}
-        transition={{
-          duration: 20,
-          repeat: Infinity,
-          ease: "easeInOut"
+          opacity: 0.1,
         }}
       />
 
       {/* Overlay gradient for smooth blend */}
-      <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/50 to-background pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/70 to-background pointer-events-none" />
 
-      {/* Subtle decorative blurs */}
+      {/* Subtle decorative blurs - static */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <motion.div
-          className="absolute top-20 right-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl"
-          animate={{
-            y: [0, -30, 0],
-            x: [0, 20, 0]
-          }}
-          transition={{
-            duration: 15,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
-        <motion.div
-          className="absolute bottom-20 left-1/4 w-96 h-96 bg-accent/10 rounded-full blur-3xl"
-          animate={{
-            y: [0, 30, 0],
-            x: [0, -20, 0]
-          }}
-          transition={{
-            duration: 18,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 1
-          }}
-        />
+        <div className="absolute top-20 right-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 left-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl" />
       </div>
 
       <div className="container mx-auto px-4 py-20 lg:py-32 relative z-10">
@@ -94,10 +61,10 @@ const Hero = () => {
             variants={fadeUp}
             className="font-heading mx-auto"
           >
-            <div className="text-6xl md:text-7xl lg:text-8xl leading-[1.1] uppercase font-black tracking-[0.15em] bg-gradient-to-r from-primary via-purple-600 to-pink-600 bg-clip-text text-transparent">
+            <div className="text-5xl md:text-7xl lg:text-8xl leading-[1.1] uppercase font-black tracking-tight md:tracking-wide lg:tracking-[0.15em] bg-gradient-to-r from-primary via-purple-600 to-pink-600 bg-clip-text text-transparent">
               Workflow
             </div>
-            <div className="text-2xl md:text-3xl lg:text-4xl leading-[1.1] mt-2 lowercase first-letter:uppercase font-semibold text-foreground">
+            <div className="text-xl md:text-3xl lg:text-4xl leading-[1.1] mt-2 lowercase first-letter:uppercase font-semibold text-foreground">
               built for photo & video projects
             </div>
           </motion.h1>

@@ -1,11 +1,11 @@
 'use client';
 
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Lock, Youtube, Mail } from 'lucide-react';
 import VideoModal from '@/components/modals/VideoModal';
 import WaitlistModal from '@/components/modals/WaitlistModal';
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -19,73 +19,22 @@ const FinalCTA = () => {
   const [isWaitlistModalOpen, setIsWaitlistModalOpen] = useState(false);
   const [isSocialDialogOpen, setIsSocialDialogOpen] = useState(false);
 
-  // Parallax effect for background
-  const sectionRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"]
-  });
-
-  // Background moves slower than content, creating depth effect
-  const backgroundY = useTransform(scrollYProgress, [0, 1], [0, -100]);
-
   return (
-    <section ref={sectionRef} id="cta" className="relative py-32 overflow-hidden">
-      {/* Parallax background - moves slower, creating depth effect */}
-      <motion.div
-        style={{ y: backgroundY }}
-        className="absolute inset-0 w-full h-[120%] -top-[10%]"
-      >
+    <section id="cta" className="relative py-32 overflow-hidden">
+      {/* Static background - optimized for mobile */}
+      <div className="absolute inset-0">
         {/* Dark gradient background */}
         <div className="absolute inset-0 bg-black" />
         <div className="absolute inset-0 bg-gradient-to-br from-blue-950/30 via-cyan-950/20 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-tl from-indigo-950/25 via-transparent to-blue-950/20" />
 
-        {/* Animated gradient orbs for depth */}
+        {/* Static gradient orbs for depth */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <motion.div
-            animate={{
-              x: [0, 100, 0],
-              y: [0, 50, 0],
-              scale: [1, 1.1, 1],
-            }}
-            transition={{
-              duration: 20,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-            className="absolute w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-500/20 via-cyan-500/10 to-transparent blur-3xl -top-40 -left-40"
-          />
-          <motion.div
-            animate={{
-              x: [0, -80, 0],
-              y: [0, 100, 0],
-              scale: [1, 1.15, 1],
-            }}
-            transition={{
-              duration: 25,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: 2,
-            }}
-            className="absolute w-[700px] h-[700px] rounded-full bg-gradient-to-br from-purple-500/25 via-pink-500/15 to-transparent blur-3xl top-20 right-0"
-          />
-          <motion.div
-            animate={{
-              x: [0, -50, 0],
-              y: [0, -80, 0],
-              scale: [1, 1.2, 1],
-            }}
-            transition={{
-              duration: 30,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: 5,
-            }}
-            className="absolute w-[500px] h-[500px] rounded-full bg-gradient-to-br from-orange-500/20 via-rose-500/12 to-transparent blur-3xl bottom-0 left-1/3"
-          />
+          <div className="absolute w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-500/10 via-cyan-500/5 to-transparent blur-3xl -top-40 -left-40" />
+          <div className="absolute w-[700px] h-[700px] rounded-full bg-gradient-to-br from-purple-500/12 via-pink-500/8 to-transparent blur-3xl top-20 right-0" />
+          <div className="absolute w-[500px] h-[500px] rounded-full bg-gradient-to-br from-orange-500/10 via-rose-500/6 to-transparent blur-3xl bottom-0 left-1/3" />
         </div>
-      </motion.div>
+      </div>
 
       <div className="container mx-auto px-4 max-w-5xl relative z-10">
         <motion.div
@@ -96,7 +45,7 @@ const FinalCTA = () => {
           className="text-center text-white"
         >
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-semibold mb-6 leading-tight">
-            Start your <span className="font-bold bg-gradient-to-r from-primary via-purple-600 to-pink-600 bg-clip-text text-transparent">FlowShot</span> today.
+            Start your <span className="font-bold bg-gradient-to-r from-primary via-purple-600 to-pink-600 bg-clip-text text-transparent tracking-wide">FlowShot</span> today.
           </h2>
 
           <p className="text-xl md:text-2xl mb-10 text-gray-300 leading-relaxed max-w-3xl mx-auto">

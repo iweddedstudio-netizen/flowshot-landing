@@ -46,7 +46,7 @@ const ProblemItem = ({ problem, Icon, isEven }: any) => {
 
       {/* Content Side */}
       <div className={`flex-1 ${isEven ? 'text-left' : 'text-right'}`}>
-        <h3 className="text-2xl md:text-3xl font-heading font-semibold text-foreground mb-3">
+        <h3 className="text-2xl md:text-3xl font-heading font-semibold text-foreground mb-3 tracking-wide">
           {problem.title}
         </h3>
         <p className="text-lg leading-relaxed text-foreground">
@@ -106,7 +106,7 @@ const ProblemSolution = () => {
         >
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading text-foreground">
             <span className="font-semibold">We know the pain — so we built </span>
-            <span className="font-extrabold bg-gradient-to-r from-primary via-purple-600 to-pink-600 bg-clip-text text-transparent">FlowShot.</span>
+            <span className="font-extrabold bg-gradient-to-r from-primary via-purple-600 to-pink-600 bg-clip-text text-transparent tracking-wide">FlowShot.</span>
           </h2>
         </motion.div>
 

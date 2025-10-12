@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { motion, useInView, useScroll, useTransform } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
 import { MessageSquare, Share2, Zap, CheckSquare, Download, Users } from 'lucide-react';
 import VideoTourModal from '@/components/modals/VideoTourModal';
 
@@ -130,22 +130,13 @@ const PriorityDemo = () => {
               {priority.label}
             </span>
             {priority.hasFlame && (
-              <motion.svg
-                animate={{
-                  opacity: [1, 0.7, 1],
-                  scale: [1, 0.95, 1],
-                }}
-                transition={{
-                  duration: 1.5,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
+              <svg
                 className="w-6 h-6 text-red-500"
                 viewBox="0 0 24 24"
                 fill="currentColor"
               >
                 <path d="M12 2c-1.5 4-4 6-7 7 3.5 1 5.5 3.5 6 7 .5-3.5 2.5-6 6-7-3-1-5.5-3-5-7z" />
-              </motion.svg>
+              </svg>
             )}
           </motion.div>
         ))}
@@ -421,82 +412,26 @@ const StandoutFeatures = () => {
   const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
   const [showModal, setShowModal] = useState(false);
 
-  // Parallax effect for background
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"]
-  });
-
-  // Background moves slower than content, creating depth effect
-  const backgroundY = useTransform(scrollYProgress, [0, 1], [0, -120]);
-
   return (
     <section
       ref={sectionRef}
       id="standout-features"
       className="py-32 relative overflow-hidden"
     >
-      {/* Parallax background - moves slower, creating depth effect */}
-      <motion.div
-        style={{
-          y: backgroundY,
-          willChange: 'transform'
-        }}
-        className="absolute inset-0 w-full h-[120%] -top-[10%]"
-      >
-        {/* Dark gradient background - unique carousel-inspired style */}
-        <div className="absolute inset-0 bg-black" style={{ transform: 'translate3d(0,0,0)' }} />
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-950/30 via-cyan-950/20 to-transparent" style={{ transform: 'translate3d(0,0,0)' }} />
-        <div className="absolute inset-0 bg-gradient-to-tl from-indigo-950/25 via-transparent to-blue-950/20" style={{ transform: 'translate3d(0,0,0)' }} />
+      {/* Static background - optimized for mobile */}
+      <div className="absolute inset-0">
+        {/* Dark gradient background */}
+        <div className="absolute inset-0 bg-black" />
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-950/30 via-cyan-950/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-tl from-indigo-950/25 via-transparent to-blue-950/20" />
 
-        {/* Animated gradient orbs for depth */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ transform: 'translate3d(0,0,0)' }}>
-          <motion.div
-            animate={{
-              x: [0, 100, 0],
-              y: [0, 50, 0],
-              scale: [1, 1.1, 1],
-            }}
-            transition={{
-              duration: 20,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-            style={{ willChange: 'transform' }}
-            className="absolute w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-500/20 via-cyan-500/10 to-transparent blur-3xl -top-40 -left-40"
-          />
-          <motion.div
-            animate={{
-              x: [0, -80, 0],
-              y: [0, 100, 0],
-              scale: [1, 1.15, 1],
-            }}
-            transition={{
-              duration: 25,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: 2,
-            }}
-            style={{ willChange: 'transform' }}
-            className="absolute w-[700px] h-[700px] rounded-full bg-gradient-to-br from-purple-500/25 via-pink-500/15 to-transparent blur-3xl top-20 right-0"
-          />
-          <motion.div
-            animate={{
-              x: [0, -50, 0],
-              y: [0, -80, 0],
-              scale: [1, 1.2, 1],
-            }}
-            transition={{
-              duration: 30,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: 5,
-            }}
-            style={{ willChange: 'transform' }}
-            className="absolute w-[500px] h-[500px] rounded-full bg-gradient-to-br from-orange-500/20 via-rose-500/12 to-transparent blur-3xl bottom-0 left-1/3"
-          />
+        {/* Static gradient orbs for depth */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-500/10 via-cyan-500/5 to-transparent blur-3xl -top-40 -left-40" />
+          <div className="absolute w-[700px] h-[700px] rounded-full bg-gradient-to-br from-purple-500/12 via-pink-500/8 to-transparent blur-3xl top-20 right-0" />
+          <div className="absolute w-[500px] h-[500px] rounded-full bg-gradient-to-br from-orange-500/10 via-rose-500/6 to-transparent blur-3xl bottom-0 left-1/3" />
         </div>
-      </motion.div>
+      </div>
 
       <div className="container mx-auto px-4 max-w-7xl relative z-10">
         {/* Section Title */}
