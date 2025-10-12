@@ -1,35 +1,56 @@
+import { ImageResponse } from 'next/og';
+
+// Image metadata
 export const size = {
   width: 32,
   height: 32,
 };
 
-export const contentType = 'image/svg+xml';
+export const contentType = 'image/png';
 
+// Image generation
 export default function Icon() {
-  return new Response(
-    `<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style="stop-color:#5865F2;stop-opacity:1" />
-          <stop offset="50%" style="stop-color:#9333EA;stop-opacity:1" />
-          <stop offset="100%" style="stop-color:#EC4899;stop-opacity:1" />
-        </linearGradient>
-      </defs>
-      <text
-        x="50%"
-        y="50%"
-        dominant-baseline="central"
-        text-anchor="middle"
-        font-family="system-ui, -apple-system, sans-serif"
-        font-size="28"
-        font-weight="900"
-        fill="url(#gradient)"
-      >F</text>
-    </svg>`,
+  return new ImageResponse(
+    (
+      <div
+        style={{
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: 'white',
+          position: 'relative',
+        }}
+      >
+        {/* Gradient background */}
+        <div
+          style={{
+            position: 'absolute',
+            width: '100%',
+            height: '100%',
+            background: 'linear-gradient(135deg, #5865F2 0%, #9333EA 50%, #EC4899 100%)',
+            borderRadius: '6px',
+          }}
+        />
+
+        {/* F Text */}
+        <div
+          style={{
+            position: 'relative',
+            fontSize: '24px',
+            fontWeight: 950,
+            color: 'white',
+            letterSpacing: '0px',
+            fontFamily: 'system-ui, -apple-system, sans-serif',
+          }}
+        >
+          F
+        </div>
+      </div>
+    ),
     {
-      headers: {
-        'Content-Type': 'image/svg+xml',
-      },
+      ...size,
     }
   );
 }
