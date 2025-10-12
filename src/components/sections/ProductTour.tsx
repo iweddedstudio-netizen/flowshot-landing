@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { Package, Kanban, Calendar, Users } from 'lucide-react';
 
@@ -42,6 +42,16 @@ const ProductTour = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.05 });
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const handleScroll = () => {
     if (!scrollRef.current) return;
@@ -72,13 +82,16 @@ const ProductTour = () => {
         </motion.div>
       </div>
 
-      {/* Horizontal Scroll Container */}
+      {/* Cards Container - Vertical on mobile, Horizontal scroll on desktop */}
       <div className="relative">
         <div
           ref={scrollRef}
           onScroll={handleScroll}
-          className="flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth px-4 pb-8 scrollbar-hide"
-          style={{
+          className={isMobile
+            ? "flex flex-col gap-6 px-4 pb-8"
+            : "flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth px-4 pb-8 scrollbar-hide"
+          }
+          style={isMobile ? {} : {
             scrollbarWidth: 'none',
             msOverflowStyle: 'none',
           }}
@@ -91,8 +104,11 @@ const ProductTour = () => {
                 initial={{ opacity: 0, scale: 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true, amount: 0.05 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="flex-none snap-center min-w-[85vw] md:min-w-[70vw] lg:min-w-[45vw]"
+                transition={{ duration: 0.5, delay: isMobile ? index * 0.1 : index * 0.1 }}
+                className={isMobile
+                  ? "w-full"
+                  : "flex-none snap-center min-w-[85vw] md:min-w-[70vw] lg:min-w-[45vw]"
+                }
               >
                 <div className="h-full bg-white rounded-xl shadow-xl p-8 md:p-10 border border-border/50">
                   {/* Icon with gradient */}
@@ -154,29 +170,31 @@ const ProductTour = () => {
           })}
         </div>
 
-        {/* Progress Indicator */}
-        <div className="flex justify-center gap-2 mt-8">
-          {tours.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => {
-                if (scrollRef.current) {
-                  const cardWidth = scrollRef.current.scrollWidth / tours.length;
-                  scrollRef.current.scrollTo({
-                    left: cardWidth * index,
-                    behavior: 'smooth',
-                  });
-                }
-              }}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                index === activeIndex
-                  ? 'w-8 bg-primary'
-                  : 'w-2 bg-border hover:bg-primary/50'
-              }`}
-              aria-label={`Go to slide ${index + 1}`}
-            />
-          ))}
-        </div>
+        {/* Progress Indicator - Only show on desktop */}
+        {!isMobile && (
+          <div className="flex justify-center gap-2 mt-8">
+            {tours.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => {
+                  if (scrollRef.current) {
+                    const cardWidth = scrollRef.current.scrollWidth / tours.length;
+                    scrollRef.current.scrollTo({
+                      left: cardWidth * index,
+                      behavior: 'smooth',
+                    });
+                  }
+                }}
+                className={`h-2 rounded-full transition-all duration-300 ${
+                  index === activeIndex
+                    ? 'w-8 bg-primary'
+                    : 'w-2 bg-border hover:bg-primary/50'
+                }`}
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       <style jsx>{`
