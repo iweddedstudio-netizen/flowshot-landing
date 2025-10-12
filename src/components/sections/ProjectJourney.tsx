@@ -149,7 +149,7 @@ const ProjectJourney = () => {
     <section
       ref={sectionRef}
       id="project-journey"
-      className="relative w-full h-screen overflow-hidden bg-gradient-to-br from-gray-50 via-white to-gray-50"
+      className="hidden md:block relative w-full h-screen overflow-hidden bg-gradient-to-br from-gray-50 via-white to-gray-50"
       style={{ touchAction: 'pan-y' }}
     >
       {/* Header - Always visible */}
