@@ -56,19 +56,19 @@ const ChatDemo = () => (
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: 0.2 }}
-      className="bg-blue-500/10 rounded-lg p-2 text-xs"
+      className="bg-blue-500/20 rounded-lg p-2 text-xs"
     >
-      <div className="font-semibold text-blue-600">Sarah:</div>
-      <div className="text-gray-600">Updated the lighting setup</div>
+      <div className="font-semibold text-blue-300">Sarah:</div>
+      <div className="text-gray-300">Updated the lighting setup</div>
     </motion.div>
     <motion.div
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: 0.4 }}
-      className="bg-purple-500/10 rounded-lg p-2 text-xs ml-4"
+      className="bg-purple-500/20 rounded-lg p-2 text-xs ml-4"
     >
-      <div className="font-semibold text-purple-600">You:</div>
-      <div className="text-gray-600">Perfect! Ready to shoot</div>
+      <div className="font-semibold text-purple-300">You:</div>
+      <div className="text-gray-300">Perfect! Ready to shoot</div>
     </motion.div>
   </div>
 );
@@ -78,19 +78,19 @@ const PortalDemo = () => (
     initial={{ scale: 0.8, opacity: 0 }}
     animate={{ scale: 1, opacity: 1 }}
     transition={{ delay: 0.2 }}
-    className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-lg p-3 text-center"
+    className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-lg p-3 text-center"
   >
-    <Share2 className="w-8 h-8 mx-auto mb-2 text-purple-600" />
-    <div className="text-xs font-semibold text-gray-700">flowshot.app/p/abc123</div>
-    <div className="text-xs text-gray-500 mt-1">Secure • Expires in 7 days</div>
+    <Share2 className="w-8 h-8 mx-auto mb-2 text-purple-300" />
+    <div className="text-xs font-semibold text-gray-200">flowshot.app/p/abc123</div>
+    <div className="text-xs text-gray-400 mt-1">Secure • Expires in 7 days</div>
   </motion.div>
 );
 
 const PriorityDemo = () => {
   const priorityColors: Record<string, string> = {
-    red: '#ef4444',
-    orange: '#f97316',
-    gray: '#6b7280',
+    red: '#f87171',
+    orange: '#fb923c',
+    gray: '#9ca3af',
   };
 
   return (
@@ -111,7 +111,7 @@ const PriorityDemo = () => {
             className="w-2 h-2 rounded-full"
             style={{ backgroundColor: priorityColors[item.color] }}
           />
-          <span className="text-gray-700">{item.label}</span>
+          <span className="text-gray-300">{item.label}</span>
         </motion.div>
       ))}
     </div>
@@ -134,7 +134,7 @@ const ChecklistDemo = () => (
       >
         <motion.div
           className={`w-4 h-4 rounded border-2 flex items-center justify-center ${
-            item.done ? 'bg-green-500 border-green-500' : 'border-gray-300'
+            item.done ? 'bg-green-500 border-green-500' : 'border-gray-400'
           }`}
           whileHover={{ scale: 1.1 }}
         >
@@ -156,7 +156,7 @@ const ChecklistDemo = () => (
             </motion.svg>
           )}
         </motion.div>
-        <span className={item.done ? 'line-through text-gray-400' : 'text-gray-700'}>
+        <span className={item.done ? 'line-through text-gray-500' : 'text-gray-300'}>
           {item.label}
         </span>
       </motion.div>
@@ -175,7 +175,7 @@ const CalendarDemo = () => (
         className={`aspect-square rounded text-xs flex items-center justify-center ${
           [3, 5, 9].includes(i)
             ? 'bg-indigo-500 text-white font-semibold'
-            : 'bg-gray-100 text-gray-400'
+            : 'bg-white/10 text-gray-400'
         }`}
       >
         {i + 1}
@@ -227,9 +227,9 @@ const WorkspaceDemo = () => {
                 background: `linear-gradient(to bottom right, ${workspace.gradientFrom}, ${workspace.gradientTo})`,
               }}
             />
-            <span className="text-xs font-semibold text-gray-700">{workspace.name}</span>
+            <span className="text-xs font-semibold text-gray-200">{workspace.name}</span>
           </div>
-          <span className="text-xs text-gray-500">{workspace.count} projects</span>
+          <span className="text-xs text-gray-400">{workspace.count} projects</span>
         </motion.div>
       ))}
     </div>
@@ -257,17 +257,17 @@ const FeatureCard = ({ feature, index }: { feature: typeof features[0]; index: n
       transition={{ duration: 0.5, delay: index * 0.05 }}
       className="relative group"
     >
-      <div className="relative bg-white rounded-3xl p-8 shadow-xl border border-gray-100 overflow-hidden h-full transition-all duration-300 hover:shadow-2xl hover:scale-[1.02]">
+      <div className="relative bg-white/10 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-white/20 overflow-hidden h-full transition-all duration-300 hover:shadow-2xl hover:scale-[1.02] hover:bg-white/15">
         {/* Content */}
-        <h3 className="text-2xl font-heading font-semibold text-foreground mb-3">
+        <h3 className="text-2xl font-heading font-semibold text-white mb-3">
           {feature.title}
         </h3>
-        <p className="text-secondary mb-6 leading-relaxed">
+        <p className="text-gray-200 mb-6 leading-relaxed">
           {feature.description}
         </p>
 
         {/* Interactive Demo */}
-        <div className="mt-6 pt-6 border-t border-gray-100">
+        <div className="mt-6 pt-6 border-t border-white/10">
           <DemoComponent />
         </div>
       </div>
@@ -283,13 +283,56 @@ const StandoutFeatures = () => {
     <section
       ref={sectionRef}
       id="standout-features"
-      className="py-32 relative overflow-hidden bg-gradient-to-b from-white via-accent/[0.03] to-white"
+      className="py-32 relative overflow-hidden"
     >
-      {/* Static background decoration */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-30">
-        <div className="absolute w-96 h-96 rounded-full bg-gradient-to-br from-blue-200 to-transparent blur-3xl top-10 left-10" />
-        <div className="absolute w-96 h-96 rounded-full bg-gradient-to-br from-purple-200 to-transparent blur-3xl top-40 right-20" />
-        <div className="absolute w-96 h-96 rounded-full bg-gradient-to-br from-pink-200 to-transparent blur-3xl bottom-20 left-1/3" />
+      {/* Dark gradient background - unique carousel-inspired style */}
+      <div className="absolute inset-0 bg-black" />
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-950/30 via-cyan-950/20 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-tl from-indigo-950/25 via-transparent to-blue-950/20" />
+
+      {/* Animated gradient orbs for depth */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <motion.div
+          animate={{
+            x: [0, 100, 0],
+            y: [0, 50, 0],
+            scale: [1, 1.1, 1],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="absolute w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-500/20 via-cyan-500/10 to-transparent blur-3xl -top-40 -left-40"
+        />
+        <motion.div
+          animate={{
+            x: [0, -80, 0],
+            y: [0, 100, 0],
+            scale: [1, 1.15, 1],
+          }}
+          transition={{
+            duration: 25,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 2,
+          }}
+          className="absolute w-[700px] h-[700px] rounded-full bg-gradient-to-br from-purple-500/25 via-pink-500/15 to-transparent blur-3xl top-20 right-0"
+        />
+        <motion.div
+          animate={{
+            x: [0, -50, 0],
+            y: [0, -80, 0],
+            scale: [1, 1.2, 1],
+          }}
+          transition={{
+            duration: 30,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 5,
+          }}
+          className="absolute w-[500px] h-[500px] rounded-full bg-gradient-to-br from-orange-500/20 via-rose-500/12 to-transparent blur-3xl bottom-0 left-1/3"
+        />
       </div>
 
       <div className="container mx-auto px-4 max-w-7xl relative z-10">
@@ -306,20 +349,20 @@ const StandoutFeatures = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="inline-block"
           >
-            <h3 className="text-sm md:text-base font-bold tracking-[0.2em] text-primary uppercase mb-6">
+            <h3 className="text-sm md:text-base font-bold tracking-[0.2em] text-cyan-400 uppercase mb-6">
               BUILT DIFFERENT
             </h3>
           </motion.div>
 
-          <h2 className="text-5xl md:text-6xl font-heading font-bold text-foreground mb-6">
+          <h2 className="text-5xl md:text-6xl font-heading font-bold text-white mb-6">
             Features That Make
             <br />
-            <span className="bg-gradient-to-r from-primary via-purple-600 to-pink-600 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
               Production Teams Faster
             </span>
           </h2>
 
-          <p className="text-xl text-secondary max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
             Everything you need to run a modern production studio. No compromises.
           </p>
         </motion.div>
@@ -339,13 +382,13 @@ const StandoutFeatures = () => {
           transition={{ duration: 0.6 }}
           className="text-center mt-20"
         >
-          <p className="text-lg text-secondary mb-6">
+          <p className="text-lg text-gray-300 mb-6">
             And we're just getting started...
           </p>
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="px-8 py-4 bg-gradient-to-r from-primary to-purple-600 text-white rounded-full font-semibold shadow-lg hover:shadow-xl transition-shadow"
+            className="px-8 py-4 bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 text-white rounded-full font-semibold shadow-lg hover:shadow-xl transition-shadow"
           >
             See All Features
           </motion.button>

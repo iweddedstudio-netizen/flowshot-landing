@@ -29,9 +29,9 @@ const sceneBackgrounds = [
 const scenes = [
   {
     id: 1,
-    title: "Set Up Offer Catalog",
-    caption: "Build your reusable presets once — packages, add-ons, deliverables.",
-    subCaption: "Everything organized before your first project.",
+    title: "Preset Library",
+    caption: "No setup. No spreadsheets. Just ready-made presets for every shoot.",
+    subCaption: "",
     icon: Package,
     background: sceneBackgrounds[0],
   },
@@ -149,26 +149,33 @@ const ProjectJourney = () => {
     <section
       ref={sectionRef}
       id="project-journey"
-      className="relative w-full h-screen overflow-hidden bg-gradient-to-br from-gray-50 via-white to-gray-50"
+      className="relative w-full h-screen overflow-hidden bg-gradient-to-br from-gray-900 via-gray-950 to-black"
       style={{ touchAction: 'pan-y' }}
     >
+      {/* Gradient overlays for visual interest */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
+        <div className="absolute top-1/3 right-1/4 w-80 h-80 bg-purple-600/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 left-1/3 w-72 h-72 bg-pink-600/10 rounded-full blur-3xl" />
+      </div>
+
       {/* Header - Always visible */}
-      <div className="absolute top-6 md:top-8 left-0 right-0 z-20 container mx-auto px-4 max-w-7xl text-center pointer-events-none">
-        <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-heading font-bold text-foreground mb-3 md:mb-4">
+      <div className="absolute top-20 md:top-24 left-0 right-0 z-20 container mx-auto px-4 max-w-7xl text-center pointer-events-none">
+        <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-heading font-bold text-white mb-3 md:mb-4">
           See how{' '}
           <span className="bg-gradient-to-r from-primary via-purple-600 to-pink-600 bg-clip-text text-transparent">
             FlowShot
           </span>{' '}
           works
         </h2>
-        <p className="text-base md:text-lg lg:text-xl text-secondary max-w-2xl mx-auto">
+        <p className="text-base md:text-lg lg:text-xl text-gray-300 max-w-2xl mx-auto">
           Scroll through the complete workflow — from creating a project to delivering the final result
         </p>
       </div>
 
       {/* Scenes Container - Scenes overlay each other */}
       <div
-        className="absolute inset-0 flex items-center justify-center pt-32 md:pt-36"
+        className="absolute inset-0 flex items-center justify-center pt-40 md:pt-44"
         style={{
           touchAction: 'pan-y',
           WebkitOverflowScrolling: 'touch'
@@ -268,7 +275,7 @@ const ProjectJourney = () => {
               <div key={index} className="relative flex items-center gap-3">
                 {/* Line connector with gradient fill */}
                 {index < scenes.length - 1 && (
-                  <div className="absolute left-1/2 top-full -translate-x-1/2 w-0.5 h-3 bg-gray-300 overflow-hidden rounded-full">
+                  <div className="absolute left-1/2 top-full -translate-x-1/2 w-0.5 h-3 bg-gray-600 overflow-hidden rounded-full">
                     <motion.div
                       className="w-full bg-gradient-to-b from-primary via-purple-600 to-pink-600"
                       initial={{ height: '0%' }}
@@ -286,7 +293,7 @@ const ProjectJourney = () => {
                 {/* Scene dot with icon */}
                 <div className="relative w-10 h-10">
                   {/* Background gray circle */}
-                  <div className="absolute inset-0 rounded-full bg-gray-200 shadow-lg" />
+                  <div className="absolute inset-0 rounded-full bg-gray-700 shadow-lg" />
 
                   {/* Gradient fill circle - liquid animation */}
                   <motion.div
@@ -309,7 +316,7 @@ const ProjectJourney = () => {
                   {/* Icon */}
                   <div className="absolute inset-0 flex items-center justify-center z-10">
                     <Icon className={`w-5 h-5 transition-colors ${
-                      isPast || (isActive && scrollProgress > 0.5) ? 'text-white' : 'text-gray-400'
+                      isPast || (isActive && scrollProgress > 0.5) ? 'text-white' : 'text-gray-300'
                     }`} />
                   </div>
 
@@ -358,7 +365,7 @@ const ProjectJourney = () => {
                   width: isActive ? 32 : 8,
                 }}
                 transition={{ duration: 0.3, ease: "easeInOut" }}
-                className="h-2 rounded-full bg-gray-300 overflow-hidden shadow-sm"
+                className="h-2 rounded-full bg-gray-600 overflow-hidden shadow-sm"
               >
                 {/* Gradient fill with liquid effect */}
                 <motion.div
@@ -379,7 +386,7 @@ const ProjectJourney = () => {
       </div>
 
       {/* Scene Counter - Mobile only */}
-      <div className="md:hidden absolute bottom-6 right-4 z-20 text-sm font-medium text-secondary">
+      <div className="md:hidden absolute bottom-6 right-4 z-20 text-sm font-medium text-gray-300">
         {currentScene + 1} / {scenes.length}
       </div>
 
@@ -395,7 +402,7 @@ const ProjectJourney = () => {
           }}
           className="md:hidden absolute bottom-20 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2 pointer-events-none"
         >
-          <span className="text-xs text-secondary font-medium">Swipe to explore</span>
+          <span className="text-xs text-gray-300 font-medium">Swipe to explore</span>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-primary">
             <path d="M12 5v14M19 12l-7 7-7-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
@@ -425,13 +432,13 @@ const Scene = ({ scene, index, isActive }: SceneProps) => {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="text-center md:text-left"
         >
-          <h3 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-heading font-bold text-foreground mb-3 md:mb-4">
+          <h3 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-heading font-bold text-white mb-3 md:mb-4">
             {scene.title}
           </h3>
-          <p className="text-lg md:text-xl lg:text-2xl text-foreground/80 mb-2 md:mb-3 font-medium">
+          <p className="text-lg md:text-xl lg:text-2xl text-gray-200 mb-2 md:mb-3 font-medium">
             {scene.caption}
           </p>
-          <p className="text-sm md:text-base lg:text-lg text-secondary">
+          <p className="text-sm md:text-base lg:text-lg text-gray-400">
             {scene.subCaption}
           </p>
         </motion.div>
