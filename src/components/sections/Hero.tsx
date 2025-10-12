@@ -49,9 +49,9 @@ const Hero = () => {
             {/* Headline */}
             <motion.h1
               variants={fadeUp}
-              className="text-5xl md:text-6xl lg:text-7xl font-heading font-semibold text-foreground leading-[1.05] tracking-tight max-w-[12ch] mx-auto lg:mx-0"
+              className="text-5xl md:text-6xl lg:text-7xl font-heading font-semibold text-foreground leading-[1.05] tracking-tight max-w-[16ch] mx-auto lg:mx-0"
             >
-              Run your photo & video jobs — without chaos
+              Workflow platform built for photo & video teams
             </motion.h1>
 
             {/* Subheadline */}
@@ -59,9 +59,15 @@ const Hero = () => {
               variants={fadeUp}
               className="text-lg md:text-xl text-secondary mt-8 leading-[1.5] max-w-[52ch] mx-auto lg:mx-0"
             >
-              Skip the setup. Start creating.
-              <br />
               FlowShot is ready out of the box — everything's pre-configured for studios and solo creators.
+            </motion.p>
+
+            {/* Secondary tagline */}
+            <motion.p
+              variants={fadeUp}
+              className="text-base md:text-lg text-muted-foreground mt-4 max-w-[52ch] mx-auto lg:mx-0"
+            >
+              Skip the setup. Start creating.
             </motion.p>
 
             {/* CTA Cluster */}
