@@ -250,7 +250,7 @@ const ProjectJourney = () => {
           works
         </h2>
         <p className="text-lg md:text-xl text-secondary max-w-2xl mx-auto">
-          {isMobile ? 'Swipe through' : 'Scroll through'} the complete workflow — from creating a project to delivering the final result
+          {isMobile ? 'Explore' : 'Scroll through'} the complete workflow — from creating a project to delivering the final result
         </p>
       </motion.div>
 
@@ -273,61 +273,25 @@ const ProjectJourney = () => {
         </div>
       )}
 
-      {/* Mobile: Swipeable Scenes */}
+      {/* Mobile: All Scenes Vertically */}
       {isMobile && (
-        <div className="relative h-full pb-20">
-          <AnimatePresence mode="wait">
+        <div className="relative space-y-8 pb-12">
+          {scenes.map((scene, index) => (
             <motion.div
-              key={currentScene}
-              initial={{ opacity: 0, x: 100 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -100 }}
-              transition={{ duration: 0.3 }}
+              key={scene.id}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
             >
               <Scene
-                scene={scenes[currentScene]}
-                index={currentScene}
+                scene={scene}
+                index={index}
                 isActive={true}
                 isMobile={true}
               />
             </motion.div>
-          </AnimatePresence>
-
-          {/* Mobile Navigation */}
-          <div className="fixed bottom-6 left-0 right-0 z-30 flex items-center justify-center gap-4 px-4">
-            <button
-              onClick={handlePrevScene}
-              disabled={currentScene === 0}
-              className="p-3 rounded-full bg-white shadow-lg disabled:opacity-30 disabled:cursor-not-allowed transition-all hover:scale-110 active:scale-95"
-              aria-label="Previous scene"
-            >
-              <ChevronLeft className="w-6 h-6 text-foreground" />
-            </button>
-
-            <div className="flex gap-2">
-              {scenes.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentScene(index)}
-                  className={`h-2 rounded-full transition-all duration-300 ${
-                    index === currentScene
-                      ? 'w-8 bg-primary'
-                      : 'w-2 bg-gray-300 hover:bg-primary/50'
-                  }`}
-                  aria-label={`Go to scene ${index + 1}`}
-                />
-              ))}
-            </div>
-
-            <button
-              onClick={handleNextScene}
-              disabled={currentScene === scenes.length - 1}
-              className="p-3 rounded-full bg-white shadow-lg disabled:opacity-30 disabled:cursor-not-allowed transition-all hover:scale-110 active:scale-95"
-              aria-label="Next scene"
-            >
-              <ChevronRight className="w-6 h-6 text-foreground" />
-            </button>
-          </div>
+          ))}
         </div>
       )}
 
