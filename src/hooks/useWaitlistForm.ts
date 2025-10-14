@@ -20,6 +20,9 @@ interface UseWaitlistFormReturn {
 
 const SUCCESS_TIMEOUT = 3000; // 3 seconds for better UX
 
+const GOOGLE_SCRIPT_URL =
+  'https://script.google.com/macros/s/AKfycbxqT19HYWxhQHaz292LuQoNgChNuHfkEQtl7UVGzmc80T2KgftQPQSFZrIpDem2nv38/exec';
+
 export function useWaitlistForm(onSuccess?: () => void): UseWaitlistFormReturn {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -95,8 +98,6 @@ export function useWaitlistForm(onSuccess?: () => void): UseWaitlistFormReturn {
     setError(null);
 
     try {
-      const GOOGLE_SCRIPT_URL = process.env.NEXT_PUBLIC_GOOGLE_SCRIPT_URL;
-
       if (!GOOGLE_SCRIPT_URL) {
         throw new Error('Google Script URL is not configured');
       }
