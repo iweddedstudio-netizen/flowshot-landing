@@ -3,7 +3,6 @@
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Lock, Youtube, Mail } from 'lucide-react';
-import VideoModal from '@/components/modals/VideoModal';
 import WaitlistModal from '@/components/modals/WaitlistModal';
 import { useState, useEffect } from 'react';
 import {
@@ -15,7 +14,6 @@ import {
 } from '@/components/ui/dialog';
 
 const FinalCTA = () => {
-  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
   const [isWaitlistModalOpen, setIsWaitlistModalOpen] = useState(false);
   const [isSocialDialogOpen, setIsSocialDialogOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -78,15 +76,6 @@ const FinalCTA = () => {
               >
                 Try for free
               </Button>
-
-              <Button
-                size="lg"
-                variant="outline"
-                className="text-base px-8 py-6 rounded-xl bg-white/10 border-2 border-white/30 text-white hover:bg-white/20 hover:border-white/50 font-semibold shadow-lg backdrop-blur-sm transition-all"
-                onClick={() => setIsVideoModalOpen(true)}
-              >
-                Watch 60-sec demo
-              </Button>
             </div>
 
             {/* Lock + Text under buttons */}
@@ -129,11 +118,10 @@ const FinalCTA = () => {
           </button>
         </div>
 
-        <p className="text-sm text-white/50">© 2025 FlowShot — built with love for creators.</p>
+        <p className="text-sm text-white/50">© 2026 FlowShot — built with love for creators.</p>
       </div>
 
       {/* Modals */}
-      <VideoModal isOpen={isVideoModalOpen} onClose={() => setIsVideoModalOpen(false)} />
       <WaitlistModal isOpen={isWaitlistModalOpen} onClose={() => setIsWaitlistModalOpen(false)} />
 
       {/* Social Media Dialog */}
@@ -142,7 +130,7 @@ const FinalCTA = () => {
           <DialogHeader>
             <DialogTitle className="text-2xl">Coming Soon!</DialogTitle>
             <DialogDescription className="text-base leading-relaxed pt-4">
-              We're working on our social media presence. Follow us soon for updates, tips, and behind-the-scenes content!
+              We&apos;re working on our social media presence. Follow us soon for updates, tips, and behind-the-scenes content!
             </DialogDescription>
           </DialogHeader>
         </DialogContent>

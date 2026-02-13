@@ -5,7 +5,7 @@ import { useRef } from 'react';
 import { MessageSquare, FileSpreadsheet, Grid3x3, RefreshCw } from 'lucide-react';
 
 // Individual Problem Item with scroll-triggered animation
-const ProblemItem = ({ problem, Icon, isEven }: any) => {
+const ProblemItem = ({ problem, Icon, isEven }: { problem: { title: string; description: string }; Icon: React.ElementType; isEven: boolean }) => {
   const itemRef = useRef(null);
   const isInView = useInView(itemRef, { once: true, amount: 0.05 });
 

@@ -20,8 +20,7 @@ interface UseWaitlistFormReturn {
 
 const SUCCESS_TIMEOUT = 3000; // 3 seconds for better UX
 
-const GOOGLE_SCRIPT_URL =
-  'https://script.google.com/macros/s/AKfycbxqT19HYWxhQHaz292LuQoNgChNuHfkEQtl7UVGzmc80T2KgftQPQSFZrIpDem2nv38/exec';
+const GOOGLE_SCRIPT_URL = process.env.NEXT_PUBLIC_GOOGLE_SCRIPT_URL ?? '';
 
 export function useWaitlistForm(onSuccess?: () => void): UseWaitlistFormReturn {
   const [name, setName] = useState('');

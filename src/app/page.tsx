@@ -1,9 +1,7 @@
 import dynamic from 'next/dynamic';
 import Hero from '@/components/sections/Hero';
 import ProblemSolution from '@/components/sections/ProblemSolution';
-// import AppleMotionTypography from '@/components/sections/AppleMotionTypography';
 const ProjectJourney = dynamic(() => import('@/components/sections/ProjectJourney'), { ssr: false });
-import UseCases from '@/components/sections/UseCases';
 import StandoutFeatures from '@/components/sections/StandoutFeatures';
 import FeaturesAndExperience from '@/components/sections/FeaturesAndExperience';
 import FounderStory from '@/components/sections/FounderStory';
@@ -17,18 +15,15 @@ export default function Home() {
     "@type": "SoftwareApplication",
     "name": "FlowShot",
     "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web",
     "description": "All-in-one project management for video creators. Manage offers, projects, teams, and clients in one visual platform.",
     "url": "https://flowshot.app",
     "offers": {
       "@type": "Offer",
-      "price": "29",
+      "price": "0",
       "priceCurrency": "USD",
-      "priceValidUntil": "2025-12-31"
-    },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "5.0",
-      "ratingCount": "100"
+      "description": "Free during beta",
+      "availability": "https://schema.org/InStock"
     },
     "author": {
       "@type": "Person",
@@ -54,30 +49,26 @@ export default function Home() {
 
       {/* 2. Problem -> Solution */}
       <ProblemSolution />
-      {/* <AppleMotionTypography /> */}
 
       {/* 3. Project Journey - Interactive horizontal scroll experience */}
       <ProjectJourney />
 
-      {/* 4. Use Cases */}
-      <UseCases />
-
-      {/* 5. Standout Features */}
+      {/* 4. Standout Features */}
       <StandoutFeatures />
 
-      {/* 6-7. Features and Experience - Unified Section */}
+      {/* 5. Foundations + Who It's For */}
       <FeaturesAndExperience />
 
-      {/* 8. Founder Story */}
+      {/* 6. Founder Story */}
       <FounderStory />
 
-      {/* 9. Pricing Teaser */}
+      {/* 7. Pricing */}
       <PricingTeaser />
 
-      {/* 10. FAQ */}
+      {/* 8. FAQ */}
       <FAQ />
 
-      {/* 11. Final CTA */}
+      {/* 9. Final CTA + Footer */}
       <FinalCTA />
       </main>
     </>

@@ -4,12 +4,10 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ArrowDown } from 'lucide-react';
 import AnimatedMockup from '@/components/AnimatedMockup';
-import VideoModal from '@/components/modals/VideoModal';
 import WaitlistModal from '@/components/modals/WaitlistModal';
 import { useState } from 'react';
 
 const Hero = () => {
-  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
   const [isWaitlistModalOpen, setIsWaitlistModalOpen] = useState(false);
 
   const fadeUp = {
@@ -84,7 +82,7 @@ const Hero = () => {
               variants={fadeUp}
               className="text-xl md:text-2xl text-secondary leading-[1.5] max-w-[52ch] mx-auto lg:mx-0"
             >
-              <strong>FlowShot</strong> is ready out of the box — everything's pre-configured for studios and solo creators.
+              <strong>FlowShot</strong> is ready out of the box — everything&apos;s pre-configured for studios and solo creators.
             </motion.p>
 
             {/* Secondary tagline */}
@@ -106,14 +104,6 @@ const Hero = () => {
                 onClick={() => setIsWaitlistModalOpen(true)}
               >
                 Try FlowShot free
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="text-base px-8 py-6 rounded-xl border-2 border-foreground/30 hover:bg-primary hover:text-white hover:border-primary transition-all"
-                onClick={() => setIsVideoModalOpen(true)}
-              >
-                Watch 60-sec demo
               </Button>
             </motion.div>
           </motion.div>
@@ -147,7 +137,6 @@ const Hero = () => {
       </motion.div>
 
       {/* Modals */}
-      <VideoModal isOpen={isVideoModalOpen} onClose={() => setIsVideoModalOpen(false)} />
       <WaitlistModal isOpen={isWaitlistModalOpen} onClose={() => setIsWaitlistModalOpen(false)} />
     </section>
   );

@@ -24,6 +24,12 @@ const pillars = [
   },
 ];
 
+const audiences = [
+  { icon: '🏢', title: 'Studios', subtitle: 'multi-member teams' },
+  { icon: '👤', title: 'Solo Creators', subtitle: 'one-person setup' },
+  { icon: '🤝', title: 'Freelancers', subtitle: 'work with others remotely' },
+];
+
 const FeaturesAndExperience = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.05 });
@@ -76,12 +82,9 @@ const FeaturesAndExperience = () => {
 
                 {/* Content */}
                 <div className="relative z-10 pt-16">
-                  {/* Title */}
                   <h3 className="text-xl md:text-2xl font-bold mb-3 leading-tight bg-gradient-to-r from-primary via-purple-600 to-pink-600 bg-clip-text text-transparent">
                     {pillar.title}
                   </h3>
-
-                  {/* Description */}
                   <p className="text-sm md:text-base leading-relaxed text-secondary">
                     {pillar.description}
                   </p>
@@ -117,36 +120,65 @@ const FeaturesAndExperience = () => {
             transition={{ duration: 0.6 }}
             className="relative flex items-center justify-center"
           >
-            {/* Left line */}
             <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-200 to-gray-300" />
-
-            {/* Center dot */}
             <div className="relative px-6">
               <div className="w-1.5 h-1.5 rounded-full bg-gray-300" />
             </div>
-
-            {/* Right line */}
             <div className="flex-1 h-px bg-gradient-to-l from-transparent via-gray-200 to-gray-300" />
           </motion.div>
         </div>
       </div>
 
-      {/* Integrations Section */}
+      {/* Who It's For — merged from UseCases */}
       <div className="py-12 md:py-20 relative z-10">
         <div className="container mx-auto px-4 max-w-6xl">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.05 }}
             transition={{ duration: 0.6 }}
-            className="text-center"
+            className="text-center mb-10"
           >
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading font-semibold text-foreground mb-6 leading-tight lg:whitespace-nowrap">
-              <span className="bg-gradient-to-r from-primary via-purple-600 to-pink-600 bg-clip-text text-transparent font-bold">10 years</span> in production — and still learning.
+            <p className="text-sm font-semibold tracking-widest uppercase text-primary mb-4">
+              Who it&apos;s for
+            </p>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading font-semibold text-foreground mb-6 leading-tight">
+              Works for any setup
             </h2>
             <p className="text-lg md:text-xl text-secondary leading-relaxed max-w-2xl mx-auto">
-              Every creator's feedback shapes what FlowShot becomes next.
+              Every creator&apos;s feedback shapes what FlowShot becomes next.
             </p>
           </motion.div>
+
+          {/* Audience Pills */}
+          <div className="flex flex-wrap justify-center items-center gap-6 max-w-4xl mx-auto">
+            {audiences.map((pill, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.05 }}
+                transition={{ duration: 0.5, delay: index * 0.15, ease: "easeOut" }}
+                className="group"
+              >
+                <div className="relative px-8 py-5 rounded-full bg-gradient-to-r from-purple-50 via-pink-50 to-purple-50 border border-purple-200/50 transition-all duration-300 hover:-translate-y-2">
+                  <div className="relative flex items-center gap-3">
+                    <span className="text-2xl" role="img" aria-label={pill.title}>
+                      {pill.icon}
+                    </span>
+                    <div className="flex flex-col sm:flex-row sm:items-baseline sm:gap-2">
+                      <span className="text-lg font-semibold text-foreground whitespace-nowrap">
+                        {pill.title}
+                      </span>
+                      <span className="text-sm text-muted-foreground whitespace-nowrap hidden sm:inline">
+                        — {pill.subtitle}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

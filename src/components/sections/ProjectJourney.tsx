@@ -6,24 +6,13 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import {
   Plus, Package, MessageSquare, Users,
-  Calendar, Bell, CheckCircle, Video, DollarSign, Palette
+  Calendar, Bell, CheckCircle, Video, Palette
 } from 'lucide-react';
 
 // Register GSAP plugins
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
 }
-
-// Hook to prevent hydration errors
-const useClientOnly = () => {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  return mounted;
-};
 
 // Scene backgrounds
 const sceneBackgrounds = [
@@ -493,6 +482,7 @@ interface SceneProps {
 }
 
 const Scene = ({ scene, index, isActive }: SceneProps) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const Icon = scene.icon;
 
   return (
@@ -917,6 +907,7 @@ const Scene2Animation = ({ isActive }: { isActive: boolean }) => {
   );
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const Scene3Animation = ({ isActive }: { isActive: boolean }) => {
   const [members, setMembers] = useState<number[]>([]);
 
@@ -962,7 +953,6 @@ const Scene3Animation = ({ isActive }: { isActive: boolean }) => {
       <div className="space-y-3">
         {teamMembers.map((member, index) => {
           const isVisible = members.includes(member.id);
-          const isLastAdded = isVisible && index === members.findIndex(m => m === member.id) + members.length - 1;
 
           return (
             <motion.div
@@ -1022,6 +1012,7 @@ const Scene3Animation = ({ isActive }: { isActive: boolean }) => {
   );
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const Scene4Animation = ({ isActive }: { isActive: boolean }) => {
   const [step, setStep] = useState(0);
 
@@ -1647,7 +1638,7 @@ const Scene7Animation = ({ isActive }: { isActive: boolean }) => {
 
         {/* Brand Items - Right side as pills */}
         <div className="flex flex-col gap-2 justify-center w-[45%]">
-          {brandItems.map((item, index) => {
+          {brandItems.map((item) => {
             const visibleItems = brandItems.filter(i => i.show);
             const visibleIndex = visibleItems.findIndex(i => i.id === item.id);
 

@@ -3,9 +3,9 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { Badge } from '@/components/ui/badge';
 import {
-  Kanban, Flame, Check, ChevronRight, Calendar as CalendarIcon,
-  Bell, FileText, Users, MessageSquare, Video, Upload, UserPlus,
-  DollarSign, Download, Camera, Star
+  Kanban, Flame, Check, Calendar as CalendarIcon,
+  Bell, FileText, Users, MessageSquare, Video, UserPlus,
+  DollarSign, Camera
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
@@ -331,7 +331,6 @@ const Scene1Priority = ({ progress }: { progress: number }) => {
 
 // SCENE 2: Drag & Drop
 const Scene2DragDrop = ({ progress }: { progress: number }) => {
-  const hovering = progress > 0.1 && progress < 0.2;
   const pickingUp = progress >= 0.2 && progress < 0.35;
   const draggingToReview = progress >= 0.35 && progress < 0.55;
   const draggingToReady = progress >= 0.55 && progress < 0.75;
@@ -392,7 +391,6 @@ const Scene2DragDrop = ({ progress }: { progress: number }) => {
   }
 
   const isMoving = pickingUp || draggingToReview || draggingToReady;
-  const showStaticCard = !isMoving && !dropped;
 
   return (
     <motion.div
@@ -723,7 +721,7 @@ const Scene4Tabs = ({ progress }: { progress: number }) => {
             )}
             {activeTab === 2 && (
               <div className="space-y-2">
-                <div className="bg-white rounded p-2 text-xs">Latest comment: "Looks great!"</div>
+                <div className="bg-white rounded p-2 text-xs">Latest comment: &ldquo;Looks great!&rdquo;</div>
               </div>
             )}
             {activeTab === 3 && (
@@ -763,7 +761,6 @@ const Scene5Calendar = ({ progress }: { progress: number }) => {
   ];
 
   const getWeddingByDay = (day: number) => weddings.find(w => w.day === day);
-  const isEvent = (day: number) => weddings.some(w => w.day === day);
   const hoveredDay = progress > 0.2 && progress < 0.7 ? 25 : null;
 
   return (
@@ -1102,7 +1099,7 @@ const Scene7TeamChat = ({ progress }: { progress: number }) => {
                   <span className="text-xs font-medium text-foreground">You</span>
                 </div>
                 <div className="bg-primary text-white rounded-lg rounded-tr-none p-2 text-xs">
-                  Great! Can you upload the RAW files? I'll start editing today
+                  Great! Can you upload the RAW files? I&apos;ll start editing today
                 </div>
               </div>
               <div className="w-6 h-6 rounded-full bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center text-white text-xs font-semibold flex-shrink-0">
@@ -1185,7 +1182,7 @@ const Scene7TeamChat = ({ progress }: { progress: number }) => {
                   <span className="text-xs font-medium text-foreground">You</span>
                 </div>
                 <div className="bg-primary text-white rounded-lg rounded-tr-none p-2 text-xs font-medium">
-                  Perfect! I'll have them ready by Friday 👍
+                  Perfect! I&apos;ll have them ready by Friday 👍
                 </div>
               </div>
               <div className="w-6 h-6 rounded-full bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center text-white text-xs font-semibold flex-shrink-0">

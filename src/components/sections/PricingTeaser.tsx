@@ -3,21 +3,12 @@
 import { useRef, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Heart } from 'lucide-react';
 import WaitlistModal from '@/components/modals/WaitlistModal';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
 
 const PricingTeaser = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.05 });
   const [isWaitlistModalOpen, setIsWaitlistModalOpen] = useState(false);
-  const [isDonationDialogOpen, setIsDonationDialogOpen] = useState(false);
 
   return (
     <section
@@ -77,20 +68,20 @@ const PricingTeaser = () => {
           {/* Description */}
           <div className="space-y-4 text-base leading-relaxed text-secondary mb-8 border-t border-b py-8">
             <p>
-              We're building FlowShot together with creators like you.
+              We&apos;re building FlowShot together with creators like you.
             </p>
             <p>
               All features are unlocked — no limits, no credit card.
             </p>
             <p>
-              If you'd like to support the project, you can donate anytime.
+              If you&apos;d like to support the project, you can donate anytime.
             </p>
             <p className="text-sm text-muted-foreground">
-              In the future, we'll announce fair pricing — transparent, affordable, and built for creators.
+              In the future, we&apos;ll announce fair pricing — transparent, affordable, and built for creators.
             </p>
           </div>
 
-          {/* CTA Buttons */}
+          {/* CTA Button */}
           <div className="space-y-3">
             <Button
               size="lg"
@@ -98,15 +89,6 @@ const PricingTeaser = () => {
               onClick={() => setIsWaitlistModalOpen(true)}
             >
               Get Started Free
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="w-full text-base py-6 rounded-xl border-2 border-primary/30 hover:bg-primary/10 transition-all"
-              onClick={() => setIsDonationDialogOpen(true)}
-            >
-              <Heart className="w-4 h-4 mr-2" />
-              Support the Project
             </Button>
           </div>
         </motion.div>
@@ -126,23 +108,6 @@ const PricingTeaser = () => {
 
       {/* Waitlist Modal */}
       <WaitlistModal isOpen={isWaitlistModalOpen} onClose={() => setIsWaitlistModalOpen(false)} />
-
-      {/* Donation Dialog */}
-      <Dialog open={isDonationDialogOpen} onOpenChange={setIsDonationDialogOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="text-2xl flex items-center gap-2">
-              <Heart className="w-6 h-6 text-primary" />
-              Thank You!
-            </DialogTitle>
-            <DialogDescription className="text-base leading-relaxed pt-4">
-              We truly appreciate your interest in supporting FlowShot!
-              <br /><br />
-              We're currently setting up donation options and will announce them very soon. Stay tuned!
-            </DialogDescription>
-          </DialogHeader>
-        </DialogContent>
-      </Dialog>
     </section>
   );
 };

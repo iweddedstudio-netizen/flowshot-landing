@@ -1,9 +1,8 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { MessageSquare, Share2, Zap, CheckSquare, Download, Users } from 'lucide-react';
-import VideoTourModal from '@/components/modals/VideoTourModal';
 
 const features = [
   {
@@ -371,7 +370,6 @@ const demoComponents = {
 };
 
 const FeatureCard = ({ feature, index }: { feature: typeof features[0]; index: number }) => {
-  const Icon = feature.icon;
   const DemoComponent = demoComponents[feature.demo as keyof typeof demoComponents];
 
   return (
@@ -410,7 +408,6 @@ const FeatureCard = ({ feature, index }: { feature: typeof features[0]; index: n
 const StandoutFeatures = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.05 });
-  const [showModal, setShowModal] = useState(false);
 
   return (
     <section
@@ -470,30 +467,7 @@ const StandoutFeatures = () => {
           ))}
         </div>
 
-        {/* Bottom CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mt-20"
-        >
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setShowModal(true)}
-            className="px-8 py-4 bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 text-white rounded-full font-semibold shadow-lg hover:shadow-xl transition-shadow flex items-center gap-3 mx-auto"
-          >
-            <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" />
-            </svg>
-            Watch Video Tour
-          </motion.button>
-        </motion.div>
       </div>
-
-      {/* Video Tour Modal */}
-      <VideoTourModal isOpen={showModal} onClose={() => setShowModal(false)} />
     </section>
   );
 };

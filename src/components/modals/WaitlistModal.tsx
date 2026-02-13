@@ -47,7 +47,7 @@ export default function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
             Thank you!
           </h3>
           <p className="text-secondary">
-            We'll send you an email when the service launches
+            We&apos;ll send you an email when the service launches
           </p>
         </div>
       ) : (
@@ -65,7 +65,7 @@ export default function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
             </h3>
             <p className="text-secondary text-sm leading-relaxed">
               The service is in its final stage of development and testing.
-              Leave your email and we'll notify you when the service goes live.
+              Leave your email and we&apos;ll notify you when the service goes live.
               <strong className="text-primary"> First users will get several months free.</strong>
             </p>
           </div>
