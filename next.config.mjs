@@ -1,5 +1,19 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  async redirects() {
+    return [
+      {
+        source: '/q/:path*',
+        destination: 'https://app.flowshot.space/q/:path*',
+        permanent: false,
+      },
+      {
+        source: '/d/:path*',
+        destination: 'https://app.flowshot.space/d/:path*',
+        permanent: false,
+      },
+    ];
+  },
   async headers() {
     return [
       {
