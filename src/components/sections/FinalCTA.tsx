@@ -118,6 +118,11 @@ const FinalCTA = () => {
           </button>
         </div>
 
+        <div className="flex items-center justify-center gap-4 mb-3 text-xs text-white/40">
+          <a href="https://app.flowshot.space/privacy" target="_blank" rel="noopener noreferrer" className="hover:text-white/70 transition-colors">Privacy Policy</a>
+          <span>•</span>
+          <a href="https://app.flowshot.space/terms" target="_blank" rel="noopener noreferrer" className="hover:text-white/70 transition-colors">Terms of Service</a>
+        </div>
         <p className="text-sm text-white/50">© 2026 FlowShot — built with love for creators.</p>
       </div>
 
