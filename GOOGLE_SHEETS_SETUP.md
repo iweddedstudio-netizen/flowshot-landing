@@ -6,8 +6,10 @@
 2. Создайте новую таблицу с названием "FlowShot Waitlist"
 3. В первой строке создайте заголовки:
    - A1: `Timestamp`
-   - B1: `Name`
-   - C1: `Email`
+   - B1: `Type`
+   - C1: `Name`
+   - D1: `Email`
+   - E1: `Question`
 
 ## Шаг 2: Создайте Google Apps Script
 
@@ -22,11 +24,29 @@ function doPost(e) {
 
     // Получаем данные из формы
     var timestamp = new Date();
+    var formType = e.parameter.formType || 'waitlist';
     var name = e.parameter.name || '';
     var email = e.parameter.email || '';
+    var question = e.parameter.question || '';
+    var recipient = e.parameter.recipient || 'iweddedstudio@gmail.com';
+    var subject = e.parameter.subject || 'FlowShot support question';
 
-    // Добавляем новую строку с данными
-    sheet.appendRow([timestamp, name, email]);
+    // Добавляем новую строку с данными.
+    sheet.appendRow([timestamp, formType, name, email, question]);
+
+    // Для встроенной формы поддержки отправляем письмо владельцу.
+    if (formType === 'support') {
+      MailApp.sendEmail({
+        to: recipient,
+        replyTo: email,
+        subject: subject,
+        body:
+          'New FlowShot support question\n\n' +
+          'Name: ' + name + '\n' +
+          'Email: ' + email + '\n\n' +
+          'Question:\n' + question
+      });
+    }
 
     // Возвращаем успешный ответ
     return ContentService.createTextOutput(JSON.stringify({
@@ -62,21 +82,22 @@ function doGet(e) {
 5. Авторизуйте приложение (нажмите "Авторизовать доступ")
 6. **ВАЖНО**: Скопируйте URL веб-приложения (он выглядит как `https://script.google.com/macros/s/AKfycby.../exec`)
 
-## Шаг 4: Добавьте URL в код
+## Шаг 4: Добавьте URL в `.env.local`
 
-1. Откройте файл `src/components/modals/WaitlistModal.tsx`
-2. Найдите строку:
-   ```typescript
-   const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
+1. Откройте файл `.env.local`
+2. Добавьте или обновите строку:
+   ```env
+   NEXT_PUBLIC_GOOGLE_SCRIPT_URL=https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec
    ```
-3. Замените `YOUR_SCRIPT_ID` на URL, который вы скопировали на предыдущем шаге
+3. Замените значение на URL, который вы скопировали на предыдущем шаге
 
 ## Шаг 5: Проверьте работу
 
 1. Перезапустите dev сервер
-2. Откройте сайт и нажмите "Try FlowShot free"
-3. Заполните форму и отправьте
+2. Откройте сайт и нажмите "Try FlowShot free", чтобы проверить waitlist
+3. Нажмите кнопку "Support" в правом нижнем углу, чтобы проверить форму поддержки
 4. Проверьте Google Таблицу - новая строка должна появиться
+5. Для формы поддержки проверьте почту `iweddedstudio@gmail.com`
 
 ## Готово! 🎉
 

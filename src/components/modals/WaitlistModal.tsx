@@ -39,8 +39,8 @@ export default function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
     <BaseModal isOpen={isOpen} onClose={onClose} maxWidth="max-w-lg">
       {isSuccess ? (
         /* Success State */
-        <div className="text-center py-8 animate-in fade-in duration-300">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 animate-in zoom-in duration-500">
+        <div className="py-8 text-center">
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-lg bg-green-100">
             <span className="text-3xl">✓</span>
           </div>
           <h3 className="text-2xl font-bold text-foreground mb-2">
@@ -54,7 +54,7 @@ export default function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
         /* Form State */
         <>
           {/* Icon */}
-          <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-lg bg-primary/10">
             <Mail className="w-8 h-8 text-primary" />
           </div>
 
@@ -82,7 +82,7 @@ export default function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
                 id="name"
                 value={name}
                 onChange={(e) => handleNameChange(e.target.value)}
-                className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none transition-colors ${
+                className={`w-full rounded-lg border-2 px-4 py-3 transition-colors focus:outline-none ${
                   nameError
                     ? 'border-red-500 focus:border-red-600'
                     : 'border-gray-200 focus:border-primary'
@@ -103,7 +103,7 @@ export default function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
                 id="email"
                 value={email}
                 onChange={(e) => handleEmailChange(e.target.value)}
-                className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none transition-colors ${
+                className={`w-full rounded-lg border-2 px-4 py-3 transition-colors focus:outline-none ${
                   emailError
                     ? 'border-red-500 focus:border-red-600'
                     : 'border-gray-200 focus:border-primary'
@@ -117,7 +117,7 @@ export default function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
 
             {/* Error Display */}
             {error && (
-              <div className="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-xl animate-in fade-in slide-in-from-top-2 duration-300">
+              <div className="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4">
                 <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
                 <p className="text-sm text-red-800">{error}</p>
               </div>
@@ -126,7 +126,7 @@ export default function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full px-6 py-3 bg-primary text-white rounded-xl font-semibold hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full rounded-lg bg-primary px-6 py-3 font-semibold text-white transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isSubmitting ? 'Submitting...' : error ? 'Try again' : 'Join the waitlist'}
             </button>

@@ -1,1765 +1,197 @@
-﻿'use client';
+'use client';
 
-import { useRef, useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import {
-  Plus, Package, MessageSquare, Users,
-  Calendar, Bell, CheckCircle, Video, Palette
+  Calendar,
+  MessageSquare,
+  Package,
+  Palette,
+  Plus,
 } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { revealUp, viewportOnce } from '@/lib/utils';
 
-// Register GSAP plugins
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger);
-}
-
-// Scene backgrounds
-const sceneBackgrounds = [
-  '#E7F0FF', // Scene 1: Cool blue
-  '#E9F7F2', // Scene 2: Mint green
-  '#F8F4FF', // Scene 3: Lavender
-  '#FFF5EB', // Scene 4: Warm peach (mint green в†’ soft amber)
-  '#FFF0F3', // Scene 5: Coral pink (soft amber в†’ coral pink)
-  '#F5F0FF', // Scene 6: Light violet (coral pink в†’ light violet)
-  '#FFF9E6', // Scene 7: Golden white (light violet в†’ golden white)
-];
-
-// Scene data
 const scenes = [
   {
     id: 1,
-    title: "Preset Library",
-    caption: "No setup. No spreadsheets. Just ready-made presets for every shoot.",
-    subCaption: "",
+    title: 'Preset Library',
+    caption:
+      'No setup. No spreadsheets. Just ready-made presets for every shoot.',
     icon: Package,
-    background: sceneBackgrounds[0],
+    pos: 'lg:left-[4%] lg:top-[0%]',
   },
   {
     id: 2,
-    title: "Create Project",
-    caption: "Photo, video, or both вЂ” FlowShot adapts to your setup.",
-    subCaption: "Turn off what you don't need. Everything stays organized.",
+    title: 'Create Project',
+    caption: 'Photo, video, or both — FlowShot adapts to your setup.',
     icon: Plus,
-    background: sceneBackgrounds[1],
+    pos: 'lg:left-[26%] lg:top-[18%]',
+  },
+  {
+    id: 3,
+    title: 'Collaborate & Review',
+    caption:
+      'Preview videos, leave timeline comments, and update status in real time.',
+    icon: MessageSquare,
+    pos: 'lg:left-[48%] lg:top-[38%]',
   },
   {
     id: 4,
-    title: "Collaborate & Review",
-    caption: "Preview videos, leave timeline comments, and update status in real time.",
-    subCaption: "Team communication that stays synced.",
-    icon: MessageSquare,
-    background: sceneBackgrounds[3],
+    title: 'Schedule & Notify',
+    caption: 'Calendar view with smart notifications for every deadline.',
+    icon: Calendar,
+    pos: 'lg:left-[50%] lg:top-[62%]',
   },
   {
     id: 5,
-    title: "Schedule & Notify",
-    caption: "Calendar view with smart notifications for every deadline.",
-    subCaption: "Never miss an editing deadline or client approval.",
-    icon: Calendar,
-    background: sceneBackgrounds[4],
-  },
-  {
-    id: 6,
-    title: "Keep your team in sync",
-    caption: "Save your style guides, asset links, and brand rules вЂ” so your editors and shooters stay aligned.",
-    subCaption: "",
+    title: 'Keep your team in sync',
+    caption:
+      'Save your style guides, asset links, and brand rules — so your editors and shooters stay aligned.',
     icon: Palette,
-    background: sceneBackgrounds[5],
+    pos: 'lg:left-[28%] lg:top-[82%]',
   },
 ];
 
 const ProjectJourney = () => {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const [currentScene, setCurrentScene] = useState(0);
-  const [scrollProgress, setScrollProgress] = useState(0); // 0-1 progress through current scene
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
-  const [isMobile, setIsMobile] = useState<boolean | undefined>(undefined); // undefined until client-side check
-  const [mounted, setMounted] = useState(false);
-
-  // Detect mobile and reduced motion preference - client-side only
-  useEffect(() => {
-    setMounted(true);
-
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    const checkMotion = () => {
-      const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-      setPrefersReducedMotion(mediaQuery.matches);
-    };
-
-    checkMobile();
-    checkMotion();
-
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
-  // GSAP vertical scroll animation with scene transitions - Desktop only
-  useEffect(() => {
-    if (prefersReducedMotion || !sectionRef.current || isMobile || !mounted) {
-      return;
-    }
-
-    const section = sectionRef.current;
-    const totalScenes = scenes.length;
-
-    // Adaptive scroll distance based on screen size
-    // Mobile needs longer scroll distance for smoother transitions
-    const getScrollMultiplier = () => {
-      const width = window.innerWidth;
-      if (width < 768) return 45; // Mobile: 45vh per scene (slower, smoother)
-      if (width < 1024) return 55; // Tablet: 55vh per scene
-      return 75; // Desktop: 75vh per scene
-    };
-
-    const scrollMultiplier = getScrollMultiplier();
-
-    // Create animation that changes scenes on scroll
-    const scrollTween = gsap.to({}, {
-      scrollTrigger: {
-        trigger: section,
-        start: 'top top',
-        end: `+=${totalScenes * scrollMultiplier}%`, // Adaptive scroll distance
-        scrub: 1,
-        pin: true,
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
-        onUpdate: (self) => {
-          // Calculate which scene should be active based on progress
-          const progress = self.progress;
-          const newScene = Math.min(Math.floor(progress * totalScenes), totalScenes - 1);
-
-          // Calculate progress within current scene (0-1)
-          const sceneProgress = (progress * totalScenes) % 1;
-
-          setCurrentScene(newScene);
-          setScrollProgress(sceneProgress);
-        },
-      },
-    });
-
-    // Recalculate on window resize
-    const handleResize = () => {
-      ScrollTrigger.refresh();
-    };
-
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      if (scrollTween.scrollTrigger) {
-        scrollTween.scrollTrigger.kill();
-      }
-      scrollTween.kill();
-    };
-  }, [prefersReducedMotion, isMobile, mounted]);
-
-  // Show loading state during hydration
-  if (!mounted || isMobile === undefined) {
-    return (
-      <section
-        id="project-journey"
-        className="relative w-full h-screen bg-gradient-to-br from-gray-900 via-gray-950 to-black"
-      >
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-center">
-            <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-            <p className="text-gray-400">Loading...</p>
-          </div>
-        </div>
-      </section>
-    );
-  }
-
-  // Mobile: Vertical stack layout
-  if (isMobile) {
-    return (
-      <section
-        id="project-journey"
-        className="relative w-full py-12 md:py-16 bg-gradient-to-br from-gray-900 via-gray-950 to-black"
-      >
-        {/* Header */}
-        <div className="container mx-auto px-4 max-w-7xl text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-heading font-bold text-white mb-3">
-            See how{' '}
-            <span className="bg-gradient-to-r from-primary via-purple-600 to-pink-600 bg-clip-text text-transparent">
-              FlowShot
-            </span>{' '}
-            works
-          </h2>
-          <p className="text-base text-gray-300 max-w-2xl mx-auto">
-            Complete workflow вЂ” from creating a project to delivering the final result
-          </p>
-        </div>
-
-        {/* Scenes as vertical cards */}
-        <div className="container mx-auto px-4 max-w-4xl space-y-8">
-          {scenes.map((scene, index) => (
-            <MobileScene key={scene.id} scene={scene} index={index} />
-          ))}
-        </div>
-      </section>
-    );
-  }
-
-  // Desktop: GSAP ScrollTrigger carousel
   return (
     <section
-      ref={sectionRef}
-      id="project-journey"
-      className="relative w-full h-screen overflow-hidden"
-      style={{ touchAction: 'pan-y' }}
-      suppressHydrationWarning
+      id="journey"
+      className="relative overflow-hidden border-b border-amber/10 bg-surface py-32 lg:py-40"
     >
-      {/* Static background - optimized for mobile */}
-      <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-950 to-black">
-        {/* Gradient overlays for visual interest */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
-          <div className="absolute top-1/3 right-1/4 w-80 h-80 bg-purple-600/5 rounded-full blur-3xl" />
-          <div className="absolute bottom-1/4 left-1/3 w-72 h-72 bg-pink-600/5 rounded-full blur-3xl" />
-        </div>
-      </div>
-
-      {/* Header - Always visible */}
-      <div className="absolute top-20 md:top-24 left-0 right-0 z-20 container mx-auto px-4 max-w-7xl text-center pointer-events-none">
-        <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-heading font-bold text-white mb-3 md:mb-4">
-          See how{' '}
-          <span className="bg-gradient-to-r from-primary via-purple-600 to-pink-600 bg-clip-text text-transparent">
-            FlowShot
-          </span>{' '}
-          works
-        </h2>
-        <p className="text-base md:text-lg lg:text-xl text-gray-300 max-w-2xl mx-auto">
-          Scroll through the complete workflow вЂ” from creating a project to delivering the final result
-        </p>
-      </div>
-
-      {/* Scenes Container - Scenes overlay each other */}
+      {/* Background giant outline word */}
       <div
-        className="absolute inset-0 flex items-center justify-center pt-40 md:pt-44"
+        aria-hidden
+        className="pointer-events-none absolute -right-[6vw] top-[6%] hidden select-none font-heading italic lg:block"
         style={{
-          touchAction: 'pan-y',
-          WebkitOverflowScrolling: 'touch'
+          fontSize: 'clamp(10rem, 20vw, 22rem)',
+          lineHeight: 0.85,
+          letterSpacing: '-0.04em',
         }}
       >
-        {scenes.map((scene, index) => {
-          const isActive = currentScene === index;
-          const isPast = index < currentScene;
-          const isFuture = index > currentScene;
-
-          // Ultra-fast crossfade - scenes are either fully visible or fully hidden
-          let opacity = 0;
-          if (isActive) {
-            // Current scene: always visible, fade in after first scene
-            if (index === 0 && currentScene === 0) {
-              // First scene starts at full opacity
-              opacity = 1;
-            } else if (index === scenes.length - 1 && currentScene === scenes.length - 1) {
-              // Last scene stays at full opacity
-              opacity = 1;
-            } else {
-              // Ultra-fast fade-in: 0-10% of scroll, then stay at 100%
-              if (scrollProgress < 0.1) {
-                const fadeProgress = scrollProgress / 0.1;
-                // Sharp easing for instant transition feel
-                opacity = Math.pow(fadeProgress, 3);
-              } else {
-                opacity = 1;
-              }
-            }
-          } else if (index === currentScene - 1) {
-            // Previous scene: fade out as we leave it (except last scene)
-            if (index === scenes.length - 1) {
-              opacity = 1; // Last scene stays visible
-            } else {
-              // Stay at 100% until 90%, then ultra-fast fade-out 90-100%
-              if (scrollProgress < 0.9) {
-                opacity = 1;
-              } else {
-                const fadeProgress = (scrollProgress - 0.9) / 0.1;
-                // Sharp easing for instant transition feel
-                opacity = 1 - Math.pow(fadeProgress, 3);
-              }
-            }
-          } else if (index === currentScene + 1) {
-            // Next scene: barely visible hint
-            opacity = 0.02 * scrollProgress; // 0 to 0.02
-          } else if (isPast && index === scenes.length - 1) {
-            // Last scene stays visible after completion
-            opacity = 1;
-          }
-
-          // Mobile-friendly vertical slide animation
-          const yOffset = 30; // Vertical movement for scene transitions
-
-          return (
-            <motion.div
-              key={scene.id}
-              className="absolute inset-0 w-full h-full flex items-center justify-center px-4"
-              initial={false}
-              animate={{
-                opacity,
-                scale: isActive ? 1 : isFuture ? 1.05 : 0.98,
-                y: isActive ? 0 : isFuture ? yOffset : -yOffset,
-              }}
-              transition={{
-                opacity: { duration: 0.1 },
-                scale: { duration: 0.6, ease: 'easeInOut' },
-                y: { duration: 0.6, ease: 'easeInOut' },
-              }}
-              style={{
-                pointerEvents: isActive ? 'auto' : 'none',
-              }}
-            >
-              <Scene
-                scene={scene}
-                index={index}
-                isActive={isActive}
-              />
-            </motion.div>
-          );
-        })}
+        <span className="text-outline opacity-30">flow</span>
       </div>
 
-      {/* Vertical Progress Indicator - Desktop only */}
-      <div className="hidden md:block absolute right-8 top-1/2 -translate-y-1/2 z-20">
-        <div className="flex flex-col items-center gap-3">
-          {scenes.map((scene, index) => {
-            const isActive = currentScene === index;
-            const isPast = index < currentScene;
-            const Icon = scene.icon;
-
-            return (
-              <div key={index} className="relative flex items-center gap-3">
-                {/* Line connector with gradient fill */}
-                {index < scenes.length - 1 && (
-                  <div className="absolute left-1/2 top-full -translate-x-1/2 w-0.5 h-3 bg-gray-600 overflow-hidden rounded-full">
-                    <motion.div
-                      className="w-full bg-gradient-to-b from-primary via-purple-600 to-pink-600"
-                      initial={{ height: '0%' }}
-                      animate={{
-                        height: isPast ? '100%' : isActive ? `${scrollProgress * 100}%` : '0%'
-                      }}
-                      transition={{
-                        duration: 0.05,
-                        ease: "linear"
-                      }}
-                    />
-                  </div>
-                )}
-
-                {/* Scene dot with icon */}
-                <div className="relative w-10 h-10">
-                  {/* Background gray circle */}
-                  <div className="absolute inset-0 rounded-full bg-gray-700 shadow-lg" />
-
-                  {/* Gradient fill circle - liquid animation */}
-                  <motion.div
-                    className="absolute inset-0 rounded-full bg-gradient-to-br from-primary via-purple-600 to-pink-600 shadow-lg overflow-hidden"
-                    initial={{ clipPath: 'inset(100% 0% 0% 0%)' }}
-                    animate={{
-                      clipPath: isPast
-                        ? 'inset(0% 0% 0% 0%)'
-                        : isActive
-                          ? `inset(${(1 - scrollProgress) * 100}% 0% 0% 0%)`
-                          : 'inset(100% 0% 0% 0%)',
-                      scale: isActive ? 1.15 : 1,
-                    }}
-                    transition={{
-                      clipPath: { duration: 0.05, ease: "linear" },
-                      scale: { duration: 0.3, ease: "easeOut" }
-                    }}
-                  />
-
-                  {/* Icon */}
-                  <div className="absolute inset-0 flex items-center justify-center z-10">
-                    <Icon className={`w-5 h-5 transition-colors ${
-                      isPast || (isActive && scrollProgress > 0.5) ? 'text-white' : 'text-gray-300'
-                    }`} />
-                  </div>
-
-                  {/* Circular progress ring for active scene */}
-                  {isActive && (
-                    <svg className="absolute inset-0 w-full h-full -rotate-90 z-20">
-                      <defs>
-                        <linearGradient id={`gradient-${index}`} x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" stopColor="#3b82f6" />
-                          <stop offset="50%" stopColor="#9333ea" />
-                          <stop offset="100%" stopColor="#ec4899" />
-                        </linearGradient>
-                      </defs>
-                      <circle
-                        cx="20"
-                        cy="20"
-                        r="18"
-                        fill="none"
-                        stroke={`url(#gradient-${index})`}
-                        strokeWidth="2"
-                        strokeDasharray={`${2 * Math.PI * 18}`}
-                        strokeDashoffset={`${2 * Math.PI * 18 * (1 - scrollProgress)}`}
-                        className="transition-all duration-50"
-                        strokeLinecap="round"
-                      />
-                    </svg>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Bottom Progress Dots with larger touch target on mobile */}
-      <div className="absolute bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2 z-20 flex gap-2 md:py-0 py-4">
-        {scenes.map((_, index) => {
-          const isActive = currentScene === index;
-          const isPast = index < currentScene;
-
-          return (
-            <div key={index} className="relative h-2 flex items-center">
-              {/* Background gray dot */}
-              <motion.div
-                animate={{
-                  width: isActive ? 32 : 8,
-                }}
-                transition={{ duration: 0.3, ease: "easeInOut" }}
-                className="h-2 rounded-full bg-gray-600 overflow-hidden shadow-sm"
-              >
-                {/* Gradient fill with liquid effect */}
-                <motion.div
-                  className="h-full bg-gradient-to-r from-primary via-purple-600 to-pink-600"
-                  initial={{ width: '0%' }}
-                  animate={{
-                    width: isPast ? '100%' : isActive ? `${scrollProgress * 100}%` : '0%'
-                  }}
-                  transition={{
-                    duration: 0.05,
-                    ease: "linear"
-                  }}
-                />
-              </motion.div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Scene Counter - Mobile only */}
-      <div className="md:hidden absolute bottom-6 right-4 z-20 text-sm font-medium text-gray-300">
-        {currentScene + 1} / {scenes.length}
-      </div>
-
-      {/* Mobile Scroll Hint - Only on first scene */}
-      {currentScene === 0 && (
+      <div className="container relative mx-auto max-w-7xl px-4">
         <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: [0.4, 1, 0.4], y: [0, 8, 0] }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-          className="md:hidden absolute bottom-20 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2 pointer-events-none"
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportOnce}
+          variants={revealUp}
+          className="mb-20 max-w-2xl"
         >
-          <span className="text-xs text-gray-300 font-medium">Swipe to explore</span>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-primary">
-            <path d="M12 5v14M19 12l-7 7-7-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </motion.div>
-      )}
-    </section>
-  );
-};
-
-// Individual Scene Component
-interface SceneProps {
-  scene: typeof scenes[0];
-  index: number;
-  isActive: boolean;
-}
-
-const Scene = ({ scene, index, isActive }: SceneProps) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const Icon = scene.icon;
-
-  return (
-    <div className="w-full max-w-7xl mx-auto px-4 md:px-8">
-      <div className="grid md:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center">
-        {/* Text Content */}
-        <motion.div
-          initial={{ opacity: 0, x: -30 }}
-          animate={isActive ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-center md:text-left"
-        >
-          <h3 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-heading font-bold text-white mb-3 md:mb-4">
-            {scene.title}
-          </h3>
-          <p className="text-lg md:text-xl lg:text-2xl text-gray-200 mb-2 md:mb-3 font-medium">
-            {scene.caption}
-          </p>
-          <p className="text-sm md:text-base lg:text-lg text-gray-400">
-            {scene.subCaption}
+          <div className="mb-5 flex items-center gap-3">
+            <span className="block h-px w-8 bg-amber/60" />
+            <span className="text-xs font-medium uppercase tracking-[0.24em] text-amber">
+              Workflow
+            </span>
+          </div>
+          <h2 className="font-heading text-4xl leading-[1.05] text-foreground md:text-6xl lg:text-7xl">
+            See how{' '}
+            <span className="italic font-light text-amber">FlowShot</span> works
+          </h2>
+          <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground md:text-xl">
+            Complete workflow — from creating a project to delivering the final result.
           </p>
         </motion.div>
 
-        {/* Animation/Mockup Area */}
-        <motion.div
-          initial={{ opacity: 0, x: 30 }}
-          animate={isActive ? { opacity: 1, x: 0 } : { opacity: 0, x: 30 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="relative"
-        >
-          {index === 0 && <Scene1Animation isActive={isActive} />}
-          {index === 1 && <Scene2Animation isActive={isActive} />}
-          {index === 2 && <Scene5Animation isActive={isActive} />}
-          {index === 3 && <Scene6Animation isActive={isActive} />}
-          {index === 4 && <Scene7Animation isActive={isActive} />}
-        </motion.div>
-      </div>
-    </div>
-  );
-};
-
-// Scene Animations Components
-const Scene1Animation = ({ isActive }: { isActive: boolean }) => {
-  const [step, setStep] = useState(0);
-
-  useEffect(() => {
-    if (!isActive) {
-      setStep(0);
-      return;
-    }
-
-    const timers = [
-      setTimeout(() => setStep(1), 150),   // Add Wedding tag
-      setTimeout(() => setStep(2), 300),   // Add Photo tag
-      setTimeout(() => setStep(3), 450),   // Add Video tag
-      setTimeout(() => setStep(4), 600),   // Add Full Day package
-      setTimeout(() => setStep(5), 750),   // Add Maria editor
-      setTimeout(() => setStep(6), 900),   // Add Teaser addon
-      setTimeout(() => setStep(7), 1050),  // Add Drone addon
-      setTimeout(() => setStep(8), 1200),  // Add Highlight format
-      setTimeout(() => setStep(9), 1350),  // Add Film format
-      setTimeout(() => setStep(10), 1500), // Add Corporate tag
-      setTimeout(() => setStep(11), 1650), // Add Half Day package
-      setTimeout(() => setStep(12), 1800), // Add John editor
-      setTimeout(() => setStep(13), 1950), // Add Reel format
-    ];
-
-    return () => timers.forEach(clearTimeout);
-  }, [isActive]);
-
-  // Notion-style tags with different categories and colors
-  const tags = [
-    { id: 1, name: 'Wedding', category: 'Event Type', color: 'bg-pink-100 text-pink-700 border-pink-200', show: step >= 1 },
-    { id: 2, name: 'Photo', category: 'Service', color: 'bg-blue-100 text-blue-700 border-blue-200', show: step >= 2 },
-    { id: 3, name: 'Video', category: 'Service', color: 'bg-purple-100 text-purple-700 border-purple-200', show: step >= 3 },
-    { id: 4, name: 'Full Day', category: 'Package', color: 'bg-green-100 text-green-700 border-green-200', show: step >= 4 },
-    { id: 5, name: 'Maria', category: 'Editor', color: 'bg-orange-100 text-orange-700 border-orange-200', show: step >= 5 },
-    { id: 6, name: 'Teaser', category: 'Add-on', color: 'bg-indigo-100 text-indigo-700 border-indigo-200', show: step >= 6 },
-    { id: 7, name: 'Drone', category: 'Add-on', color: 'bg-sky-100 text-sky-700 border-sky-200', show: step >= 7 },
-    { id: 8, name: 'Highlight', category: 'Format', color: 'bg-yellow-100 text-yellow-700 border-yellow-200', show: step >= 8 },
-    { id: 9, name: 'Film', category: 'Format', color: 'bg-red-100 text-red-700 border-red-200', show: step >= 9 },
-    { id: 10, name: 'Corporate', category: 'Event Type', color: 'bg-teal-100 text-teal-700 border-teal-200', show: step >= 10 },
-    { id: 11, name: 'Half Day', category: 'Package', color: 'bg-lime-100 text-lime-700 border-lime-200', show: step >= 11 },
-    { id: 12, name: 'John', category: 'Editor', color: 'bg-amber-100 text-amber-700 border-amber-200', show: step >= 12 },
-    { id: 13, name: 'Reel', category: 'Format', color: 'bg-fuchsia-100 text-fuchsia-700 border-fuchsia-200', show: step >= 13 },
-  ];
-
-  return (
-    <div className="relative aspect-[4/3] bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl shadow-2xl p-6 overflow-hidden" suppressHydrationWarning>
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <h4 className="text-xl font-bold text-foreground flex items-center gap-2">
-          <Package className="w-5 h-5 text-primary" />
-          Offer Catalog
-        </h4>
-        <motion.span
-          initial={{ opacity: 0 }}
-          animate={{ opacity: step >= 1 ? 1 : 0 }}
-          className="text-xs text-secondary"
-        >
-          Building presets...
-        </motion.span>
-      </div>
-
-      {/* Tags Container - Notion style */}
-      <div className="space-y-4">
-        {/* Event Types */}
-        <div>
-          <label className="text-xs font-bold text-secondary mb-2 block uppercase tracking-wide">Event Type</label>
-          <div className="flex flex-wrap gap-2">
-            {tags.filter(t => t.category === 'Event Type').map((tag) => (
-              <motion.div
-                key={tag.id}
-                animate={{
-                  scale: tag.show ? 1 : 0,
-                  opacity: tag.show ? 1 : 0,
-                  y: tag.show ? 0 : -10
-                }}
-                transition={{ duration: 0.3, ease: 'easeOut' }}
-                className={`px-3 py-1.5 rounded-md text-xs font-medium border ${tag.color} shadow-sm`}
-              >
-                {tag.name}
-              </motion.div>
-            ))}
-          </div>
-        </div>
-
-        {/* Services */}
-        <div>
-          <label className="text-xs font-bold text-secondary mb-2 block uppercase tracking-wide">Service</label>
-          <div className="flex flex-wrap gap-2">
-            {tags.filter(t => t.category === 'Service').map((tag) => (
-              <motion.div
-                key={tag.id}
-                animate={{
-                  scale: tag.show ? 1 : 0,
-                  opacity: tag.show ? 1 : 0,
-                  x: tag.show ? 0 : -10
-                }}
-                transition={{ duration: 0.3, ease: 'easeOut' }}
-                className={`px-3 py-1.5 rounded-md text-xs font-medium border ${tag.color} shadow-sm`}
-              >
-                {tag.name}
-              </motion.div>
-            ))}
-          </div>
-        </div>
-
-        {/* Packages */}
-        <div>
-          <label className="text-xs font-bold text-secondary mb-2 block uppercase tracking-wide">Package</label>
-          <div className="flex flex-wrap gap-2">
-            {tags.filter(t => t.category === 'Package').map((tag) => (
-              <motion.div
-                key={tag.id}
-                animate={{
-                  scale: tag.show ? 1 : 0,
-                  opacity: tag.show ? 1 : 0,
-                  rotate: tag.show ? 0 : -10
-                }}
-                transition={{ duration: 0.3, ease: 'easeOut' }}
-                className={`px-3 py-1.5 rounded-md text-xs font-medium border ${tag.color} shadow-sm`}
-              >
-                {tag.name}
-              </motion.div>
-            ))}
-          </div>
-        </div>
-
-        {/* Editors */}
-        <div>
-          <label className="text-xs font-bold text-secondary mb-2 block uppercase tracking-wide">Editor</label>
-          <div className="flex flex-wrap gap-2">
-            {tags.filter(t => t.category === 'Editor').map((tag) => (
-              <motion.div
-                key={tag.id}
-                animate={{
-                  scale: tag.show ? 1 : 0,
-                  opacity: tag.show ? 1 : 0
-                }}
-                transition={{ duration: 0.3, ease: 'easeOut' }}
-                className={`px-3 py-1.5 rounded-md text-xs font-medium border ${tag.color} shadow-sm flex items-center gap-1`}
-              >
-                <div className="w-2 h-2 rounded-full bg-current opacity-50" />
-                {tag.name}
-              </motion.div>
-            ))}
-          </div>
-        </div>
-
-        {/* Add-ons */}
-        <div>
-          <label className="text-xs font-bold text-secondary mb-2 block uppercase tracking-wide">Add-on</label>
-          <div className="flex flex-wrap gap-2">
-            {tags.filter(t => t.category === 'Add-on').map((tag) => (
-              <motion.div
-                key={tag.id}
-                animate={{
-                  scale: tag.show ? 1 : 0,
-                  opacity: tag.show ? 1 : 0,
-                  x: tag.show ? 0 : 10
-                }}
-                transition={{ duration: 0.3, ease: 'easeOut' }}
-                className={`px-3 py-1.5 rounded-md text-xs font-medium border ${tag.color} shadow-sm`}
-              >
-                + {tag.name}
-              </motion.div>
-            ))}
-          </div>
-        </div>
-
-        {/* Formats */}
-        <div>
-          <label className="text-xs font-bold text-secondary mb-2 block uppercase tracking-wide">Format</label>
-          <div className="flex flex-wrap gap-2">
-            {tags.filter(t => t.category === 'Format').map((tag) => (
-              <motion.div
-                key={tag.id}
-                animate={{
-                  scale: tag.show ? 1 : 0,
-                  opacity: tag.show ? 1 : 0,
-                  rotate: tag.show ? 0 : 10
-                }}
-                transition={{ duration: 0.3, ease: 'easeOut' }}
-                className={`px-3 py-1.5 rounded-md text-xs font-medium border ${tag.color} shadow-sm`}
-              >
-                {tag.name}
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const Scene2Animation = ({ isActive }: { isActive: boolean }) => {
-  const [step, setStep] = useState(0);
-
-  useEffect(() => {
-    if (!isActive) {
-      setStep(0);
-      return;
-    }
-
-    const timers = [
-      setTimeout(() => setStep(1), 200),   // Show "+ New Project" button
-      setTimeout(() => setStep(2), 400),   // Modal appears
-      setTimeout(() => setStep(3), 700),   // Type project name
-      setTimeout(() => setStep(4), 1000),  // Select Photo
-      setTimeout(() => setStep(5), 1200),  // Select Video
-      setTimeout(() => setStep(6), 1500),  // Select preset
-      setTimeout(() => setStep(7), 1800),  // Add Add-on
-      setTimeout(() => setStep(8), 2100),  // Click Create
-      setTimeout(() => setStep(9), 2300),  // Show project card
-      setTimeout(() => setStep(10), 2600), // Show tooltip
-    ];
-
-    return () => timers.forEach(clearTimeout);
-  }, [isActive]);
-
-  return (
-    <div className="relative aspect-[4/3] bg-gradient-to-br from-green-50 to-purple-50 rounded-2xl shadow-2xl p-6 overflow-hidden" suppressHydrationWarning>
-      {/* Dashboard Header */}
-      <div className="flex items-center justify-between mb-6">
-        <h4 className="text-xl font-bold text-foreground">Active Projects</h4>
-        <motion.button
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={step >= 1 ? { scale: step === 1 ? 1.05 : 1, opacity: 1 } : { opacity: 0 }}
-          transition={{ duration: 0.3, ease: 'easeOut' }}
-          className="px-4 py-2 bg-primary text-white rounded-lg font-medium flex items-center gap-2 shadow-lg text-sm"
-        >
-          <Plus className="w-4 h-4" />
-          New Project
-        </motion.button>
-      </div>
-
-      {/* Project Card (appears at end) */}
-      <motion.div
-        animate={{
-          scale: step >= 9 ? 1 : 0.8,
-          opacity: step >= 9 ? 1 : 0,
-          y: step >= 9 ? 0 : -20
-        }}
-        transition={{ duration: 0.5, ease: 'easeOut' }}
-        className="p-4 bg-white rounded-xl border-2 border-primary/20 shadow-lg"
-        style={{ pointerEvents: step >= 9 ? 'auto' : 'none' }}
-      >
-        <div className="flex items-start justify-between mb-2">
-          <div>
-            <h5 className="font-bold text-foreground">Emma & Ryan</h5>
-            <div className="flex gap-2 mt-1">
-              <span className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded">Photo</span>
-              <span className="text-xs px-2 py-1 bg-purple-100 text-purple-700 rounded">Video</span>
-            </div>
-          </div>
-          <motion.div
-            animate={{ scale: step >= 9 ? [1, 1.2, 1] : 1 }}
-            transition={{ repeat: 2, duration: 0.5 }}
-            className="w-3 h-3 bg-green-500 rounded-full"
-          />
-        </div>
-        <p className="text-xs text-secondary">Full Wedding Package + Add-on</p>
-      </motion.div>
-
-      {/* Modal */}
-      <motion.div
-        animate={{
-          opacity: step >= 2 && step < 9 ? 1 : 0,
-          scale: step >= 2 && step < 9 ? 1 : 0.9,
-          y: step >= 2 && step < 9 ? 0 : 30
-        }}
-        transition={{ duration: 0.4, ease: 'easeOut' }}
-        style={{ pointerEvents: step >= 2 && step < 9 ? 'auto' : 'none' }}
-        className="absolute inset-4 bg-white rounded-xl shadow-2xl p-5 border-2 border-primary/20 overflow-hidden"
-      >
-        <h4 className="text-lg font-bold mb-4 text-foreground">Create New Project</h4>
-
-            <div className="space-y-3">
-              {/* Project Name */}
-              <div>
-                <label className="text-xs text-secondary mb-1 block">Project Name</label>
-                <motion.div
-                  className="w-full p-2 border-2 border-primary/30 rounded-lg bg-blue-50/30"
-                  animate={{ borderColor: step >= 3 ? 'rgba(59, 130, 246, 0.6)' : 'rgba(139, 92, 246, 0.3)' }}
-                >
-                  <motion.span
-                    initial={{ opacity: 0 }}
-                    animate={step >= 3 ? { opacity: 1 } : { opacity: 0 }}
-                    className="text-foreground font-medium text-sm"
-                  >
-                    {step >= 3 && 'Emma & Ryan'}
-                  </motion.span>
-                </motion.div>
-              </div>
-
-              {/* Project Type */}
-              <div>
-                <label className="text-xs text-secondary mb-1 block">Type</label>
-                <div className="flex gap-2">
-                  <motion.div
-                    animate={{
-                      scale: step >= 4 ? [1, 1.05, 1] : 1,
-                      borderColor: step >= 4 ? 'rgba(59, 130, 246, 1)' : 'rgba(229, 231, 235, 1)'
-                    }}
-                    transition={{ duration: 0.3 }}
-                    className={`flex-1 p-2 rounded-lg border-2 text-center text-xs font-medium ${
-                      step >= 4 ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-gray-200 text-gray-600'
-                    }`}
-                  >
-                    рџ“· Photo
-                  </motion.div>
-                  <motion.div
-                    animate={{
-                      scale: step >= 5 ? [1, 1.05, 1] : 1,
-                      borderColor: step >= 5 ? 'rgba(139, 92, 246, 1)' : 'rgba(229, 231, 235, 1)'
-                    }}
-                    transition={{ duration: 0.3 }}
-                    className={`flex-1 p-2 rounded-lg border-2 text-center text-xs font-medium ${
-                      step >= 5 ? 'border-purple-500 bg-purple-50 text-purple-700' : 'border-gray-200 text-gray-600'
-                    }`}
-                  >
-                    рџЋҐ Video
-                  </motion.div>
-                </div>
-              </div>
-
-              {/* Presets */}
-              {step >= 6 && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  className="space-y-2"
-                >
-                  <label className="text-xs text-secondary block">Choose from presets</label>
-                  <motion.div
-                    animate={{ scale: step >= 6 ? [1, 1.03, 1] : 1 }}
-                    className="p-2 bg-gradient-to-r from-blue-100 to-purple-100 rounded-lg border border-primary flex items-center justify-between"
-                  >
-                    <span className="text-xs font-bold text-foreground">Full Wedding Package</span>
-                    <span className="text-xs font-bold text-primary">$2,500</span>
-                  </motion.div>
-                </motion.div>
-              )}
-
-              {/* Add-on */}
-              {step >= 7 && (
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  className="p-2 bg-gradient-to-r from-purple-100 to-pink-100 rounded-lg border border-purple-300 flex items-center justify-between"
-                >
-                  <span className="text-xs font-medium text-foreground">+ 60 sec Teaser</span>
-                  <span className="text-xs font-bold text-purple-600">$350</span>
-                </motion.div>
-              )}
-
-              {/* Create Button */}
-              <motion.button
-                animate={{ scale: step >= 8 ? [1, 1.08, 1] : 1 }}
-                transition={{ duration: 0.4 }}
-                className="w-full mt-4 px-4 py-2 bg-primary text-white rounded-lg font-semibold shadow-lg text-sm"
-              >
-                Create Project
-              </motion.button>
-            </div>
-      </motion.div>
-
-      {/* Tooltip */}
-      <motion.div
-        animate={{
-          opacity: step >= 10 ? 1 : 0,
-          y: step >= 10 ? 0 : 10
-        }}
-        transition={{ duration: 0.3 }}
-        style={{ pointerEvents: step >= 10 ? 'auto' : 'none' }}
-        className="absolute bottom-6 left-1/2 transform -translate-x-1/2 bg-foreground text-white px-4 py-2 rounded-lg shadow-lg text-xs font-medium whitespace-nowrap"
-      >
-        Created using your saved presets вњ“
-      </motion.div>
-    </div>
-  );
-};
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const Scene3Animation = ({ isActive }: { isActive: boolean }) => {
-  const [members, setMembers] = useState<number[]>([]);
-
-  useEffect(() => {
-    if (!isActive) {
-      setMembers([]);
-      return;
-    }
-
-    const timers = [
-      setTimeout(() => setMembers([1]), 300),
-      setTimeout(() => setMembers([1, 2]), 700),
-      setTimeout(() => setMembers([1, 2, 3]), 1100),
-    ];
-
-    return () => timers.forEach(clearTimeout);
-  }, [isActive]);
-
-  const teamMembers = [
-    { id: 1, name: 'Sarah Miller', role: 'Editor', color: 'bg-blue-500', initial: 'SM' },
-    { id: 2, name: 'Mike Chen', role: 'Second Shooter', color: 'bg-purple-500', initial: 'MC' },
-    { id: 3, name: 'Alex Davis', role: 'Assistant', color: 'bg-pink-500', initial: 'AD' },
-  ];
-
-  return (
-    <div className="relative aspect-[4/3] bg-gradient-to-br from-purple-50 to-blue-50 rounded-2xl shadow-2xl p-6 overflow-hidden" suppressHydrationWarning>
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <h4 className="text-xl font-bold text-foreground flex items-center gap-2">
-          <Users className="w-5 h-5 text-primary" />
-          Team Members
-        </h4>
-        <motion.span
-          initial={{ opacity: 0 }}
-          animate={{ opacity: members.length > 0 ? 1 : 0 }}
-          className="text-xs text-secondary"
-        >
-          {members.length} member{members.length !== 1 ? 's' : ''}
-        </motion.span>
-      </div>
-
-      {/* Team Cards */}
-      <div className="space-y-3">
-        {teamMembers.map((member, index) => {
-          const isVisible = members.includes(member.id);
-
-          return (
-            <motion.div
-              key={member.id}
-              animate={{
-                opacity: isVisible ? 1 : 0,
-                x: isVisible ? 0 : -20,
-                scale: isVisible ? 1 : 0.9
-              }}
-              transition={{ duration: 0.4, ease: 'easeOut' }}
-              className="bg-white rounded-xl p-4 shadow-md border border-gray-100 hover:shadow-lg transition-shadow"
-              style={{ pointerEvents: isVisible ? 'auto' : 'none' }}
-            >
-              <div className="flex items-center gap-3">
-                {/* Avatar */}
-                <div className={`w-12 h-12 ${member.color} rounded-lg flex items-center justify-center text-white font-bold text-sm flex-shrink-0 shadow-sm`}>
-                  {member.initial}
-                </div>
-
-                {/* Info */}
-                <div className="flex-1 min-w-0">
-                  <h5 className="font-semibold text-foreground text-sm truncate">{member.name}</h5>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="text-xs px-2 py-0.5 bg-purple-100 text-purple-700 rounded-md font-medium">
-                      {member.role}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Status indicator - appears on last added member */}
-                {members.includes(member.id) && index === members.length - 1 && (
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: [0, 1.2, 1] }}
-                    transition={{ duration: 0.3 }}
-                    className="w-2 h-2 bg-green-500 rounded-full flex-shrink-0"
-                  />
-                )}
-              </div>
-            </motion.div>
-          );
-        })}
-
-        {/* Add Member Button */}
-        {members.length < 3 && (
-          <motion.button
-            animate={{ scale: [1, 1.02, 1] }}
-            transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
-            className="w-full p-4 border-2 border-dashed border-primary/40 rounded-xl flex items-center justify-center gap-2 text-primary hover:bg-primary/5 transition-colors"
+        {/* Desktop: diagonal zigzag */}
+        <div className="relative hidden lg:block" style={{ height: '1400px' }}>
+          {/* Diagonal SVG path */}
+          <svg
+            aria-hidden
+            className="pointer-events-none absolute inset-0 h-full w-full"
+            viewBox="0 0 1000 1400"
+            preserveAspectRatio="none"
           >
-            <Plus className="w-5 h-5" />
-            <span className="font-medium text-sm">Invite team member</span>
-          </motion.button>
-        )}
-      </div>
-    </div>
-  );
-};
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const Scene4Animation = ({ isActive }: { isActive: boolean }) => {
-  const [step, setStep] = useState(0);
-
-  useEffect(() => {
-    if (!isActive) {
-      setStep(0);
-      return;
-    }
-
-    const timers = [
-      setTimeout(() => setStep(1), 200),   // Drag package
-      setTimeout(() => setStep(2), 600),   // Package added
-      setTimeout(() => setStep(3), 1000),  // Add Add-on
-      setTimeout(() => setStep(4), 1400),  // Select Output Profile
-      setTimeout(() => setStep(5), 1900),  // Type notes
-      setTimeout(() => setStep(6), 2500),  // Hover Editor Payment
-      setTimeout(() => setStep(7), 3000),  // Auto-save confirmation
-    ];
-
-    return () => timers.forEach(clearTimeout);
-  }, [isActive]);
-
-  return (
-    <div className="relative aspect-[4/3] bg-gradient-to-br from-green-50 to-orange-50 rounded-2xl shadow-2xl p-6 overflow-hidden" suppressHydrationWarning>
-      <div className="flex items-center justify-between mb-4">
-        <h4 className="text-lg font-bold text-foreground">Project Info</h4>
-        {step >= 7 && (
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="text-xs text-green-600 font-medium flex items-center gap-1"
-          >
-            <CheckCircle className="w-3 h-3" />
-            Auto-saved
-          </motion.div>
-        )}
-      </div>
-
-      <div className="space-y-3">
-        {/* Package Field */}
-        <div>
-          <label className="text-xs text-secondary mb-1 block">Package</label>
-          <motion.div
-            animate={{
-              scale: step >= 2 ? 1 : 0.9,
-              opacity: step >= 2 ? 1 : (step === 1 ? 0.5 : 1),
-              borderColor: step === 1 ? 'rgba(59, 130, 246, 0.4)' : step >= 2 ? 'rgba(59, 130, 246, 1)' : 'rgb(229, 231, 235)'
-            }}
-            transition={{ duration: 0.3 }}
-            className={`p-2 rounded-lg h-10 flex items-center justify-center ${
-              step >= 2
-                ? 'bg-gradient-to-r from-blue-100 to-purple-100 border border-primary'
-                : 'border-2 border-dashed border-gray-200'
-            }`}
-            style={{ pointerEvents: step >= 2 ? 'auto' : 'none' }}
-          >
-            {step >= 2 ? (
-              <div className="flex items-center justify-between w-full">
-                <span className="text-xs font-bold text-foreground">Full Wedding Package</span>
-                <span className="text-xs font-bold text-primary">$2,500</span>
-              </div>
-            ) : (
-              <span className="text-xs text-gray-400">Drag from catalog</span>
-            )}
-          </motion.div>
-        </div>
-
-        {/* Add-on */}
-        {step >= 3 && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-          >
-            <label className="text-xs text-secondary mb-1 block">Add-ons</label>
-            <motion.div
-              initial={{ x: -20, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              className="p-2 bg-gradient-to-r from-purple-100 to-pink-100 rounded-lg border border-purple-300"
-            >
-              <span className="text-xs font-medium text-foreground">+ 60 sec Teaser</span>
-            </motion.div>
-          </motion.div>
-        )}
-
-        {/* Output Profile */}
-        {step >= 4 && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-          >
-            <label className="text-xs text-secondary mb-1 block">Output Profile</label>
-            <motion.select
-              initial={{ scale: 0.95 }}
-              animate={{ scale: 1, borderColor: 'rgba(59, 130, 246, 0.6)' }}
-              className="w-full p-2 border-2 border-primary/30 rounded-lg text-xs font-medium bg-blue-50/50"
-            >
-              <option>Instagram Reel</option>
-            </motion.select>
-          </motion.div>
-        )}
-
-        {/* Project Notes */}
-        {step >= 5 && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-          >
-            <label className="text-xs text-secondary mb-1 block">Project Notes</label>
-            <motion.div
-              initial={{ borderColor: 'rgba(229, 231, 235, 1)' }}
-              animate={{ borderColor: 'rgba(59, 130, 246, 0.6)' }}
-              className="p-2 border-2 rounded-lg bg-white"
-            >
-              <motion.span
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="text-xs text-foreground"
-              >
-                Outdoor shoot, golden hour
-              </motion.span>
-            </motion.div>
-          </motion.div>
-        )}
-
-        {/* Editor Payment */}
-        {step >= 6 && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className={`p-2 rounded-lg border-2 ${
-              step >= 6 ? 'border-red-200 bg-red-50/30' : 'border-gray-200'
-            }`}
-          >
-            <div className="flex items-center justify-between">
-              <span className="text-xs text-gray-600">Editor Payment</span>
-              <span className="text-xs font-bold text-red-600">Unpaid</span>
-            </div>
-          </motion.div>
-        )}
-
-        {/* Linked from Catalog label */}
-        {step >= 2 && step < 7 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="text-center pt-2"
-          >
-            <span className="text-xs text-primary font-medium">вњ“ Linked from Offer Catalog</span>
-          </motion.div>
-        )}
-      </div>
-
-      {/* Dragging Package */}
-      {step === 1 && (
-        <motion.div
-          initial={{ x: -100, y: 50, opacity: 0 }}
-          animate={{ x: 60, y: 80, opacity: 1 }}
-          className="absolute z-50 p-2 bg-gradient-to-r from-blue-100 to-purple-100 rounded-lg border border-primary shadow-2xl"
-        >
-          <span className="text-xs font-bold text-foreground">Full Wedding Package</span>
-        </motion.div>
-      )}
-    </div>
-  );
-};
-
-const Scene5Animation = ({ isActive }: { isActive: boolean }) => {
-  const [step, setStep] = useState(0);
-
-  useEffect(() => {
-    if (!isActive) {
-      setStep(0);
-      return;
-    }
-
-    const timers = [
-      setTimeout(() => setStep(1), 200),   // Show video preview
-      setTimeout(() => setStep(2), 600),   // Play preview
-      setTimeout(() => setStep(3), 1200),  // Click timeline
-      setTimeout(() => setStep(4), 1600),  // Add comment
-      setTimeout(() => setStep(5), 2200),  // Maria's response
-      setTimeout(() => setStep(6), 2800),  // Change status
-      setTimeout(() => setStep(7), 3200),  // Show notification
-    ];
-
-    return () => timers.forEach(clearTimeout);
-  }, [isActive]);
-
-  return (
-    <div className="relative aspect-[4/3] bg-gradient-to-br from-orange-50 to-pink-50 rounded-2xl shadow-2xl p-6 overflow-hidden" suppressHydrationWarning>
-      {/* Tab Header */}
-      <div className="flex items-center gap-2 mb-4 pb-3 border-b">
-        <span className="text-xs px-2 py-1 bg-gray-100 rounded">Project Info</span>
-        <span className="text-xs px-2 py-1 bg-primary text-white rounded">Discussion</span>
-        <span className="text-xs px-2 py-1 bg-gray-100 rounded">Files</span>
-      </div>
-
-      <div className="grid grid-cols-2 gap-4">
-        {/* Video Preview */}
-        <div>
-          <label className="text-xs text-secondary mb-2 block">Video Preview</label>
-          <motion.div
-            animate={{
-              scale: step >= 1 && step < 3 ? [1, 1.02, 1] : 1,
-              borderColor: step >= 1 && step < 3 ? 'rgba(59, 130, 246, 0.4)' : 'rgba(229, 231, 235, 1)'
-            }}
-            transition={{ duration: 1, repeat: step >= 1 && step < 3 ? Infinity : 0 }}
-            className="relative aspect-video bg-gray-900 rounded-lg overflow-hidden border-2"
-          >
-            {/* Video thumbnail */}
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/30 to-pink-500/30" />
-
-            {/* Play icon */}
-            {step >= 2 && step < 3 && (
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                className="absolute inset-0 flex items-center justify-center"
-              >
-                <Video className="w-8 h-8 text-white" />
-              </motion.div>
-            )}
-
-            {/* Timeline */}
-            <div className="absolute bottom-2 left-2 right-2">
-              <div className="h-1 bg-white/30 rounded-full overflow-hidden">
-                <motion.div
-                  initial={{ width: '0%' }}
-                  animate={{ width: step >= 2 ? '45%' : '0%' }}
-                  transition={{ duration: 1 }}
-                  className="h-full bg-white"
-                />
-              </div>
-            </div>
-
-            {/* Comment marker */}
-            {step >= 3 && (
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: [0, 1.3, 1] }}
-                className="absolute bottom-3 left-[45%] w-3 h-3 bg-yellow-400 rounded-full border-2 border-white"
-              />
-            )}
-          </motion.div>
-        </div>
-
-        {/* Chat/Comments */}
-        <div>
-          <label className="text-xs text-secondary mb-2 block flex items-center justify-between">
-            <span>Comments</span>
-            {step >= 7 && (
-              <motion.span
-                initial={{ scale: 0 }}
-                animate={{ scale: [0, 1.2, 1] }}
-                className="flex items-center gap-1 text-primary"
-              >
-                <Bell className="w-3 h-3" />
-                <span className="font-bold">1 new</span>
-              </motion.span>
-            )}
-          </label>
-
-          <div className="space-y-2">
-            {/* Comment 1 */}
-            {step >= 4 && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="bg-yellow-50 border border-yellow-200 rounded-lg p-2"
-              >
-                <div className="flex items-center gap-2 mb-1">
-                  <div className="w-4 h-4 rounded-full bg-primary" />
-                  <span className="text-xs font-bold">You</span>
-                  <span className="text-xs text-secondary">0:45</span>
-                </div>
-                <p className="text-xs text-foreground">Cut before vows</p>
-              </motion.div>
-            )}
-
-            {/* Maria's response */}
-            {step >= 5 && (
-              <motion.div
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                className="bg-white border border-gray-200 rounded-lg p-2"
-              >
-                <div className="flex items-center gap-2 mb-1">
-                  <div className="w-4 h-4 rounded-full bg-purple-500" />
-                  <span className="text-xs font-bold">Maria</span>
-                </div>
-                <p className="text-xs text-foreground">Got it рџ‘Ќ</p>
-              </motion.div>
-            )}
-          </div>
-
-          {/* Status Change */}
-          {step >= 6 && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mt-4"
-            >
-              <label className="text-xs text-secondary mb-1 block">Status</label>
-              <div
-                className="flex items-center gap-2 p-2 rounded-lg border border-orange-200"
-                style={{
-                  backgroundColor: step >= 6 ? 'rgba(249, 115, 22, 0.1)' : 'rgba(0, 0, 0, 0)'
-                }}
-              >
-                <span className="text-xs px-2 py-1 bg-orange-500 text-white rounded font-medium">In Review</span>
-                <span className="text-xs text-orange-600">в†’ Synced</span>
-              </div>
-            </motion.div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const Scene6Animation = ({ isActive }: { isActive: boolean }) => {
-  const [step, setStep] = useState(0);
-
-  useEffect(() => {
-    if (!isActive) {
-      setStep(0);
-      return;
-    }
-
-    const timers = [
-      setTimeout(() => setStep(1), 200),   // Show calendar
-      setTimeout(() => setStep(2), 500),   // Hover event
-      setTimeout(() => setStep(3), 1000),  // Show tooltip
-      setTimeout(() => setStep(4), 1600),  // Click bell icon
-      setTimeout(() => setStep(5), 1900),  // Show modal
-      setTimeout(() => setStep(6), 2400),  // Toggle notification
-      setTimeout(() => setStep(7), 2800),  // Show success
-    ];
-
-    return () => timers.forEach(clearTimeout);
-  }, [isActive]);
-
-  const events = [
-    { day: 15, name: 'Sarah & James', type: 'photo', color: 'bg-blue-100' },
-    { day: 22, name: 'Emma & Ryan', type: 'video', color: 'bg-purple-100', isTarget: true },
-    { day: 28, name: 'Olivia & Liam', type: 'both', color: 'bg-pink-100' },
-  ];
-
-  return (
-    <div className="relative aspect-[4/3] bg-gradient-to-br from-pink-50 to-purple-50 rounded-2xl shadow-2xl p-6 overflow-hidden" suppressHydrationWarning>
-      <div className="flex items-center justify-between mb-4">
-        <h4 className="text-lg font-bold text-foreground flex items-center gap-2">
-          <Calendar className="w-5 h-5 text-primary" />
-          October 2025
-        </h4>
-        <motion.button
-          animate={{
-            scale: step >= 4 && step < 5 ? [1, 1.2, 1] : 1
-          }}
-          transition={{ duration: 0.5, repeat: step >= 4 && step < 5 ? Infinity : 0 }}
-          className="p-2 rounded-lg hover:bg-white/50"
-        >
-          <Bell className={`w-5 h-5 ${step >= 4 ? 'text-primary' : 'text-gray-400'}`} />
-        </motion.button>
-      </div>
-
-      {/* Calendar Grid */}
-      <div className="grid grid-cols-7 gap-1 mb-4">
-        {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((day, i) => (
-          <div key={i} className="text-center text-xs text-gray-500 font-bold py-1">
-            {day}
-          </div>
-        ))}
-
-        {[...Array(35)].map((_, i) => {
-          const day = i - 2;
-          const event = events.find(e => e.day === day);
-          const isHovered = event?.isTarget && step >= 2 && step < 4;
-
-          // Get static background color for event (without using bg-* classes in motion.div)
-          const eventBgColor = event ? (
-            event.color === 'bg-blue-100' ? 'rgba(219, 234, 254, 1)' :
-            event.color === 'bg-purple-100' ? 'rgba(243, 232, 255, 1)' :
-            'rgba(252, 231, 243, 1)' // pink-100
-          ) : 'rgba(0, 0, 0, 0)';
-
-          return (
-            <motion.div
-              key={i}
-              animate={{
-                scale: isHovered ? 1.05 : 1
-              }}
-              className={`min-h-[30px] text-xs rounded flex flex-col items-center justify-center p-1 ${
-                day < 1 || day > 31 ? 'text-gray-300' :
-                event ? 'cursor-pointer font-medium border border-purple-200' :
-                'hover:bg-gray-50'
-              }`}
-              style={{ backgroundColor: isHovered ? 'rgba(147, 51, 234, 0.1)' : eventBgColor }}
-            >
-              {day > 0 && day <= 31 && (
-                <>
-                  <span className="text-xs">{day}</span>
-                  {event && (
-                    <div className="w-1 h-1 rounded-full bg-purple-500 mt-0.5" />
-                  )}
-                </>
-              )}
-
-              {/* Tooltip */}
-              {event?.isTarget && step >= 3 && step < 5 && (
-                <motion.div
-                  initial={{ opacity: 0, y: 5 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="absolute z-40 bg-foreground text-white px-2 py-1 rounded shadow-lg text-xs whitespace-nowrap mt-12"
-                >
-                  <div className="font-bold">{event.name} вЂ“ Video</div>
-                  <div className="text-xs opacity-80">Editing due Oct 25 вЂ“ Maria</div>
-                </motion.div>
-              )}
-            </motion.div>
-          );
-        })}
-      </div>
-
-      {/* Notification Settings Modal */}
-      <motion.div
-        animate={{
-          opacity: step >= 5 ? 1 : 0,
-          scale: step >= 5 ? 1 : 0.9,
-          y: step >= 5 ? 0 : 20
-        }}
-        transition={{ duration: 0.3 }}
-        style={{ pointerEvents: step >= 5 ? 'auto' : 'none' }}
-        className="absolute inset-x-4 bottom-4 bg-white rounded-xl shadow-2xl p-4 border-2 border-primary/20"
-      >
-        <div className="flex items-center justify-between mb-3">
-          <h5 className="text-sm font-bold text-foreground">Notification Settings</h5>
-          <Bell className="w-4 h-4 text-primary" />
-        </div>
-
-        <label
-          className="flex items-center gap-3 p-2 rounded-lg cursor-pointer"
-          style={{
-            backgroundColor: step >= 6 ? 'rgba(59, 130, 246, 0.05)' : 'rgba(0, 0, 0, 0)'
-          }}
-        >
-          <div className={`w-10 h-5 rounded-full transition-colors ${
-            step >= 6 ? 'bg-primary' : 'bg-gray-300'
-          } relative`}>
-            <motion.div
-              animate={{
-                left: step >= 6 ? '20px' : '2px'
-              }}
-              transition={{ duration: 0.3, ease: 'easeInOut' }}
-              className="absolute top-0.5 w-4 h-4 bg-white rounded-full shadow-sm"
+            <defs>
+              <linearGradient id="journey-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="hsl(var(--accent))" stopOpacity="0" />
+                <stop offset="20%" stopColor="hsl(var(--accent))" stopOpacity="0.6" />
+                <stop offset="80%" stopColor="hsl(var(--accent))" stopOpacity="0.6" />
+                <stop offset="100%" stopColor="hsl(var(--accent))" stopOpacity="0" />
+              </linearGradient>
+            </defs>
+            <path
+              d="M 80,60 Q 300,220 360,320 T 620,560 Q 720,760 600,900 T 320,1200"
+              fill="none"
+              stroke="url(#journey-gradient)"
+              strokeWidth="1.5"
+              strokeDasharray="4 8"
             />
-          </div>
-          <span className="text-xs text-foreground">Notify me when status = Uploaded</span>
-          {step >= 6 && (
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              className="ml-auto"
-            >
-              <CheckCircle className="w-4 h-4 text-green-500" />
-            </motion.div>
-          )}
-        </label>
+          </svg>
 
-        {step >= 7 && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mt-2 text-xs text-green-600 font-medium flex items-center gap-1"
-          >
-            <CheckCircle className="w-3 h-3" />
-            Alert set successfully
-          </motion.div>
-        )}
-      </motion.div>
-    </div>
-  );
-};
-
-const Scene7Animation = ({ isActive }: { isActive: boolean }) => {
-  const [step, setStep] = useState(0);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (!isActive || !mounted) {
-      setStep(0);
-      return;
-    }
-
-    const timers = [
-      setTimeout(() => setStep(1), 300),   // Show title "Brand Kit"
-      setTimeout(() => setStep(2), 600),   // Add video card
-      setTimeout(() => setStep(3), 1000),  // Add LUT pill
-      setTimeout(() => setStep(4), 1300),  // Add Music Library pill
-      setTimeout(() => setStep(5), 1600),  // Add Footage Folder pill
-      setTimeout(() => setStep(6), 1900),  // Add Photo Examples
-    ];
-
-    return () => timers.forEach(clearTimeout);
-  }, [isActive, mounted]);
-
-  const brandItems = [
-    {
-      id: 1,
-      icon: 'рџЋЁ',
-      label: 'LUT вЂ” Cinematic Base',
-      categoryColor: 'bg-purple-100 text-purple-700 border-purple-300',
-      show: step >= 3
-    },
-    {
-      id: 2,
-      icon: 'рџЋµ',
-      label: 'Music Library вЂ” Ambient',
-      categoryColor: 'bg-blue-100 text-blue-700 border-blue-300',
-      show: step >= 4
-    },
-    {
-      id: 3,
-      icon: 'рџ“Ѓ',
-      label: 'Footage Folder вЂ” Drive',
-      categoryColor: 'bg-green-100 text-green-700 border-green-300',
-      show: step >= 5
-    },
-    {
-      id: 4,
-      type: 'photos',
-      label: 'Photo Editing Examples',
-      categoryColor: 'bg-orange-100 text-orange-700 border-orange-300',
-      show: step >= 6
-    },
-  ];
-
-  if (!mounted) {
-    return (
-      <div className="relative aspect-[4/3] bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl shadow-2xl p-6 overflow-hidden">
-        <div className="flex items-center mb-4">
-          <h4 className="text-xl font-bold text-foreground flex items-center gap-2">
-            <Palette className="w-5 h-5 text-primary" />
-            Brand Kit
-          </h4>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="relative aspect-[4/3] bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl shadow-2xl p-6 overflow-hidden" suppressHydrationWarning>
-      {/* Floating glow effect */}
-      <motion.div
-        animate={{
-          opacity: [0.3, 0.6, 0.3],
-          scale: [1, 1.1, 1],
-        }}
-        transition={{
-          duration: 4,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-        className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded-full blur-3xl"
-      />
-
-      {/* Header */}
-      <div className="flex items-center mb-4">
-        <motion.h4
-          initial={{ opacity: 0, x: -20 }}
-          animate={step >= 1 ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
-          transition={{ duration: 0.4 }}
-          className="text-xl font-bold text-foreground flex items-center gap-2"
-        >
-          <Palette className="w-5 h-5 text-primary" />
-          Brand Kit
-        </motion.h4>
-      </div>
-
-      {/* Layout: Video left, items right */}
-      <div className="flex gap-3 h-[calc(100%-3rem)]">
-        {/* Video Card - Left side, 16:9 aspect ratio */}
-        <motion.div
-          animate={{
-            opacity: step >= 2 ? 1 : 0,
-            x: step >= 2 ? 0 : -20,
-            scale: step >= 2 ? 1 : 0.95
-          }}
-          transition={{
-            duration: 0.5,
-            ease: [0.22, 1, 0.36, 1],
-          }}
-          className="flex-1 relative"
-          style={{ pointerEvents: step >= 2 ? 'auto' : 'none' }}
-        >
-          <div className="relative bg-white/90 backdrop-blur-sm rounded-lg overflow-hidden border-2 border-purple-200 shadow-lg h-full flex flex-col">
-            {/* Video thumbnail - 16:9 */}
-            <div className="relative flex-1 bg-gradient-to-br from-purple-500 to-pink-500">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <Video className="w-10 h-10 text-white/80" />
-              </div>
-
-              {/* Play button overlay */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
-                  <div className="w-0 h-0 border-l-[16px] border-l-white border-t-[10px] border-t-transparent border-b-[10px] border-b-transparent ml-1" />
-                </div>
-              </div>
-            </div>
-
-            {/* Label */}
-            <div className="p-2.5 bg-white">
-              <p className="text-xs font-semibold text-foreground text-center">
-                Example of style
-              </p>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Brand Items - Right side as pills */}
-        <div className="flex flex-col gap-2 justify-center w-[45%]">
-          {brandItems.map((item) => {
-            const visibleItems = brandItems.filter(i => i.show);
-            const visibleIndex = visibleItems.findIndex(i => i.id === item.id);
-
+          {scenes.map((scene, index) => {
+            const Icon = scene.icon;
             return (
               <motion.div
-                key={item.id}
-                animate={{
-                  opacity: item.show ? 1 : 0,
-                  x: item.show ? 0 : 20,
-                  scale: item.show ? 1 : 0.9
-                }}
-                transition={{
-                  duration: 0.4,
-                  ease: [0.22, 1, 0.36, 1],
-                  delay: visibleIndex >= 0 ? visibleIndex * 0.1 : 0
-                }}
-                style={{ pointerEvents: item.show ? 'auto' : 'none' }}
+                key={scene.id}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-10% 0px' }}
+                transition={{ duration: 0.7, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                className={`absolute w-[340px] ${scene.pos}`}
               >
-                {item.type === 'photos' ? (
-                  // Photo Examples Card
-                  <div className={`relative bg-white/80 backdrop-blur-sm rounded-lg p-2 border ${item.categoryColor} shadow-sm hover:shadow-md transition-all`}>
-                    <p className="text-[10px] font-semibold text-foreground mb-2">{item.label}</p>
-                    <div className="flex gap-1">
-                      {/* Photo thumbnails */}
-                      {[1, 2, 3].map((photoIndex) => (
-                        <div
-                          key={photoIndex}
-                          className="flex-1 aspect-square bg-gradient-to-br from-orange-200 to-pink-200 rounded border border-orange-300"
-                        >
-                          <div className="w-full h-full flex items-center justify-center text-xs opacity-60">
-                            рџ“·
-                          </div>
-                        </div>
-                      ))}
+                <div className="group rounded-2xl border border-amber/15 bg-surface-elevated p-8 shadow-glowSm transition-all duration-300 hover:border-amber/35">
+                  <div className="flex items-start justify-between">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-amber/25 bg-amber/5 text-amber">
+                      <Icon className="h-5 w-5" strokeWidth={1.7} />
                     </div>
-                  </div>
-                ) : (
-                  // Regular pill
-                  <div className={`relative bg-white/80 backdrop-blur-sm rounded-full px-3 py-2 border ${item.categoryColor} shadow-sm hover:shadow-md transition-all flex items-center gap-2`}>
-                    {/* Icon */}
-                    <span className="text-lg flex-shrink-0">{item.icon}</span>
-
-                    {/* Label */}
-                    <span className="text-[10px] font-semibold text-foreground truncate flex-1">
-                      {item.label}
+                    <span className="font-heading text-2xl font-light text-amber">
+                      {String(index + 1).padStart(2, '0')}
                     </span>
                   </div>
-                )}
+                  <h3 className="mt-6 font-heading text-2xl font-medium leading-tight text-foreground">
+                    {scene.title}
+                  </h3>
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                    {scene.caption}
+                  </p>
+                </div>
               </motion.div>
             );
           })}
         </div>
-      </div>
-    </div>
-  );
-};
 
-// Mobile Scene Component - Simple vertical card layout
-interface MobileSceneProps {
-  scene: typeof scenes[0];
-  index: number;
-}
-
-const MobileScene = ({ scene, index }: MobileSceneProps) => {
-  const Icon = scene.icon;
-  const [isVisible, setIsVisible] = useState(false);
-  const [isAnimationActive, setIsAnimationActive] = useState(false);
-
-  useEffect(() => {
-    // Trigger card animation when component mounts
-    const visibilityTimer = setTimeout(() => setIsVisible(true), index * 100);
-
-    // Trigger internal scene animation after card is visible
-    const animationTimer = setTimeout(() => setIsAnimationActive(true), index * 100 + 400);
-
-    return () => {
-      clearTimeout(visibilityTimer);
-      clearTimeout(animationTimer);
-    };
-  }, [index]);
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      animate={isVisible ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6 }}
-      className="bg-gradient-to-br from-gray-800 via-gray-900 to-black rounded-2xl p-6 shadow-2xl border border-gray-700"
-    >
-      {/* Scene Header */}
-      <div className="flex items-center gap-3 mb-6">
-        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary via-purple-600 to-pink-600 flex items-center justify-center">
-          <Icon className="w-6 h-6 text-white" />
-        </div>
-        <div>
-          <h3 className="text-xl font-heading font-bold text-white">
-            {scene.title}
-          </h3>
+        {/* Mobile: simple vertical stack */}
+        <div className="lg:hidden">
+          <div className="relative">
+            <div
+              aria-hidden
+              className="absolute left-6 top-0 bottom-0 w-px bg-gradient-to-b from-amber/0 via-amber/40 to-amber/0"
+            />
+            <ol className="space-y-12">
+              {scenes.map((scene, index) => {
+                const Icon = scene.icon;
+                return (
+                  <motion.li
+                    key={scene.id}
+                    initial={{ opacity: 0, y: 24 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: '-10% 0px' }}
+                    transition={{ duration: 0.6 }}
+                    className="relative pl-20"
+                  >
+                    <div className="absolute left-0 flex h-12 w-12 items-center justify-center rounded-full border border-amber/30 bg-surface-elevated">
+                      <span className="font-heading text-base text-amber">
+                        {String(index + 1).padStart(2, '0')}
+                      </span>
+                    </div>
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-amber/20 bg-amber/5 text-amber">
+                      <Icon className="h-4 w-4" strokeWidth={1.8} />
+                    </div>
+                    <h3 className="mt-4 font-heading text-2xl font-medium text-foreground">
+                      {scene.title}
+                    </h3>
+                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                      {scene.caption}
+                    </p>
+                  </motion.li>
+                );
+              })}
+            </ol>
+          </div>
         </div>
       </div>
-
-      {/* Scene Content */}
-      <div className="space-y-4">
-        <p className="text-base text-gray-200 font-medium">
-          {scene.caption}
-        </p>
-        {scene.subCaption && (
-          <p className="text-sm text-gray-400">
-            {scene.subCaption}
-          </p>
-        )}
-
-        {/* Animation/Mockup */}
-        <div className="mt-6">
-          {index === 0 && <Scene1Animation isActive={isAnimationActive} />}
-          {index === 1 && <Scene2Animation isActive={isAnimationActive} />}
-          {index === 2 && <Scene5Animation isActive={isAnimationActive} />}
-          {index === 3 && <Scene6Animation isActive={isAnimationActive} />}
-          {index === 4 && <Scene7Animation isActive={isAnimationActive} />}
-        </div>
-      </div>
-    </motion.div>
+    </section>
   );
 };
 

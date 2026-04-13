@@ -39,12 +39,12 @@ export default function BaseModal({
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               onClick={(e) => e.stopPropagation()}
-              className={`bg-white rounded-2xl shadow-2xl w-full p-8 relative ${maxWidth}`}
+              className={`relative w-full rounded-lg bg-white p-8 shadow-xl ${maxWidth}`}
             >
               {/* Close button */}
               <button
                 onClick={onClose}
-                className="absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-full transition-colors"
+                className="absolute right-4 top-4 rounded-lg p-2 transition-colors hover:bg-gray-100"
                 aria-label="Close modal"
               >
                 <X className="w-5 h-5 text-gray-500" />

@@ -1,7 +1,7 @@
-import dynamic from 'next/dynamic';
 import Hero from '@/components/sections/Hero';
+import Marquee from '@/components/sections/Marquee';
 import ProblemSolution from '@/components/sections/ProblemSolution';
-const ProjectJourney = dynamic(() => import('@/components/sections/ProjectJourney'), { ssr: false });
+import ProjectJourney from '@/components/sections/ProjectJourney';
 import StandoutFeatures from '@/components/sections/StandoutFeatures';
 import FeaturesAndExperience from '@/components/sections/FeaturesAndExperience';
 import FounderStory from '@/components/sections/FounderStory';
@@ -47,10 +47,13 @@ export default function Home() {
         {/* 1. Hero Section */}
         <Hero />
 
+      {/* 1.5 Marquee */}
+      <Marquee />
+
       {/* 2. Problem -> Solution */}
       <ProblemSolution />
 
-      {/* 3. Project Journey - Interactive horizontal scroll experience */}
+      {/* 3. Project Journey */}
       <ProjectJourney />
 
       {/* 4. Standout Features */}

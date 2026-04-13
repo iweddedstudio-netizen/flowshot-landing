@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { Inter, Plus_Jakarta_Sans } from "next/font/google";
+import { Inter, Fraunces } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
+import SupportButton from "@/components/SupportButton";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -9,16 +10,17 @@ const inter = Inter({
   display: "swap",
 });
 
-const plusJakartaSans = Plus_Jakarta_Sans({
+const fraunces = Fraunces({
   subsets: ["latin"],
-  variable: "--font-jakarta",
+  variable: "--font-fraunces",
   display: "swap",
+  axes: ["SOFT", "opsz"],
 });
 
 export const viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#fcfcfd",
+  themeColor: "#0A0A0B",
 };
 
 export const metadata: Metadata = {
@@ -88,10 +90,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${plusJakartaSans.variable}`}>
-      <body className="font-sans antialiased">
+    <html lang="en" className={`${inter.variable} ${fraunces.variable} dark`}>
+      <body className="font-sans antialiased bg-background text-foreground">
         <Navbar />
         {children}
+        <SupportButton />
       </body>
     </html>
   );

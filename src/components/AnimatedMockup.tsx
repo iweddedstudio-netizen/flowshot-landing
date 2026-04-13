@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { Badge } from '@/components/ui/badge';
 import {
   Kanban, Flame, Check, Calendar as CalendarIcon,
@@ -26,26 +26,14 @@ const AnimatedMockup = () => {
   const [currentScene, setCurrentScene] = useState(0);
   const [sceneProgress, setSceneProgress] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
 
-  // Check for mobile and prefers-reduced-motion
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
-  const prefersReducedMotion = typeof window !== 'undefined'
-    && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const prefersReducedMotion = useReducedMotion() ?? false;
 
   const totalScenes = SCENES.length;
 
-  // Second useEffect - Animation loop (MUST be called before any conditional returns)
+  // Animation loop
   useEffect(() => {
-    if (prefersReducedMotion || isPaused || isMobile) return;
+    if (prefersReducedMotion || isPaused) return;
 
     const scene = SCENES[currentScene];
     if (!scene) {
@@ -84,12 +72,7 @@ const AnimatedMockup = () => {
     animationFrameId = requestAnimationFrame(animate);
 
     return () => cancelAnimationFrame(animationFrameId);
-  }, [currentScene, isPaused, prefersReducedMotion, totalScenes, isMobile]);
-
-  // Don't render on mobile devices (AFTER all hooks)
-  if (isMobile) {
-    return null;
-  }
+  }, [currentScene, isPaused, prefersReducedMotion, totalScenes]);
 
   // Calculate progress percentage for current scene
   const progressPercent = (sceneProgress / SCENES[currentScene].duration);

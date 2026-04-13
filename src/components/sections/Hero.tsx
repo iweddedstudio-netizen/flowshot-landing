@@ -2,141 +2,171 @@
 
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { ArrowDown } from 'lucide-react';
-import AnimatedMockup from '@/components/AnimatedMockup';
 import WaitlistModal from '@/components/modals/WaitlistModal';
 import { useState } from 'react';
+import Image from 'next/image';
+import AnimatedMockup from '@/components/AnimatedMockup';
+import { ArrowDown, ArrowRight } from 'lucide-react';
+import { revealUp, staggerContainer } from '@/lib/utils';
 
 const Hero = () => {
   const [isWaitlistModalOpen, setIsWaitlistModalOpen] = useState(false);
 
-  const fadeUp = {
-    initial: { opacity: 0, y: 30 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.8 }
-  };
-
-  const stagger = {
-    animate: {
-      transition: {
-        staggerChildren: 0.15
-      }
-    }
-  };
-
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+      className="relative flex min-h-[92svh] items-center overflow-hidden border-b border-amber/10 bg-background pt-24 lg:pt-28"
     >
-      {/* Static Gradient Background */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%)',
-          opacity: 0.1,
-        }}
+      {/* Background plate */}
+      <Image
+        src="/images/problem-background.jpg"
+        alt=""
+        fill
+        className="object-cover opacity-[0.08] grayscale"
+        priority
+        sizes="100vw"
       />
+      {/* Amber vignette */}
+      <div className="pointer-events-none absolute inset-0 bg-heroVignette" />
+      {/* Dark overlay */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-background/70 via-background/60 to-background" />
+      {/* Film grain */}
+      <div className="pointer-events-none absolute inset-0 grain-overlay" />
 
-      {/* Overlay gradient for smooth blend */}
-      <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/70 to-background pointer-events-none" />
-
-      {/* Subtle decorative blurs - static */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 right-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 left-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl" />
+      {/* Off-grid giant numeral */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -right-8 top-16 hidden select-none font-heading italic lg:block"
+        style={{
+          fontSize: 'clamp(14rem, 22vw, 24rem)',
+          lineHeight: 0.85,
+          letterSpacing: '-0.05em',
+        }}
+      >
+        <span className="text-outline opacity-60">26</span>
       </div>
 
-      <div className="container mx-auto px-4 py-12 md:py-16 lg:py-24 relative z-10">
-        {/* Headline - Centered at top */}
+      {/* Metadata side labels (editorial magazine style) */}
+      <div className="pointer-events-none absolute left-6 top-1/2 hidden -translate-y-1/2 -rotate-90 select-none text-[10px] font-medium uppercase tracking-[0.32em] text-foreground/30 lg:block">
+        Vol. 01 — Spring 2026
+      </div>
+      <div className="pointer-events-none absolute right-6 bottom-10 hidden select-none text-[10px] font-medium uppercase tracking-[0.3em] text-foreground/30 lg:block">
+        N°001 · flowshot.app
+      </div>
+
+      <div className="container relative z-10 mx-auto px-4 py-16 md:py-20 lg:py-24">
         <motion.div
-          variants={stagger}
-          initial="initial"
-          animate="animate"
-          className="text-center mb-16"
+          variants={staggerContainer}
+          initial="hidden"
+          animate="visible"
+          className="grid items-center gap-14 lg:grid-cols-[1.05fr_1fr] lg:gap-16"
         >
-          <motion.h1
-            variants={fadeUp}
-            className="font-heading mx-auto"
-          >
-            <div className="text-5xl md:text-7xl lg:text-8xl leading-[1.1] uppercase font-black tracking-tight md:tracking-wide lg:tracking-[0.15em] bg-gradient-to-r from-primary via-purple-600 to-pink-600 bg-clip-text text-transparent">
-              Workflow
-            </div>
-            <div className="text-xl md:text-3xl lg:text-4xl leading-[1.1] mt-2 lowercase first-letter:uppercase font-semibold text-foreground">
-              built for photo & video projects
-            </div>
-          </motion.h1>
-        </motion.div>
+          {/* Left: copy */}
+          <div>
+            <motion.div variants={revealUp} className="mb-6 flex items-center gap-3">
+              <span className="block h-px w-10 bg-amber/60" />
+              <span className="text-xs font-medium uppercase tracking-[0.24em] text-amber">
+                For wedding & commercial studios
+              </span>
+            </motion.div>
 
-        {/* Two column layout for content and mockup */}
-        <div className="grid lg:grid-cols-2 gap-16 lg:gap-20 items-center">
-          {/* Content Column */}
-          <motion.div
-            variants={stagger}
-            initial="initial"
-            animate="animate"
-            className="text-center lg:text-left"
-          >
-            {/* Subheadline */}
-            <motion.p
-              variants={fadeUp}
-              className="text-xl md:text-2xl text-secondary leading-[1.5] max-w-[52ch] mx-auto lg:mx-0"
+            <motion.h1
+              variants={revealUp}
+              className="font-heading text-foreground"
+              style={{
+                fontSize: 'clamp(2.75rem, 6.8vw, 6.5rem)',
+                lineHeight: 0.95,
+                letterSpacing: '-0.02em',
+              }}
             >
-              <strong>FlowShot</strong> is ready out of the box — everything&apos;s pre-configured for studios and solo creators.
+              The operating system for{' '}
+              <span className="italic font-light text-amber">wedding</span>{' '}
+              filmmakers.
+            </motion.h1>
+
+            <motion.p
+              variants={revealUp}
+              className="mt-10 max-w-[54ch] text-lg leading-relaxed text-muted-foreground md:text-xl"
+            >
+              <strong className="font-medium text-foreground">FlowShot</strong>{' '}
+              is ready out of the box — everything&apos;s pre-configured for studios
+              and solo creators. From shoot to client approval.
             </motion.p>
 
-            {/* Secondary tagline */}
-            <motion.p
-              variants={fadeUp}
-              className="text-base md:text-lg text-muted-foreground mt-4 max-w-[52ch] mx-auto lg:mx-0"
-            >
-              From shoot to client approval
-            </motion.p>
-
-            {/* CTA Cluster */}
             <motion.div
-              variants={fadeUp}
-              className="flex flex-col sm:flex-row gap-4 mt-12 justify-center lg:justify-start"
+              variants={revealUp}
+              className="mt-12 flex flex-col items-start gap-4 sm:flex-row sm:items-center"
             >
               <Button
                 size="lg"
-                className="text-base px-8 py-6 rounded-xl shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all"
+                variant="glow"
+                className="rounded-md px-8 py-6 text-base"
                 onClick={() => setIsWaitlistModalOpen(true)}
               >
                 Try FlowShot free
+                <ArrowRight className="ml-1" />
               </Button>
+              <a
+                href="#journey"
+                className="group inline-flex items-center gap-2 text-sm font-medium text-foreground/70 transition-colors hover:text-amber"
+              >
+                See the workflow
+                <ArrowDown className="h-4 w-4 transition-transform group-hover:translate-y-0.5" />
+              </a>
             </motion.div>
-          </motion.div>
+          </div>
 
-          {/* Visual Column - Animated Mockup */}
+          {/* Right: HeroMockupFrame */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, delay: 0.2 }}
-            className="relative"
+            variants={revealUp}
+            className="relative mx-auto w-full max-w-[640px] lg:max-w-none"
           >
-            <AnimatedMockup />
+            {/* Amber glow plate behind */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute -inset-8 blur-[120px] opacity-70"
+              style={{
+                background:
+                  'radial-gradient(ellipse at center, hsl(var(--accent) / 0.35) 0%, transparent 60%)',
+              }}
+            />
+
+            <div className="perspective-hero relative">
+              <div className="tilt-hero relative rounded-2xl border border-amber/20 bg-gradient-to-br from-surface-elevated to-surface p-2 shadow-glow">
+                {/* LIVE dot */}
+                <div className="absolute -top-3 right-4 z-20 flex items-center gap-1.5 rounded-full border border-amber/30 bg-surface-elevated px-2.5 py-1">
+                  <span className="relative flex h-2 w-2">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber opacity-75" />
+                    <span className="relative inline-flex h-2 w-2 rounded-full bg-amber" />
+                  </span>
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-amber">
+                    Live
+                  </span>
+                </div>
+
+                <div className="overflow-hidden rounded-xl">
+                  <AnimatedMockup />
+                </div>
+              </div>
+            </div>
           </motion.div>
-        </div>
+        </motion.div>
+
+        {/* Scroll indicator */}
+        <motion.a
+          href="#problem"
+          variants={revealUp}
+          initial="hidden"
+          animate="visible"
+          className="mt-16 hidden items-center gap-3 text-xs font-medium uppercase tracking-[0.2em] text-foreground/40 transition-colors hover:text-amber lg:flex"
+        >
+          <span className="animate-bounce-slow">
+            <ArrowDown className="h-4 w-4" />
+          </span>
+          Scroll
+        </motion.a>
       </div>
 
-      {/* Scroll Hint */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.2, duration: 0.8 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-      >
-        <span className="text-sm text-muted-foreground">Scroll to explore</span>
-        <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <ArrowDown className="w-5 h-5 text-muted-foreground" />
-        </motion.div>
-      </motion.div>
-
-      {/* Modals */}
       <WaitlistModal isOpen={isWaitlistModalOpen} onClose={() => setIsWaitlistModalOpen(false)} />
     </section>
   );

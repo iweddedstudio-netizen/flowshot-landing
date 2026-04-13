@@ -1,112 +1,108 @@
 'use client';
 
-import { useRef, useState } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import WaitlistModal from '@/components/modals/WaitlistModal';
+import { motion } from 'framer-motion';
+import { Check } from 'lucide-react';
+import { revealUp, viewportOnce, staggerContainer } from '@/lib/utils';
+
+const bullets = [
+  "We're building FlowShot together with creators like you.",
+  'All features unlocked — no limits, no credit card.',
+  'Donate anytime if you want to support the project.',
+  'Fair, transparent pricing will be announced later.',
+];
 
 const PricingTeaser = () => {
-  const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.05 });
   const [isWaitlistModalOpen, setIsWaitlistModalOpen] = useState(false);
 
   return (
     <section
-      ref={sectionRef}
       id="pricing"
-      className="py-16 md:py-24 bg-gradient-to-b from-primary/5 via-accent/5 to-white relative overflow-hidden"
+      className="relative overflow-hidden border-b border-amber/10 bg-graphite py-32 lg:py-48"
     >
-      {/* Background decoration */}
-      <div className="absolute inset-0 opacity-30">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent/20 rounded-full blur-3xl" />
+      {/* Off-grid outline FREE */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -left-[6vw] top-[12%] hidden select-none font-heading italic lg:block"
+        style={{
+          fontSize: 'clamp(14rem, 28vw, 30rem)',
+          lineHeight: 0.85,
+          letterSpacing: '-0.04em',
+        }}
+      >
+        <span className="text-outline opacity-25">free</span>
       </div>
 
-      <div className="container mx-auto px-4 max-w-4xl relative z-10">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-12"
-        >
-          <h2 className="text-4xl md:text-5xl font-heading font-bold text-foreground mb-4">
-            FlowShot is currently <span className="bg-gradient-to-r from-primary via-purple-600 to-pink-600 bg-clip-text text-transparent">free</span>
-          </h2>
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 h-[70%] bg-[radial-gradient(ellipse_at_top,hsl(var(--accent)/0.14),transparent_70%)]"
+      />
+
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={viewportOnce}
+        variants={staggerContainer}
+        className="container relative mx-auto max-w-4xl px-4 text-center"
+      >
+        <motion.div variants={revealUp} className="mb-6 flex items-center justify-center gap-3">
+          <span className="block h-px w-8 bg-amber/60" />
+          <span className="text-xs font-medium uppercase tracking-[0.24em] text-amber">
+            Pricing
+          </span>
+          <span className="block h-px w-8 bg-amber/60" />
         </motion.div>
 
-        {/* Main Card */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="relative bg-white rounded-3xl shadow-2xl p-8 md:p-10 max-w-lg mx-auto"
+        <motion.h2
+          variants={revealUp}
+          className="font-heading font-medium text-foreground"
+          style={{
+            fontSize: 'clamp(3rem, 9vw, 8rem)',
+            lineHeight: 0.92,
+            letterSpacing: '-0.02em',
+          }}
         >
-          {/* Header */}
-          <div className="text-center mb-8">
-            <h3 className="text-2xl font-heading font-bold text-foreground mb-2">
-              Beta Access
-            </h3>
-            <p className="text-sm text-secondary">
-              Free for early adopters
-            </p>
-          </div>
+          Free during <span className="italic font-light text-amber">beta.</span>
+        </motion.h2>
 
-          {/* Price */}
-          <div className="text-center mb-8">
-            <div className="flex items-baseline justify-center gap-1 mb-2">
-              <span className="text-6xl md:text-7xl font-heading font-black bg-gradient-to-r from-primary via-purple-600 to-pink-600 bg-clip-text text-transparent">
-                $0
+        <motion.p
+          variants={revealUp}
+          className="mx-auto mt-8 max-w-xl text-lg leading-relaxed text-muted-foreground md:text-xl"
+        >
+          No credit card. No limits. No tricks.
+        </motion.p>
+
+        <motion.ul
+          variants={revealUp}
+          className="mx-auto mt-14 grid max-w-2xl gap-4 text-left md:grid-cols-2"
+        >
+          {bullets.map((bullet) => (
+            <li key={bullet} className="flex items-start gap-3">
+              <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-amber/30 bg-amber/10 text-amber">
+                <Check className="h-3.5 w-3.5" strokeWidth={2.5} />
               </span>
-              <span className="text-2xl text-secondary">/forever</span>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              During beta phase
-            </p>
-          </div>
+              <span className="text-base text-muted-foreground">{bullet}</span>
+            </li>
+          ))}
+        </motion.ul>
 
-          {/* Description */}
-          <div className="space-y-4 text-base leading-relaxed text-secondary mb-8 border-t border-b py-8">
-            <p>
-              We&apos;re building FlowShot together with creators like you.
-            </p>
-            <p>
-              All features are unlocked — no limits, no credit card.
-            </p>
-            <p>
-              If you&apos;d like to support the project, you can donate anytime.
-            </p>
-            <p className="text-sm text-muted-foreground">
-              In the future, we&apos;ll announce fair pricing — transparent, affordable, and built for creators.
-            </p>
-          </div>
-
-          {/* CTA Button */}
-          <div className="space-y-3">
-            <Button
-              size="lg"
-              className="w-full text-base py-6 rounded-xl shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all"
-              onClick={() => setIsWaitlistModalOpen(true)}
-            >
-              Get Started Free
-            </Button>
-          </div>
-        </motion.div>
-
-        {/* Additional Info */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-center mt-8"
-        >
-          <p className="text-sm text-muted-foreground">
-            No credit card required • Cancel anytime • Full data export
+        <motion.div variants={revealUp} className="mt-14">
+          <Button
+            size="lg"
+            variant="glow"
+            className="rounded-md px-10 py-7 text-base"
+            onClick={() => setIsWaitlistModalOpen(true)}
+          >
+            Get started free
+          </Button>
+          <p className="mt-6 text-sm text-foreground/50">
+            No credit card required · Cancel anytime · Full data export
           </p>
         </motion.div>
-      </div>
+      </motion.div>
 
-      {/* Waitlist Modal */}
       <WaitlistModal isOpen={isWaitlistModalOpen} onClose={() => setIsWaitlistModalOpen(false)} />
     </section>
   );

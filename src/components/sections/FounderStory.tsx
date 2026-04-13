@@ -1,110 +1,129 @@
 'use client';
 
-import { useRef, useEffect, useState } from 'react';
-import { motion, useInView } from 'framer-motion';
 import Image from 'next/image';
+import { motion } from 'framer-motion';
+import { revealUp, viewportOnce, staggerContainer } from '@/lib/utils';
+
+const stats = [
+  { number: '10+', label: 'Years experience' },
+  { number: '3,000+', label: 'Weddings edited' },
+  { number: 'Built', label: 'By creators, for pros' },
+];
 
 const FounderStory = () => {
-  const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.05 });
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
   return (
-    <section ref={sectionRef} id="story" className="py-16 md:py-24 relative overflow-hidden">
-      {/* Dark gradient background */}
-      <div className="absolute inset-0 bg-black" />
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-950/30 via-cyan-950/20 to-transparent" />
-      <div className="absolute inset-0 bg-gradient-to-tl from-indigo-950/25 via-transparent to-blue-950/20" />
+    <section
+      id="story"
+      className="relative overflow-hidden bg-cream py-32 text-ink lg:py-48"
+    >
+      {/* Top hairline */}
+      <div aria-hidden className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-ink/15 to-transparent" />
 
-      {/* Static gradient orbs for depth */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none hidden md:block">
-        <div className="absolute w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-500/20 via-cyan-500/10 to-transparent blur-3xl -top-40 -left-40" />
-        <div className="absolute w-[700px] h-[700px] rounded-full bg-gradient-to-br from-purple-500/25 via-pink-500/15 to-transparent blur-3xl top-20 right-0" />
+      {/* Off-grid "alex" outline */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute right-[2vw] bottom-[6%] hidden select-none font-heading italic lg:block"
+        style={{
+          fontSize: 'clamp(10rem, 20vw, 22rem)',
+          lineHeight: 0.85,
+          letterSpacing: '-0.04em',
+        }}
+      >
+        <span className="text-outline-ink opacity-35">alex</span>
       </div>
 
-      <div className="container mx-auto px-4 max-w-6xl relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center justify-items-center">
-          {/* Content Column */}
-          <motion.div
-            initial={isMobile ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
-            animate={isMobile ? { opacity: 1, x: 0 } : (isInView ? { opacity: 1, x: 0 } : {})}
-            transition={isMobile ? {} : { duration: 0.6 }}
-          >
-            <h2 className="text-4xl md:text-5xl font-heading font-bold text-white mb-8">
-              OUR STORY
+      <div className="container relative mx-auto max-w-6xl px-4">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportOnce}
+          variants={staggerContainer}
+          className="grid gap-14 lg:grid-cols-[1fr_1.1fr] lg:gap-0"
+        >
+          {/* Copy column */}
+          <motion.div variants={revealUp} className="flex flex-col justify-center lg:pr-12">
+            <div className="mb-5 flex items-center gap-3">
+              <span className="block h-px w-8 bg-amber/80" />
+              <span className="text-xs font-medium uppercase tracking-[0.24em] text-amber">
+                Our story
+              </span>
+            </div>
+
+            <h2
+              className="font-heading text-5xl leading-[0.95] text-ink md:text-6xl lg:text-7xl"
+              style={{ letterSpacing: '-0.02em' }}
+            >
+              Hi, I&apos;m Alex —
+              <br />
+              <span className="italic font-light text-amber">a creator,</span>{' '}
+              just like you.
             </h2>
 
-            <p className="text-xl md:text-2xl font-bold text-white mb-6 leading-relaxed">
-              Hi, I&apos;m Alex — a creator, just like you.
-            </p>
+            <blockquote className="relative mt-12 border-l-2 border-amber pl-8">
+              <p className="font-heading text-2xl font-light italic leading-snug text-ink md:text-3xl">
+                Creative people need tools made by creatives — not by tech
+                companies.
+              </p>
+            </blockquote>
 
-            <div className="text-lg leading-relaxed text-gray-300 space-y-4">
+            <div className="mt-10 space-y-4 text-base leading-relaxed text-ink-muted md:text-lg">
+              <p>After 10 years in the industry,</p>
               <p>
-                After 10 years in the industry,
-              </p>
-              <p>
-                I realized that creative people need tools made by creatives — not by tech companies.
-              </p>
-              <p>
-                That&apos;s why we built <strong className="text-white font-semibold">FlowShot</strong> — a space designed for real production life,
-                where everything finally feels connected.
+                That&apos;s why we built{' '}
+                <strong className="font-medium text-ink">FlowShot</strong> — a
+                space designed for real production life, where everything
+                finally feels connected.
               </p>
             </div>
 
-            {/* Key Points */}
-            <div className="flex flex-wrap gap-4 mt-10">
-              <div className="inline-flex items-center gap-2 bg-cyan-500/20 rounded-full px-4 py-2 border border-cyan-500/30">
-                <span className="text-sm font-semibold text-cyan-300">10+ years experience</span>
-              </div>
-              <div className="inline-flex items-center gap-2 bg-purple-500/20 rounded-full px-4 py-2 border border-purple-500/30">
-                <span className="text-sm font-semibold text-purple-300">3,000+ weddings edited worldwide</span>
-              </div>
-              <div className="inline-flex items-center gap-2 bg-green-500/20 rounded-full px-4 py-2 border border-green-500/30">
-                <span className="text-sm font-semibold text-green-300">Built by creators, trusted by pros</span>
-              </div>
+            <div className="mt-12 grid grid-cols-3 gap-6 border-t border-ink/15 pt-10">
+              {stats.map((stat) => (
+                <div key={stat.label}>
+                  <div className="font-heading text-3xl font-medium text-amber md:text-4xl">
+                    {stat.number}
+                  </div>
+                  <div className="mt-2 text-[10px] uppercase tracking-[0.18em] text-ink-muted md:text-xs">
+                    {stat.label}
+                  </div>
+                </div>
+              ))}
             </div>
           </motion.div>
 
-          {/* Visual Column */}
+          {/* Image bleeding off right edge */}
           <motion.div
-            initial={isMobile ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
-            animate={isMobile ? { opacity: 1, x: 0 } : (isInView ? { opacity: 1, x: 0 } : {})}
-            transition={isMobile ? {} : { duration: 0.6, delay: 0.2 }}
-            className="relative max-w-xs mx-auto lg:mx-0 hidden lg:block"
+            variants={revealUp}
+            className="relative lg:mr-[-12%] lg:mt-0"
           >
-            {/* Founder Photo */}
-            <div className="relative">
-              <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-gradient-to-br from-blue-900/30 via-purple-900/30 to-gray-900 shadow-2xl">
-                <Image
-                  src="/images/Screenshot_1.png"
-                  alt="Alex Ohnevskyi - Founder & Creative Director"
-                  fill
-                  className="object-cover"
-                  style={{
-                    maskImage: 'radial-gradient(ellipse 90% 90% at 50% 40%, black 40%, transparent 100%)',
-                    WebkitMaskImage: 'radial-gradient(ellipse 90% 90% at 50% 40%, black 40%, transparent 100%)'
-                  }}
-                  sizes="(max-width: 1024px) 0px, 320px"
-                  priority={false}
-                />
-              </div>
+            <div className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-ink/10 shadow-2xl">
+              <Image
+                src="/images/Screenshot_1.png"
+                alt="Alex Ohnevskyi, Founder"
+                fill
+                className="object-cover"
+                style={{
+                  filter:
+                    'sepia(0.2) saturate(1.1) hue-rotate(-6deg) brightness(0.95) contrast(1.05)',
+                }}
+                sizes="(min-width: 1024px) 55vw, 100vw"
+              />
             </div>
 
-            {/* Decorative elements */}
-            <div className="absolute -top-6 -right-6 w-24 h-24 bg-cyan-500/20 rounded-full blur-2xl" />
-            <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-blue-500/20 rounded-full blur-2xl" />
+            {/* Floating badge overlapping image */}
+            <div className="absolute -left-4 bottom-8 hidden rounded-xl border border-ink/10 bg-cream px-5 py-3 shadow-xl lg:block">
+              <div className="flex items-center gap-3">
+                <div className="h-2 w-2 rounded-full bg-amber animate-amber-pulse" />
+                <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-ink">
+                  Founder & Creative Director
+                </span>
+              </div>
+            </div>
           </motion.div>
-        </div>
+        </motion.div>
       </div>
+
+      {/* Bottom hairline */}
+      <div aria-hidden className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-ink/15 to-transparent" />
     </section>
   );
 };
