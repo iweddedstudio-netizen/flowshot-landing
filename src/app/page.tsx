@@ -1,4 +1,5 @@
 import Hero from '@/components/sections/Hero';
+import AudienceMarquee from '@/components/sections/AudienceMarquee';
 import ProblemSolution from '@/components/sections/ProblemSolution';
 import Features from '@/components/sections/Features';
 import FounderStory from '@/components/sections/FounderStory';
@@ -68,6 +69,7 @@ export default function Home() {
       />
       <main className="min-h-screen">
         <Hero />
+        <AudienceMarquee />
         <ProblemSolution />
         <Features />
         <FounderStory />
