@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Check, Rocket, Crown, Building2 } from 'lucide-react';
+import { Check, X, Rocket, Crown, Building2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import WaitlistModal from '@/components/modals/WaitlistModal';
 
@@ -14,7 +14,8 @@ interface PlanConfig {
   popular?: boolean;
   accent: string;
   accentText: string;
-  features: string[];
+  features: { label: string; included: boolean | string }[];
+  addOns: string[];
 }
 
 const plans: PlanConfig[] = [
@@ -22,37 +23,58 @@ const plans: PlanConfig[] = [
     key: 'starter',
     label: 'Starter',
     icon: Rocket,
-    monthlyPrice: 19,
-    yearlyPrice: 190,
+    monthlyPrice: 25,
+    yearlyPrice: 250,
     accent: 'border-emerald-500/30 bg-emerald-500/5',
     accentText: 'text-emerald-400',
     features: [
-      'Unlimited projects',
-      '1 included seat',
-      '1 organization',
-      'Video upload & review',
-      'Cloud storage (add-on)',
-      'Calendar sync',
-      '$6/extra seat/month',
+      { label: 'Unlimited projects', included: true },
+      { label: '1 seat', included: true },
+      { label: '1 organization', included: true },
+      { label: 'Video review', included: true },
+      { label: 'Client delivery', included: '1/mo' },
+      { label: '50 GB cloud storage', included: true },
+      { label: 'Calendar sync', included: true },
+      { label: '3 custom properties', included: true },
+      { label: 'Questionnaires', included: false },
+      { label: 'Cloud sync (GDrive/Dropbox)', included: false },
+      { label: 'Team board', included: false },
+      { label: 'Brand kit', included: false },
+      { label: 'Priority support', included: false },
+    ],
+    addOns: [
+      'Extra seat: $12/mo (max 3 total)',
+      'Extra storage: $10/mo per 50 GB (max 150 GB)',
     ],
   },
   {
     key: 'pro',
     label: 'Pro',
     icon: Crown,
-    monthlyPrice: 39,
-    yearlyPrice: 390,
+    monthlyPrice: 49,
+    yearlyPrice: 490,
     popular: true,
     accent: 'border-amber/30 bg-amber/5',
     accentText: 'text-amber',
     features: [
-      'Unlimited projects',
-      '3 included seats',
-      '3 organizations',
-      'Video upload & review',
-      '250 GB cloud storage',
-      'Calendar sync',
-      '$5/extra seat/month',
+      { label: 'Unlimited projects', included: true },
+      { label: '3 seats', included: true },
+      { label: '3 organizations', included: true },
+      { label: 'Video review', included: true },
+      { label: 'Client delivery', included: '5/mo' },
+      { label: '250 GB cloud storage', included: true },
+      { label: 'Calendar sync', included: true },
+      { label: '10 custom properties', included: true },
+      { label: 'Questionnaires', included: true },
+      { label: 'Cloud sync (GDrive/Dropbox)', included: true },
+      { label: 'Team board', included: true },
+      { label: 'Brand kit', included: true },
+      { label: 'Priority support', included: false },
+    ],
+    addOns: [
+      'Extra seat: $8/mo (max 8 total)',
+      'Extra storage: $7/mo per 50 GB (max 500 GB)',
+      'Extra delivery page: $5/page (max 10 total)',
     ],
   },
   {
@@ -64,15 +86,23 @@ const plans: PlanConfig[] = [
     accent: 'border-sky-500/30 bg-sky-500/5',
     accentText: 'text-sky-400',
     features: [
-      'Unlimited projects',
-      '5 included seats',
-      '5 organizations',
-      'Video upload & review',
-      '500 GB cloud storage',
-      'Calendar sync',
-      'Client delivery portal',
-      'Priority support',
-      '$5/extra seat/month',
+      { label: 'Unlimited projects', included: true },
+      { label: '10 seats', included: true },
+      { label: '5 organizations', included: true },
+      { label: 'Video review', included: true },
+      { label: 'Unlimited delivery', included: true },
+      { label: '750 GB cloud storage', included: true },
+      { label: 'Calendar sync', included: true },
+      { label: 'Unlimited custom properties', included: true },
+      { label: 'Questionnaires', included: true },
+      { label: 'Cloud sync (GDrive/Dropbox)', included: true },
+      { label: 'Team board', included: true },
+      { label: 'Brand kit', included: true },
+      { label: 'Priority support', included: true },
+    ],
+    addOns: [
+      'Extra seat: $5/mo (max 20 total)',
+      'Extra storage: $5/mo per 50 GB (max 2 TB)',
     ],
   },
 ];
@@ -168,12 +198,31 @@ export default function PricingPage() {
                   </div>
                 </div>
 
-                <div className="space-y-3 mb-8">
+                {/* Features */}
+                <div className="space-y-2.5 mb-6">
                   {plan.features.map((feature) => (
-                    <div key={feature} className="flex items-start gap-2.5 text-sm">
-                      <Check className={`mt-0.5 size-4 shrink-0 ${plan.accentText}`} />
-                      <span className="text-muted-foreground">{feature}</span>
+                    <div key={feature.label} className="flex items-start gap-2.5 text-sm">
+                      {feature.included ? (
+                        <Check className={`mt-0.5 size-4 shrink-0 ${plan.accentText}`} />
+                      ) : (
+                        <X className="mt-0.5 size-4 shrink-0 text-muted-foreground/30" />
+                      )}
+                      <span className={feature.included ? 'text-muted-foreground' : 'text-muted-foreground/30'}>
+                        {typeof feature.included === 'string'
+                          ? `${feature.label} (${feature.included})`
+                          : feature.label}
+                      </span>
                     </div>
+                  ))}
+                </div>
+
+                {/* Add-ons */}
+                <div className="mb-6 rounded-lg border border-current/10 bg-background/30 p-3">
+                  <p className="text-xs font-medium text-foreground/60 mb-2">Add-ons</p>
+                  {plan.addOns.map((addon) => (
+                    <p key={addon} className="text-xs text-muted-foreground/60 leading-relaxed">
+                      {addon}
+                    </p>
                   ))}
                 </div>
 
@@ -201,7 +250,7 @@ export default function PricingPage() {
           </div>
         </div>
 
-        {/* FAQ-style notes */}
+        {/* Bottom notes */}
         <div className="mt-16 grid gap-6 md:grid-cols-3 text-center">
           <div>
             <h4 className="text-sm font-semibold text-foreground mb-1">14-day free trial</h4>
