@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Cloud,
@@ -85,7 +84,7 @@ const Features = () => {
   return (
     <section
       id="features"
-      className="relative overflow-hidden border-b border-amber/10 bg-surface py-32 lg:py-40"
+      className="relative overflow-hidden border-b border-amber/10 bg-surface py-24 lg:py-32"
     >
       {/* Off-grid outline word */}
       <div
@@ -107,7 +106,7 @@ const Features = () => {
           whileInView="visible"
           viewport={viewportOnce}
           variants={staggerContainer}
-          className="mb-20 max-w-2xl lg:mb-28"
+          className="mb-14 max-w-2xl lg:mb-16"
         >
           <motion.div variants={revealUp} className="mb-5 flex items-center gap-3">
             <span className="block h-px w-8 bg-amber/60" />
@@ -231,39 +230,6 @@ const Features = () => {
           </AnimatePresence>
         </motion.div>
 
-        {/* Screenshot showcase */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-15% 0px' }}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="relative mt-32 lg:mt-48"
-        >
-          <div className="relative -mx-4 overflow-hidden rounded-3xl border border-amber/20 bg-surface-elevated lg:mx-[-8%]">
-            <div className="relative aspect-[21/9]">
-              <Image
-                src="/images/Screenshot_2.png"
-                alt="FlowShot in use"
-                fill
-                className="object-cover"
-                style={{ filter: 'brightness(0.9) contrast(1.05)' }}
-                sizes="100vw"
-              />
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
-              <div className="absolute bottom-0 left-0 right-0 p-8 lg:p-16">
-                <div className="max-w-2xl">
-                  <span className="text-xs font-medium uppercase tracking-[0.24em] text-amber">
-                    The full picture
-                  </span>
-                  <h3 className="mt-4 font-heading text-3xl font-medium leading-tight text-foreground md:text-5xl">
-                    Everything you need,{' '}
-                    <span className="italic font-light text-amber">in one place.</span>
-                  </h3>
-                </div>
-              </div>
-            </div>
-          </div>
-        </motion.div>
       </div>
     </section>
   );
