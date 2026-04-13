@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { Check, X, Rocket, Crown, Building2, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import WaitlistModal from '@/components/modals/WaitlistModal';
 
 interface PlanConfig {
   key: string;
@@ -107,9 +106,10 @@ const plans: PlanConfig[] = [
   },
 ];
 
+const APP_URL = 'https://app.flowshot.space';
+
 export default function PricingPage() {
   const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'yearly'>('monthly');
-  const [isWaitlistModalOpen, setIsWaitlistModalOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-background pt-28 pb-20 px-4">
@@ -230,9 +230,9 @@ export default function PricingPage() {
                   type="button"
                   className="w-full rounded-md"
                   variant={plan.popular ? 'glow' : 'outline'}
-                  onClick={() => setIsWaitlistModalOpen(true)}
+                  asChild
                 >
-                  {plan.popular ? 'Get Early Access' : 'Join Waitlist'}
+                  <a href={APP_URL}>Start Free Trial</a>
                 </Button>
               </div>
             );
@@ -273,7 +273,6 @@ export default function PricingPage() {
         </div>
       </div>
 
-      <WaitlistModal isOpen={isWaitlistModalOpen} onClose={() => setIsWaitlistModalOpen(false)} />
     </div>
   );
 }

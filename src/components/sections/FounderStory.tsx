@@ -94,16 +94,16 @@ const FounderStory = () => {
               ))}
             </div>
 
-            {/* Social proof / early access teaser */}
+            {/* Social proof / trial teaser */}
             <div className="mt-10 rounded-xl border border-ink/10 bg-ink/[0.03] px-6 py-5">
               <p className="text-sm leading-relaxed text-ink-muted">
-                <span className="font-medium text-ink">Beta program opening soon.</span>{' '}
-                Early adopters get extended free trial and priority onboarding.{' '}
+                <span className="font-medium text-ink">Start your 14-day free trial.</span>{' '}
+                Full access to all features — no credit card required.{' '}
                 <a
-                  href="#pricing"
+                  href="https://app.flowshot.space"
                   className="font-medium text-amber underline underline-offset-2 transition-colors hover:text-amber/80"
                 >
-                  Join the waitlist&nbsp;&rarr;
+                  Try FlowShot free&nbsp;&rarr;
                 </a>
               </p>
             </div>

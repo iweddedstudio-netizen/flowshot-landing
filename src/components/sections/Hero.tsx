@@ -2,16 +2,14 @@
 
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import WaitlistModal from '@/components/modals/WaitlistModal';
-import { useState } from 'react';
 import Image from 'next/image';
 import AnimatedMockup from '@/components/AnimatedMockup';
 import { ArrowDown, ArrowRight } from 'lucide-react';
 import { revealUp, staggerContainer } from '@/lib/utils';
 
-const Hero = () => {
-  const [isWaitlistModalOpen, setIsWaitlistModalOpen] = useState(false);
+const APP_URL = 'https://app.flowshot.space';
 
+const Hero = () => {
   return (
     <section
       id="hero"
@@ -102,10 +100,12 @@ const Hero = () => {
                 size="lg"
                 variant="glow"
                 className="rounded-md px-8 py-6 text-base"
-                onClick={() => setIsWaitlistModalOpen(true)}
+                asChild
               >
-                Get Early Access
-                <ArrowRight className="ml-1" />
+                <a href={APP_URL}>
+                  Start Free Trial
+                  <ArrowRight className="ml-1" />
+                </a>
               </Button>
               <a
                 href="#features"
@@ -168,7 +168,6 @@ const Hero = () => {
         </motion.a>
       </div>
 
-      <WaitlistModal isOpen={isWaitlistModalOpen} onClose={() => setIsWaitlistModalOpen(false)} />
     </section>
   );
 };

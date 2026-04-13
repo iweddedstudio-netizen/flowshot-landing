@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import WaitlistModal from '@/components/modals/WaitlistModal';
 import { motion } from 'framer-motion';
 import { Check, X, Rocket, Crown, Building2, Sparkles } from 'lucide-react';
 import { revealUp, viewportOnce, staggerContainer } from '@/lib/utils';
@@ -89,8 +88,9 @@ const plans: PlanConfig[] = [
   },
 ];
 
+const APP_URL = 'https://app.flowshot.space';
+
 const PricingTeaser = () => {
-  const [isWaitlistModalOpen, setIsWaitlistModalOpen] = useState(false);
   const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'yearly'>('monthly');
 
   return (
@@ -221,9 +221,9 @@ const PricingTeaser = () => {
                   type="button"
                   className="w-full rounded-md"
                   variant={plan.popular ? 'glow' : 'outline'}
-                  onClick={() => setIsWaitlistModalOpen(true)}
+                  asChild
                 >
-                  {plan.popular ? 'Get Early Access' : 'Join Waitlist'}
+                  <a href={APP_URL}>Start Free Trial</a>
                 </Button>
               </div>
             );
@@ -252,7 +252,6 @@ const PricingTeaser = () => {
         </motion.div>
       </motion.div>
 
-      <WaitlistModal isOpen={isWaitlistModalOpen} onClose={() => setIsWaitlistModalOpen(false)} />
     </section>
   );
 };

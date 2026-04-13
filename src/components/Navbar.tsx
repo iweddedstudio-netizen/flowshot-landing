@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Menu, X } from 'lucide-react';
-import WaitlistModal from '@/components/modals/WaitlistModal';
 
 const navLinks = [
   { href: '#features', label: 'Features' },
@@ -13,9 +12,10 @@ const navLinks = [
   { href: '#faq', label: 'FAQ' },
 ];
 
+const APP_URL = 'https://app.flowshot.space';
+
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isWaitlistModalOpen, setIsWaitlistModalOpen] = useState(false);
 
   const handleLinkClick = () => {
     setIsOpen(false);
@@ -61,9 +61,9 @@ const Navbar = () => {
               <Button
                 size="lg"
                 className="rounded-md"
-                onClick={() => setIsWaitlistModalOpen(true)}
+                asChild
               >
-                Get Early Access
+                <a href={APP_URL}>Start Free Trial</a>
               </Button>
             </div>
 
@@ -107,12 +107,11 @@ const Navbar = () => {
                   <Button
                     size="lg"
                     className="w-full rounded-md"
-                    onClick={() => {
-                      setIsWaitlistModalOpen(true);
-                      handleLinkClick();
-                    }}
+                    asChild
                   >
-                    Get Early Access
+                    <a href={APP_URL} onClick={handleLinkClick}>
+                      Start Free Trial
+                    </a>
                   </Button>
                 </div>
               </div>
@@ -121,8 +120,6 @@ const Navbar = () => {
         </AnimatePresence>
       </nav>
 
-      {/* Waitlist Modal */}
-      <WaitlistModal isOpen={isWaitlistModalOpen} onClose={() => setIsWaitlistModalOpen(false)} />
     </>
   );
 };
