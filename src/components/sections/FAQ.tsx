@@ -7,32 +7,73 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { revealUp, viewportOnce, staggerContainer } from '@/lib/utils';
+import { cn, revealUp, viewportOnce, staggerContainer } from '@/lib/utils';
 
-const faqs = [
+const faqCategories = [
   {
-    question: 'Can FlowShot support only photo or only video?',
-    answer:
-      'Yes! FlowShot is designed to handle both photo and video workflows separately or together. You can customize your catalog, pipeline stages, and team roles to match your specific production type.',
+    category: 'Product',
+    items: [
+      {
+        question: 'What makes FlowShot different from Trello, Asana, or Monday?',
+        answer:
+          'FlowShot is built specifically for photo and video production. Unlike generic project tools, it has built-in video review with drawing tools, client questionnaires, branded delivery pages, automatic Google Drive and Dropbox folder creation, and a preset library designed for shoots — not sprints. Every feature is tailored to how studios actually work.',
+      },
+      {
+        question: 'Can FlowShot handle both photo and video projects?',
+        answer:
+          'Yes. Every project supports photo, video, or both. You can link photo and video projects together so they share the same client info, cloud folder, and timeline. Crew assignments, packages, and deliverables are format-specific, so each side of the project gets exactly the right setup.',
+      },
+      {
+        question: 'How does the Google Drive / Dropbox integration work?',
+        answer:
+          'Connect your cloud storage account once in Settings. When you create a new project, FlowShot automatically creates a folder with your custom subfolder structure — for example, RAW, Edited, and Delivery. You can customize the folder name template and subfolders for each provider.',
+      },
+      {
+        question: 'Can I send questionnaires to my clients?',
+        answer:
+          'Yes. FlowShot includes a drag-and-drop questionnaire builder with 5 industry templates: Wedding, Corporate, Real Estate, Portrait, and Product. Send branded questionnaires to clients via email, track responses in real time, and send reminders — all from the project drawer.',
+      },
+    ],
   },
   {
-    question: 'How do I invite freelancers and crew members?',
-    answer:
-      'Use invite mode with granular permissions. You can assign roles (Editor, Coordinator, Viewer) and control what each team member can see and edit. Invites are sent via email, and members can join your workspace instantly.',
+    category: 'Team',
+    items: [
+      {
+        question: 'How do I invite freelancers and crew members?',
+        answer:
+          'Send email invitations with specific roles — Owner, Co-Owner, Videographer, Video Editor, Photographer, Photo Editor, or Assistant. Each role sees only what is relevant to their work. Freelancers and crew join your workspace instantly via the invite link.',
+      },
+      {
+        question: 'Is there a limit on team members?',
+        answer:
+          'Each plan includes a set number of seats: 1 on Starter, 3 on Pro, and 10 on Business. Seats are counted per organization. You can manage multiple organizations on Pro and Business plans.',
+      },
+    ],
   },
   {
-    question: 'How does billing work?',
-    answer:
-      'FlowShot offers simple per-organization pricing with unlimited users. You pay for each studio or brand workspace you create. Contact our team to discuss custom pricing for larger collectives or enterprise needs.',
-  },
-  {
-    question: 'Can we track revisions and approval trails?',
-    answer:
-      'Yes! FlowShot includes revision tracking and approval history on every project. See who changed what and when, with in-thread approvals that keep your entire team on the same page.',
-  },
-  {
-    question: 'What happens if we cancel?',
-    answer: 'You can export your data anytime.',
+    category: 'Billing & Data',
+    items: [
+      {
+        question: 'Is my data secure?',
+        answer:
+          'FlowShot runs on Google Cloud with enterprise-grade security. Your data is scoped to your organization with strict multi-tenant isolation — no one outside your team can access it. All connections are encrypted, and Firestore security rules enforce access control at every level.',
+      },
+      {
+        question: 'What happens if I cancel my subscription?',
+        answer:
+          'You can export your project data anytime. After cancellation, your account switches to read-only mode for 30 days, then data is archived. Cloud storage folders in Google Drive or Dropbox are yours and are never deleted by FlowShot.',
+      },
+      {
+        question: 'Do you offer a free plan?',
+        answer:
+          'We offer an extended free trial for all early access users. After launch, every plan will include a 14-day free trial. No credit card is required to get started.',
+      },
+      {
+        question: 'Can I switch plans later?',
+        answer:
+          'Yes, you can upgrade or downgrade anytime. Changes take effect at the start of your next billing cycle. There is no penalty for switching between plans.',
+      },
+    ],
   },
 ];
 
@@ -78,12 +119,30 @@ const FAQ = () => {
           viewport={viewportOnce}
           variants={revealUp}
         >
-          <Accordion type="single" collapsible className="w-full border-t border-amber/10">
-            {faqs.map((faq, index) => (
-              <AccordionItem key={index} value={`item-${index}`}>
-                <AccordionTrigger>{faq.question}</AccordionTrigger>
-                <AccordionContent>{faq.answer}</AccordionContent>
-              </AccordionItem>
+          <Accordion type="single" collapsible className="w-full">
+            {faqCategories.map((cat, catIndex) => (
+              <div key={cat.category}>
+                <div
+                  className={cn(
+                    'flex items-center gap-3 py-4',
+                    catIndex === 0 ? 'pt-0' : 'pt-8'
+                  )}
+                >
+                  <span className="text-xs font-medium uppercase tracking-[0.24em] text-amber">
+                    {cat.category}
+                  </span>
+                  <span className="block h-px flex-1 bg-amber/20" />
+                </div>
+                {cat.items.map((faq, itemIndex) => (
+                  <AccordionItem
+                    key={`${catIndex}-${itemIndex}`}
+                    value={`${cat.category}-${itemIndex}`}
+                  >
+                    <AccordionTrigger>{faq.question}</AccordionTrigger>
+                    <AccordionContent>{faq.answer}</AccordionContent>
+                  </AccordionItem>
+                ))}
+              </div>
             ))}
           </Accordion>
         </motion.div>

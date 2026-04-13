@@ -44,10 +44,11 @@ export default function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
             <span className="text-3xl">✓</span>
           </div>
           <h3 className="text-2xl font-bold text-foreground mb-2">
-            Thank you!
+            You&apos;re on the list!
           </h3>
           <p className="text-secondary">
-            We&apos;ll send you an email when the service launches
+            We&apos;ll email you as soon as early access opens.
+            Keep an eye on your inbox — spots are limited.
           </p>
         </div>
       ) : (
@@ -61,13 +62,23 @@ export default function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
           {/* Content */}
           <div className="text-center mb-6">
             <h3 className="text-2xl font-bold text-foreground mb-3">
-              Launching soon!
+              Get early access
             </h3>
             <p className="text-secondary text-sm leading-relaxed">
-              The service is in its final stage of development and testing.
-              Leave your email and we&apos;ll notify you when the service goes live.
-              <strong className="text-primary"> First users will get several months free.</strong>
+              FlowShot is launching soon. Join the waitlist to be first in line.
+              Early adopters get:
             </p>
+            <ul className="mt-3 space-y-1.5 text-sm text-secondary text-left max-w-xs mx-auto">
+              <li className="flex items-center gap-2">
+                <span className="text-primary font-bold">✓</span> Extended free trial
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-primary font-bold">✓</span> Locked-in early pricing
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-primary font-bold">✓</span> Priority onboarding & support
+              </li>
+            </ul>
           </div>
 
           {/* Form */}

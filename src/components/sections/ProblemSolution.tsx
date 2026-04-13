@@ -1,38 +1,41 @@
 'use client';
 
 import {
-  FileSpreadsheet,
-  Grid3x3,
+  Calendar,
+  FolderOpen,
+  LayoutGrid,
   MessageSquare,
-  RefreshCw,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { revealUp, viewportOnce, staggerContainer } from '@/lib/utils';
 
 const heroProblem = {
   icon: MessageSquare,
-  title: 'Lost in chats',
+  title: 'Client revisions scattered everywhere',
   description:
-    'Scattered messages and links across ten group threads — and still nothing where you need it on shoot day.',
+    'Feedback split between WhatsApp, email, and Dropbox comments. By the time you find the right thread — the deadline has passed.',
 };
 
 const secondaryProblems = [
   {
-    icon: FileSpreadsheet,
-    title: 'Spreadsheets everywhere',
-    description: 'Budgets split across sheets.',
+    icon: Calendar,
+    title: 'Shooting day chaos',
+    description:
+      'The crew arrives and nobody knows the timeline. Locations, contacts, and shot lists are buried in different apps.',
     offset: 'lg:mt-20',
   },
   {
-    icon: Grid3x3,
-    title: 'Templates that never fit',
-    description: "Tried others - they didn't work.",
+    icon: FolderOpen,
+    title: 'Manual folders for every project',
+    description:
+      'Google Drive, Dropbox — new project means new folders, same structure, copy-paste, rename. Every. Single. Time.',
     offset: 'lg:mt-8',
   },
   {
-    icon: RefreshCw,
-    title: 'Endless setup',
-    description: 'Copy. Rename. Repeat again.',
+    icon: LayoutGrid,
+    title: 'No single place for the full picture',
+    description:
+      'Project details in one app, chat in another, files in a third. Nothing connects — and things fall through the cracks.',
     offset: 'lg:mt-32',
   },
 ];
@@ -77,10 +80,9 @@ const ProblemSolution = () => {
             variants={revealUp}
             className="font-heading text-4xl leading-[1.05] text-foreground md:text-6xl lg:text-7xl"
           >
-            We know the pain —
+            Sound familiar?
             <br />
-            so we built{' '}
-            <span className="italic font-light text-amber">FlowShot.</span>
+            <span className="italic font-light text-amber">We&apos;ve been there.</span>
           </motion.h2>
         </motion.div>
 

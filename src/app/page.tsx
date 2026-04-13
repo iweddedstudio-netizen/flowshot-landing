@@ -1,9 +1,7 @@
 import Hero from '@/components/sections/Hero';
-import Marquee from '@/components/sections/Marquee';
 import ProblemSolution from '@/components/sections/ProblemSolution';
-import ProjectJourney from '@/components/sections/ProjectJourney';
-import StandoutFeatures from '@/components/sections/StandoutFeatures';
-import FeaturesAndExperience from '@/components/sections/FeaturesAndExperience';
+import Features from '@/components/sections/Features';
+import Audience from '@/components/sections/Audience';
 import FounderStory from '@/components/sections/FounderStory';
 import PricingTeaser from '@/components/sections/PricingTeaser';
 import FAQ from '@/components/sections/FAQ';
@@ -16,14 +14,40 @@ export default function Home() {
     "name": "FlowShot",
     "applicationCategory": "BusinessApplication",
     "operatingSystem": "Web",
-    "description": "All-in-one project management for video creators. Manage offers, projects, teams, and clients in one visual platform.",
+    "description": "All-in-one workspace for photo and video production teams. Kanban project board, video review with annotations, client questionnaires, branded delivery pages, Google Drive & Dropbox sync.",
     "url": "https://flowshot.app",
     "offers": {
-      "@type": "Offer",
-      "price": "0",
+      "@type": "AggregateOffer",
+      "lowPrice": "25",
+      "highPrice": "89",
       "priceCurrency": "USD",
-      "description": "Free during beta",
-      "availability": "https://schema.org/InStock"
+      "offerCount": "3",
+      "offers": [
+        {
+          "@type": "Offer",
+          "name": "Starter",
+          "price": "25",
+          "priceCurrency": "USD",
+          "description": "For solo creators — 1 seat, essential features",
+          "availability": "https://schema.org/PreOrder"
+        },
+        {
+          "@type": "Offer",
+          "name": "Pro",
+          "price": "49",
+          "priceCurrency": "USD",
+          "description": "For growing teams — 3 seats, advanced features",
+          "availability": "https://schema.org/PreOrder"
+        },
+        {
+          "@type": "Offer",
+          "name": "Business",
+          "price": "89",
+          "priceCurrency": "USD",
+          "description": "For studios — 10 seats, full feature set",
+          "availability": "https://schema.org/PreOrder"
+        }
+      ]
     },
     "author": {
       "@type": "Person",
@@ -47,22 +71,16 @@ export default function Home() {
         {/* 1. Hero Section */}
         <Hero />
 
-      {/* 1.5 Marquee */}
-      <Marquee />
-
       {/* 2. Problem -> Solution */}
       <ProblemSolution />
 
-      {/* 3. Project Journey */}
-      <ProjectJourney />
+      {/* 3. Features */}
+      <Features />
 
-      {/* 4. Standout Features */}
-      <StandoutFeatures />
+      {/* 4. Who It's For */}
+      <Audience />
 
-      {/* 5. Foundations + Who It's For */}
-      <FeaturesAndExperience />
-
-      {/* 6. Founder Story */}
+      {/* 5. Founder Story */}
       <FounderStory />
 
       {/* 7. Pricing */}

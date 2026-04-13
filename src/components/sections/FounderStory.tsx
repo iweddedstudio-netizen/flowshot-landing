@@ -5,9 +5,9 @@ import { motion } from 'framer-motion';
 import { revealUp, viewportOnce, staggerContainer } from '@/lib/utils';
 
 const stats = [
-  { number: '10+', label: 'Years experience' },
+  { number: '10+', label: 'Years in production' },
   { number: '3,000+', label: 'Weddings edited' },
-  { number: 'Built', label: 'By creators, for pros' },
+  { number: '100%', label: 'Self-funded' },
 ];
 
 const FounderStory = () => {
@@ -61,18 +61,23 @@ const FounderStory = () => {
 
             <blockquote className="relative mt-12 border-l-2 border-amber pl-8">
               <p className="font-heading text-2xl font-light italic leading-snug text-ink md:text-3xl">
-                Creative people need tools made by creatives — not by tech
-                companies.
+                I spent 10 years editing wedding films and managing projects in
+                WhatsApp groups and Google Sheets. Every tool I tried was built
+                for tech companies, not for us. So I built the one I always wanted.
               </p>
             </blockquote>
 
             <div className="mt-10 space-y-4 text-base leading-relaxed text-ink-muted md:text-lg">
-              <p>After 10 years in the industry,</p>
               <p>
-                That&apos;s why we built{' '}
-                <strong className="font-medium text-ink">FlowShot</strong> — a
-                space designed for real production life, where everything
-                finally feels connected.
+                After editing 3,000+ weddings and working with dozens of
+                production teams, I knew exactly what a real workspace for
+                creators should look like.
+              </p>
+              <p>
+                <strong className="font-medium text-ink">FlowShot</strong> is
+                that workspace — built from real experience, not assumptions.
+                Projects, team, clients, reviews, and delivery — finally
+                connected in one place.
               </p>
             </div>
 
@@ -87,6 +92,20 @@ const FounderStory = () => {
                   </div>
                 </div>
               ))}
+            </div>
+
+            {/* Social proof / early access teaser */}
+            <div className="mt-10 rounded-xl border border-ink/10 bg-ink/[0.03] px-6 py-5">
+              <p className="text-sm leading-relaxed text-ink-muted">
+                <span className="font-medium text-ink">Beta program opening soon.</span>{' '}
+                Early adopters get extended free trial and priority onboarding.{' '}
+                <a
+                  href="#pricing"
+                  className="font-medium text-amber underline underline-offset-2 transition-colors hover:text-amber/80"
+                >
+                  Join the waitlist&nbsp;&rarr;
+                </a>
+              </p>
             </div>
           </motion.div>
 

@@ -24,18 +24,20 @@ export const viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "FlowShot - Operating System for Photo & Video Studios",
-  description: "All-in-one project management for video creators. Manage offers, projects, teams, and clients in one visual platform. Built by creators, for creators. Start your free trial.",
+  title: "FlowShot — Project Management for Photo & Video Studios",
+  description: "All-in-one workspace for photo and video production teams. Kanban project board, video review with annotations, client questionnaires, branded delivery pages, Google Drive & Dropbox sync. Built by creators, for creators.",
   keywords: [
     "video production management",
     "photo studio software",
     "project management for creators",
-    "wedding videography software",
-    "production pipeline",
+    "wedding videography project management",
+    "video review tool for filmmakers",
+    "client questionnaire for photographers",
+    "delivery page for video production",
+    "google drive automation for studios",
+    "photo video studio management software",
     "team collaboration",
-    "client management",
-    "offer catalog",
-    "brand kit",
+    "production pipeline",
     "creative workflow"
   ],
   authors: [{ name: "Alex Ohnevskyi" }],
@@ -46,8 +48,8 @@ export const metadata: Metadata = {
     canonical: '/',
   },
   openGraph: {
-    title: "FlowShot - Operating System for Photo & Video Studios",
-    description: "All-in-one project management for video creators. Manage offers, projects, teams, and clients in one visual platform.",
+    title: "FlowShot — Project Management for Photo & Video Studios",
+    description: "All-in-one workspace for photo and video production teams. Kanban project board, video review with annotations, client questionnaires, branded delivery pages, Google Drive & Dropbox sync.",
     type: "website",
     locale: "en_US",
     url: "https://flowshot.app",
@@ -57,14 +59,14 @@ export const metadata: Metadata = {
         url: "/api/og",
         width: 1200,
         height: 630,
-        alt: "FlowShot - Project Management for Video Creators",
+        alt: "FlowShot — Project Management for Photo & Video Studios",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "FlowShot - Operating System for Photo & Video Studios",
-    description: "All-in-one project management for video creators. Built by creators, for creators.",
+    title: "FlowShot — Project Management for Photo & Video Studios",
+    description: "All-in-one workspace for photo and video production teams. Kanban project board, video review with annotations, client questionnaires, branded delivery pages.",
     images: ["/api/og"],
   },
   robots: {

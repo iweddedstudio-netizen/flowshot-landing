@@ -18,9 +18,8 @@ const footerCols = [
   {
     title: 'Product',
     links: [
-      { label: 'Features', href: '#standout-features' },
-      { label: 'Workflow', href: '#journey' },
-      { label: 'Pricing', href: '/pricing' },
+      { label: 'Features', href: '#features' },
+      { label: 'Pricing', href: '#pricing' },
       { label: 'FAQ', href: '#faq' },
     ],
   },
@@ -66,7 +65,7 @@ const FinalCTA = () => {
         <motion.div variants={revealUp} className="mb-6 flex items-center justify-center gap-3">
           <span className="block h-px w-8 bg-amber/60" />
           <span className="text-xs font-medium uppercase tracking-[0.24em] text-amber">
-            Get started
+            Early access
           </span>
           <span className="block h-px w-8 bg-amber/60" />
         </motion.div>
@@ -80,15 +79,15 @@ const FinalCTA = () => {
             letterSpacing: '-0.02em',
           }}
         >
-          Start your{' '}
-          <span className="italic font-light text-amber">FlowShot</span> today.
+          Be the first to try{' '}
+          <span className="italic font-light text-amber">FlowShot.</span>
         </motion.h2>
 
         <motion.p
           variants={revealUp}
           className="mx-auto mt-10 max-w-3xl text-xl leading-relaxed text-muted-foreground md:text-2xl"
         >
-          Try FlowShot free — no setup, no card, just pure workflow.
+          Early adopters get an extended free trial and locked-in pricing. No credit card required.
         </motion.p>
 
         <motion.div
@@ -101,13 +100,13 @@ const FinalCTA = () => {
             className="animate-pulse-glow rounded-md px-10 py-7 text-base"
             onClick={() => setIsWaitlistModalOpen(true)}
           >
-            Try for free
+            Get Early Access
             <ArrowRight className="ml-1" />
           </Button>
 
           <div className="mt-5 flex items-center gap-2 text-xs text-foreground/50">
             <Lock className="h-3 w-3" />
-            <span>Cancel anytime · Export data</span>
+            <span>Cancel anytime · Export data · Built on Google Cloud</span>
           </div>
         </motion.div>
       </motion.div>
@@ -124,8 +123,7 @@ const FinalCTA = () => {
               </span>
             </div>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
-              The operating system for wedding filmmakers. Built by creators,
-              for creators.
+              Project management for photo &amp; video production teams. Built by creators, for creators.
             </p>
             <div className="mt-6 flex items-center gap-3">
               <button
@@ -178,7 +176,7 @@ const FinalCTA = () => {
 
         <div className="mt-16 flex flex-col items-center justify-between gap-4 border-t border-amber/10 pt-8 text-xs text-foreground/40 md:flex-row">
           <p>&copy; 2026 FlowShot — built with love for creators.</p>
-          <p>Made for wedding filmmakers worldwide.</p>
+          <p>Made for photo &amp; video creators worldwide.</p>
         </div>
       </footer>
 

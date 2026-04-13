@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Check, X, Rocket, Crown, Building2 } from 'lucide-react';
+import { Check, X, Rocket, Crown, Building2, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import WaitlistModal from '@/components/modals/WaitlistModal';
 
@@ -137,7 +137,7 @@ export default function PricingPage() {
           </h1>
 
           <p className="mx-auto mt-6 max-w-xl text-lg text-muted-foreground">
-            Start with a free trial. Upgrade when you&apos;re ready. No hidden fees.
+            Early access pricing — lock in your rate before launch. No hidden fees.
           </p>
 
           {/* Billing toggle */}
@@ -232,30 +232,30 @@ export default function PricingPage() {
                   variant={plan.popular ? 'glow' : 'outline'}
                   onClick={() => setIsWaitlistModalOpen(true)}
                 >
-                  Start free trial
+                  {plan.popular ? 'Get Early Access' : 'Join Waitlist'}
                 </Button>
               </div>
             );
           })}
         </div>
 
-        {/* Trial note */}
-        <div className="mt-16 text-center">
-          <div className="inline-block rounded-2xl border border-amber/10 bg-surface-elevated px-8 py-6">
-            <h3 className="text-lg font-semibold text-foreground mb-2">14-day free trial</h3>
-            <p className="text-sm text-muted-foreground max-w-md">
-              Try any plan free for 14 days. All features included.
-              No credit card required to start.
-            </p>
-          </div>
+        {/* Early adopter incentive */}
+        <div className="mx-auto mt-14 max-w-2xl rounded-2xl border border-amber/20 bg-amber/5 px-6 py-5 text-center">
+          <p className="text-base font-medium text-foreground">
+            <Sparkles className="mb-0.5 mr-1.5 inline-block size-4 text-amber" />
+            Early adopters get an extended free trial and locked-in pricing
+          </p>
+          <p className="mt-1.5 text-sm text-muted-foreground">
+            Sign up now — your rate stays the same even after launch. No credit card required.
+          </p>
         </div>
 
         {/* Bottom notes */}
         <div className="mt-16 grid gap-6 md:grid-cols-3 text-center">
           <div>
-            <h4 className="text-sm font-semibold text-foreground mb-1">14-day free trial</h4>
+            <h4 className="text-sm font-semibold text-foreground mb-1">Extended free trial</h4>
             <p className="text-sm text-muted-foreground">
-              Try all features free. No credit card needed to start.
+              All early access users get a free extended trial. All features included.
             </p>
           </div>
           <div>

@@ -27,10 +27,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
-      url: 'https://flowshot.app/#security',
+      url: 'https://flowshot.app/#story',
       lastModified: new Date(),
       changeFrequency: 'monthly',
-      priority: 0.7,
+      priority: 0.6,
     },
     {
       url: 'https://flowshot.app/#faq',

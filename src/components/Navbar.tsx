@@ -7,9 +7,9 @@ import { Menu, X } from 'lucide-react';
 import WaitlistModal from '@/components/modals/WaitlistModal';
 
 const navLinks = [
-  { href: '#standout-features', label: 'Features' },
+  { href: '#features', label: 'Features' },
   { href: '#pricing', label: 'Pricing' },
-  { href: '#story', label: 'About us' },
+  { href: '#story', label: 'Our Story' },
   { href: '#faq', label: 'FAQ' },
 ];
 
@@ -63,7 +63,7 @@ const Navbar = () => {
                 className="rounded-md"
                 onClick={() => setIsWaitlistModalOpen(true)}
               >
-                Try for free
+                Get Early Access
               </Button>
             </div>
 
@@ -112,7 +112,7 @@ const Navbar = () => {
                       handleLinkClick();
                     }}
                   >
-                    Try for free
+                    Get Early Access
                   </Button>
                 </div>
               </div>

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import WaitlistModal from '@/components/modals/WaitlistModal';
 import { motion } from 'framer-motion';
-import { Check, X, Rocket, Crown, Building2 } from 'lucide-react';
+import { Check, X, Rocket, Crown, Building2, Sparkles } from 'lucide-react';
 import { revealUp, viewportOnce, staggerContainer } from '@/lib/utils';
 
 interface PlanConfig {
@@ -135,7 +135,7 @@ const PricingTeaser = () => {
           variants={revealUp}
           className="mx-auto mt-6 max-w-xl text-center text-lg leading-relaxed text-muted-foreground md:text-xl"
         >
-          Start with a free trial. Upgrade when you&apos;re ready. No hidden fees.
+          Early access pricing — lock in your rate before launch. No hidden fees.
         </motion.p>
 
         {/* Billing toggle */}
@@ -223,17 +223,31 @@ const PricingTeaser = () => {
                   variant={plan.popular ? 'glow' : 'outline'}
                   onClick={() => setIsWaitlistModalOpen(true)}
                 >
-                  Start free trial
+                  {plan.popular ? 'Get Early Access' : 'Join Waitlist'}
                 </Button>
               </div>
             );
           })}
         </motion.div>
 
+        {/* Early adopter incentive */}
+        <motion.div
+          variants={revealUp}
+          className="mx-auto mt-14 max-w-2xl rounded-2xl border border-amber/20 bg-amber/5 px-6 py-5 text-center"
+        >
+          <p className="text-base font-medium text-foreground">
+            <Sparkles className="mb-0.5 mr-1.5 inline-block size-4 text-amber" />
+            Early adopters get an extended free trial and locked-in pricing
+          </p>
+          <p className="mt-1.5 text-sm text-muted-foreground">
+            Sign up now — your rate stays the same even after launch. No credit card required.
+          </p>
+        </motion.div>
+
         {/* Trial note */}
-        <motion.div variants={revealUp} className="mt-12 text-center">
+        <motion.div variants={revealUp} className="mt-6 text-center">
           <p className="text-sm text-muted-foreground">
-            14-day free trial on all plans. All features included. No credit card required.
+            All early access users start with a free extended trial. All features included.
           </p>
         </motion.div>
       </motion.div>

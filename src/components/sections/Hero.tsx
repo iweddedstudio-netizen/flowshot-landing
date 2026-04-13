@@ -66,7 +66,7 @@ const Hero = () => {
             <motion.div variants={revealUp} className="mb-6 flex items-center gap-3">
               <span className="block h-px w-10 bg-amber/60" />
               <span className="text-xs font-medium uppercase tracking-[0.24em] text-amber">
-                For wedding & commercial studios
+                For photo & video studios, solo creators, and freelancers
               </span>
             </motion.div>
 
@@ -79,18 +79,19 @@ const Hero = () => {
                 letterSpacing: '-0.02em',
               }}
             >
-              The operating system for{' '}
-              <span className="italic font-light text-amber">wedding</span>{' '}
-              filmmakers.
+              Manage every shoot from{' '}
+              <span className="italic font-light text-amber">brief</span> to
+              delivery.
             </motion.h1>
 
             <motion.p
               variants={revealUp}
               className="mt-10 max-w-[54ch] text-lg leading-relaxed text-muted-foreground md:text-xl"
             >
-              <strong className="font-medium text-foreground">FlowShot</strong>{' '}
-              is ready out of the box — everything&apos;s pre-configured for studios
-              and solo creators. From shoot to client approval.
+              Replace scattered chats, spreadsheets, and cloud folders with{' '}
+              <strong className="font-medium text-foreground">one platform</strong>.
+              Projects, crew scheduling, client questionnaires, video review,
+              and delivery — all connected.
             </motion.p>
 
             <motion.div
@@ -103,14 +104,14 @@ const Hero = () => {
                 className="rounded-md px-8 py-6 text-base"
                 onClick={() => setIsWaitlistModalOpen(true)}
               >
-                Try FlowShot free
+                Get Early Access
                 <ArrowRight className="ml-1" />
               </Button>
               <a
-                href="#journey"
+                href="#features"
                 className="group inline-flex items-center gap-2 text-sm font-medium text-foreground/70 transition-colors hover:text-amber"
               >
-                See the workflow
+                See the features
                 <ArrowDown className="h-4 w-4 transition-transform group-hover:translate-y-0.5" />
               </a>
             </motion.div>
