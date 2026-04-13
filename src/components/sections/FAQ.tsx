@@ -81,7 +81,7 @@ const FAQ = () => {
   return (
     <section
       id="faq"
-      className="relative overflow-hidden border-b border-amber/10 bg-background py-32 lg:py-40"
+      className="relative overflow-hidden bg-surface py-20 lg:py-28"
     >
       <div className="container mx-auto max-w-3xl px-4">
         <motion.div

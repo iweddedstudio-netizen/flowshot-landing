@@ -1,7 +1,6 @@
 import Hero from '@/components/sections/Hero';
 import ProblemSolution from '@/components/sections/ProblemSolution';
 import Features from '@/components/sections/Features';
-import Audience from '@/components/sections/Audience';
 import FounderStory from '@/components/sections/FounderStory';
 import PricingTeaser from '@/components/sections/PricingTeaser';
 import FAQ from '@/components/sections/FAQ';
@@ -68,29 +67,13 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
       <main className="min-h-screen">
-        {/* 1. Hero Section */}
         <Hero />
-
-      {/* 2. Problem */}
-      <ProblemSolution />
-
-      {/* 3. Who It's For (cream break) */}
-      <Audience />
-
-      {/* 4. Features */}
-      <Features />
-
-      {/* 5. Founder Story */}
-      <FounderStory />
-
-      {/* 7. Pricing */}
-      <PricingTeaser />
-
-      {/* 8. FAQ */}
-      <FAQ />
-
-      {/* 9. Final CTA + Footer */}
-      <FinalCTA />
+        <ProblemSolution />
+        <Features />
+        <FounderStory />
+        <PricingTeaser />
+        <FAQ />
+        <FinalCTA />
       </main>
     </>
   );

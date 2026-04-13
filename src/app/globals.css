@@ -3,42 +3,79 @@
 @tailwind utilities;
 
 @layer base {
+  /* ── Light mode (default) ────────────────────────────── */
   :root {
-    /* FlowShot Cinematic Dark — dark-only marketing site */
-    --background: 240 6% 4%;           /* #0A0A0B */
-    --foreground: 0 0% 96%;            /* #F5F5F5 */
-    --surface: 240 6% 7%;              /* #0F0F11 */
-    --surface-elevated: 240 8% 10%;    /* #15151A */
+    --background: 0 0% 98%;             /* #FAFAFA */
+    --foreground: 240 10% 10%;          /* #17171C */
+    --surface: 240 5% 95%;              /* #F1F1F3 */
+    --surface-elevated: 0 0% 100%;      /* #FFFFFF */
+
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 10%;
+
+    --primary: 34 80% 50%;              /* deeper amber for light bg contrast */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 5% 92%;
+    --secondary-foreground: 240 10% 10%;
+    --muted: 240 5% 94%;
+    --muted-foreground: 240 5% 42%;
+    --accent: 34 80% 50%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 72% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 240 6% 82%;
+    --input: 240 5% 92%;
+    --ring: 34 80% 50%;
+
+    --radius: 0.75rem;
+
+    /* Light-breakout surfaces */
+    --cream: 38 40% 94%;
+    --cream-soft: 38 30% 90%;
+    --ink: 240 10% 8%;
+    --ink-muted: 240 6% 38%;
+    --graphite: 240 5% 94%;
+
+    color-scheme: light;
+  }
+
+  /* ── Dark mode ───────────────────────────────────────── */
+  .dark {
+    --background: 240 6% 4%;            /* #0A0A0B */
+    --foreground: 0 0% 96%;             /* #F5F5F5 */
+    --surface: 240 6% 7%;               /* #0F0F11 */
+    --surface-elevated: 240 8% 10%;     /* #15151A */
 
     --card: 240 6% 7%;
     --card-foreground: 0 0% 96%;
     --popover: 240 8% 10%;
     --popover-foreground: 0 0% 96%;
 
-    --primary: 34 72% 66%;             /* #E8B26A amber — acts as accent */
+    --primary: 34 72% 66%;              /* #E8B26A amber */
     --primary-foreground: 240 6% 4%;
     --secondary: 240 6% 14%;
     --secondary-foreground: 0 0% 96%;
     --muted: 240 6% 10%;
-    --muted-foreground: 40 8% 62%;
+    --muted-foreground: 40 8% 72%;      /* boosted from 62% for readability */
     --accent: 34 72% 66%;
     --accent-foreground: 240 6% 4%;
 
     --destructive: 0 72% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 38 55% 60%;              /* used with /10, /20 etc. opacity */
+    --border: 38 55% 60%;
     --input: 240 6% 14%;
     --ring: 34 72% 66%;
 
-    --radius: 0.75rem;
-
-    /* Light-breakout surfaces — used in specific sections only */
-    --cream: 38 40% 94%;          /* #F5F1EA */
-    --cream-soft: 38 30% 90%;     /* #EAE4D8 */
-    --ink: 240 10% 8%;            /* #121217 dark text on cream */
-    --ink-muted: 240 6% 38%;      /* muted text on cream */
-    --graphite: 240 8% 11%;       /* #1A1A1F mid-dark break */
+    --cream: 38 40% 94%;
+    --cream-soft: 38 30% 90%;
+    --ink: 240 10% 8%;
+    --ink-muted: 240 6% 38%;
+    --graphite: 240 8% 11%;
 
     color-scheme: dark;
   }

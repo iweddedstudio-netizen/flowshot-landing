@@ -2,9 +2,8 @@
 
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import Image from 'next/image';
+import { ArrowRight, Play } from 'lucide-react';
 import AnimatedMockup from '@/components/AnimatedMockup';
-import { ArrowDown, ArrowRight } from 'lucide-react';
 import { revealUp, staggerContainer } from '@/lib/utils';
 
 const APP_URL = 'https://app.flowshot.space';
@@ -13,161 +12,104 @@ const Hero = () => {
   return (
     <section
       id="hero"
-      className="relative flex min-h-[92svh] items-center overflow-hidden border-b border-amber/10 bg-background pt-24 lg:pt-28"
+      className="relative overflow-hidden bg-background pt-28 pb-16 lg:pt-36 lg:pb-24"
     >
-      {/* Background plate */}
-      <Image
-        src="/images/problem-background.jpg"
-        alt=""
-        fill
-        className="object-cover opacity-[0.08] grayscale"
-        priority
-        sizes="100vw"
-      />
-      {/* Amber vignette */}
-      <div className="pointer-events-none absolute inset-0 bg-heroVignette" />
-      {/* Dark overlay */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-background/70 via-background/60 to-background" />
-      {/* Film grain */}
-      <div className="pointer-events-none absolute inset-0 grain-overlay" />
-
-      {/* Off-grid giant numeral */}
+      {/* Subtle gradient glow */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -right-8 top-16 hidden select-none font-heading italic lg:block"
-        style={{
-          fontSize: 'clamp(14rem, 22vw, 24rem)',
-          lineHeight: 0.85,
-          letterSpacing: '-0.05em',
-        }}
-      >
-        <span className="text-outline opacity-60">26</span>
-      </div>
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,hsl(var(--accent)/0.08),transparent_60%)]"
+      />
 
-      {/* Metadata side labels (editorial magazine style) */}
-      <div className="pointer-events-none absolute left-6 top-1/2 hidden -translate-y-1/2 -rotate-90 select-none text-[10px] font-medium uppercase tracking-[0.32em] text-foreground/30 lg:block">
-        Vol. 01 — Spring 2026
-      </div>
-      <div className="pointer-events-none absolute right-6 bottom-10 hidden select-none text-[10px] font-medium uppercase tracking-[0.3em] text-foreground/30 lg:block">
-        N°001 · flowshot.app
-      </div>
-
-      <div className="container relative z-10 mx-auto px-4 py-16 md:py-20 lg:py-24">
+      <div className="container relative mx-auto max-w-5xl px-4">
         <motion.div
-          variants={staggerContainer}
           initial="hidden"
           animate="visible"
-          className="grid items-center gap-14 lg:grid-cols-[1.05fr_1fr] lg:gap-16"
+          variants={staggerContainer}
+          className="text-center"
         >
-          {/* Left: copy */}
-          <div>
-            <motion.div variants={revealUp} className="mb-6 flex items-center gap-3">
-              <span className="block h-px w-10 bg-amber/60" />
-              <span className="text-xs font-medium uppercase tracking-[0.24em] text-amber">
-                For photo & video studios, solo creators, and freelancers
-              </span>
-            </motion.div>
+          {/* Tagline */}
+          <motion.div variants={revealUp} className="mb-5 flex items-center justify-center gap-3">
+            <span className="rounded-full border border-border/60 bg-surface px-4 py-1.5 text-xs font-medium text-muted-foreground">
+              For photo & video studios, solo creators, and freelancers
+            </span>
+          </motion.div>
 
-            <motion.h1
-              variants={revealUp}
-              className="font-heading text-foreground"
-              style={{
-                fontSize: 'clamp(2.75rem, 6.8vw, 6.5rem)',
-                lineHeight: 0.95,
-                letterSpacing: '-0.02em',
-              }}
-            >
-              Manage every shoot from{' '}
-              <span className="italic font-light text-amber">brief</span> to
-              delivery.
-            </motion.h1>
+          {/* Heading */}
+          <motion.h1
+            variants={revealUp}
+            className="mx-auto max-w-3xl font-heading text-4xl font-medium leading-[1.05] text-foreground md:text-6xl lg:text-7xl"
+            style={{ letterSpacing: '-0.02em' }}
+          >
+            Manage every shoot from{' '}
+            <span className="italic font-light text-amber">brief</span> to{' '}
+            <span className="italic font-light text-amber">delivery.</span>
+          </motion.h1>
 
-            <motion.p
-              variants={revealUp}
-              className="mt-10 max-w-[54ch] text-lg leading-relaxed text-muted-foreground md:text-xl"
-            >
-              Replace scattered chats, spreadsheets, and cloud folders with{' '}
-              <strong className="font-medium text-foreground">one platform</strong>.
-              Projects, crew scheduling, client questionnaires, video review,
-              and delivery — all connected.
-            </motion.p>
+          {/* Subtitle */}
+          <motion.p
+            variants={revealUp}
+            className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground"
+          >
+            Replace scattered chats, spreadsheets, and cloud folders with{' '}
+            <strong className="font-medium text-foreground">one platform</strong>.
+            Projects, crew, clients, video review, and delivery — all connected.
+          </motion.p>
 
-            <motion.div
-              variants={revealUp}
-              className="mt-12 flex flex-col items-start gap-4 sm:flex-row sm:items-center"
-            >
-              <Button
-                size="lg"
-                variant="glow"
-                className="rounded-md px-8 py-6 text-base"
-                asChild
-              >
-                <a href={APP_URL}>
-                  Start Free Trial
-                  <ArrowRight className="ml-1" />
-                </a>
-              </Button>
-              <a
-                href="#features"
-                className="group inline-flex items-center gap-2 text-sm font-medium text-foreground/70 transition-colors hover:text-amber"
-              >
-                See the features
-                <ArrowDown className="h-4 w-4 transition-transform group-hover:translate-y-0.5" />
-              </a>
-            </motion.div>
-          </div>
-
-          {/* Right: HeroMockupFrame */}
+          {/* CTAs */}
           <motion.div
             variants={revealUp}
-            className="relative mx-auto w-full max-w-[640px] lg:max-w-none"
+            className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row"
           >
-            {/* Amber glow plate behind */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute -inset-8 blur-[120px] opacity-70"
-              style={{
-                background:
-                  'radial-gradient(ellipse at center, hsl(var(--accent) / 0.35) 0%, transparent 60%)',
-              }}
-            />
+            <Button
+              size="lg"
+              variant="glow"
+              className="rounded-md px-8 py-6 text-base"
+              asChild
+            >
+              <a href={APP_URL}>
+                Start Free Trial
+                <ArrowRight className="ml-1.5 h-4 w-4" />
+              </a>
+            </Button>
+            <a
+              href="#"
+              className="inline-flex items-center gap-2 rounded-md border border-border/60 bg-surface px-6 py-3 text-sm font-medium text-foreground transition-colors hover:bg-surface-elevated"
+            >
+              <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
+              </svg>
+              Download for iOS
+            </a>
+          </motion.div>
 
-            <div className="perspective-hero relative">
-              <div className="tilt-hero relative rounded-2xl border border-amber/20 bg-gradient-to-br from-surface-elevated to-surface p-2 shadow-glow">
-                {/* LIVE dot */}
-                <div className="absolute -top-3 right-4 z-20 flex items-center gap-1.5 rounded-full border border-amber/30 bg-surface-elevated px-2.5 py-1">
-                  <span className="relative flex h-2 w-2">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber opacity-75" />
-                    <span className="relative inline-flex h-2 w-2 rounded-full bg-amber" />
-                  </span>
-                  <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-amber">
-                    Live
-                  </span>
+          {/* Video placeholder */}
+          <motion.div
+            variants={revealUp}
+            className="mx-auto mt-14 max-w-3xl"
+          >
+            <div className="group relative aspect-video cursor-pointer overflow-hidden rounded-2xl border border-border/40 bg-surface-elevated shadow-lg transition-shadow hover:shadow-xl">
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
+                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-amber text-background shadow-lg transition-transform group-hover:scale-110">
+                  <Play className="h-7 w-7 ml-1" fill="currentColor" />
                 </div>
-
-                <div className="overflow-hidden rounded-xl">
-                  <AnimatedMockup />
-                </div>
+                <p className="text-sm font-medium text-muted-foreground">
+                  See FlowShot in action — 2 min
+                </p>
               </div>
             </div>
           </motion.div>
+
+          {/* Animated product mockup */}
+          <motion.div
+            variants={revealUp}
+            className="mx-auto mt-14 max-w-5xl"
+          >
+            <div className="overflow-hidden rounded-2xl border border-border/30 shadow-2xl">
+              <AnimatedMockup />
+            </div>
+          </motion.div>
         </motion.div>
-
-        {/* Scroll indicator */}
-        <motion.a
-          href="#problem"
-          variants={revealUp}
-          initial="hidden"
-          animate="visible"
-          className="mt-16 hidden items-center gap-3 text-xs font-medium uppercase tracking-[0.2em] text-foreground/40 transition-colors hover:text-amber lg:flex"
-        >
-          <span className="animate-bounce-slow">
-            <ArrowDown className="h-4 w-4" />
-          </span>
-          Scroll
-        </motion.a>
       </div>
-
     </section>
   );
 };

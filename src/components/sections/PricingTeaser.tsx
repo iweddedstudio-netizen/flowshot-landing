@@ -96,11 +96,11 @@ const PricingTeaser = () => {
   return (
     <section
       id="pricing"
-      className="relative overflow-hidden border-b border-amber/10 bg-graphite py-32 lg:py-48"
+      className="relative overflow-hidden bg-background py-20 lg:py-28"
     >
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-[70%] bg-[radial-gradient(ellipse_at_top,hsl(var(--accent)/0.14),transparent_70%)]"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[50%] bg-[radial-gradient(ellipse_at_top,hsl(var(--accent)/0.06),transparent_60%)]"
       />
 
       <motion.div

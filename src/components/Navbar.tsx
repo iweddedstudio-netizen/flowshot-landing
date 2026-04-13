@@ -4,11 +4,11 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Menu, X } from 'lucide-react';
+import ThemeToggle from '@/components/ThemeToggle';
 
 const navLinks = [
   { href: '#features', label: 'Features' },
   { href: '#pricing', label: 'Pricing' },
-  { href: '#story', label: 'Our Story' },
   { href: '#faq', label: 'FAQ' },
 ];
 
@@ -24,7 +24,7 @@ const Navbar = () => {
   return (
     <>
       <nav
-        className="fixed top-0 left-0 right-0 z-50 border-b border-amber/10 bg-background/70 backdrop-blur-xl"
+        className="fixed top-0 left-0 right-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl"
         style={{
           transform: 'translateZ(0)',
           WebkitTransform: 'translateZ(0)',
@@ -57,7 +57,8 @@ const Navbar = () => {
             </div>
 
             {/* Desktop CTA */}
-            <div className="hidden lg:block">
+            <div className="hidden lg:flex items-center gap-3">
+              <ThemeToggle />
               <Button
                 size="lg"
                 className="rounded-md"

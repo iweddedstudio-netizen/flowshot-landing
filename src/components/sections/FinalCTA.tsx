@@ -46,14 +46,12 @@ const FinalCTA = () => {
   const [isSocialDialogOpen, setIsSocialDialogOpen] = useState(false);
 
   return (
-    <section id="cta" className="relative overflow-hidden bg-background pt-32 pb-6 text-foreground lg:pt-48 lg:pb-8">
-      {/* Amber vignette */}
+    <section id="cta" className="relative overflow-hidden bg-background pt-20 pb-6 text-foreground lg:pt-28 lg:pb-8">
+      {/* Subtle vignette */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,hsl(var(--accent)/0.18),transparent_60%)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,hsl(var(--accent)/0.08),transparent_60%)]"
       />
-      {/* Grain */}
-      <div className="pointer-events-none absolute inset-0 grain-overlay" />
 
       <motion.div
         initial="hidden"
@@ -114,7 +112,7 @@ const FinalCTA = () => {
       </motion.div>
 
       {/* Footer */}
-      <footer className="relative mx-auto mt-24 max-w-6xl border-t border-amber/10 px-4 pt-12">
+      <footer className="relative mx-auto mt-24 max-w-6xl border-t border-border/40 px-4 pt-12">
         <div className="grid gap-10 md:grid-cols-[1.5fr_1fr_1fr_1fr] md:gap-8">
           {/* Brand */}
           <div>
@@ -176,7 +174,7 @@ const FinalCTA = () => {
           ))}
         </div>
 
-        <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-amber/10 pt-6 pb-2 text-xs text-foreground/40 md:flex-row">
+        <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-border/40 pt-6 pb-2 text-xs text-foreground/40 md:flex-row">
           <p>&copy; 2026 FlowShot — built with love for creators.</p>
           <p>Made for photo &amp; video creators worldwide.</p>
         </div>
