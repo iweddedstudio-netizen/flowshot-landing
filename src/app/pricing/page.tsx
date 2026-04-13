@@ -239,13 +239,13 @@ export default function PricingPage() {
           })}
         </div>
 
-        {/* Free plan note */}
+        {/* Trial note */}
         <div className="mt-16 text-center">
           <div className="inline-block rounded-2xl border border-amber/10 bg-surface-elevated px-8 py-6">
-            <h3 className="text-lg font-semibold text-foreground mb-2">Free plan available</h3>
+            <h3 className="text-lg font-semibold text-foreground mb-2">14-day free trial</h3>
             <p className="text-sm text-muted-foreground max-w-md">
-              Get started with up to 3 projects per month, basic project management, and team collaboration.
-              No credit card required.
+              Try any plan free for 14 days. All features included.
+              No credit card required to start.
             </p>
           </div>
         </div>

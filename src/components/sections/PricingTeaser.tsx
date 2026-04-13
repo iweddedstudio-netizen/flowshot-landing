@@ -230,10 +230,10 @@ const PricingTeaser = () => {
           })}
         </motion.div>
 
-        {/* Free plan note */}
+        {/* Trial note */}
         <motion.div variants={revealUp} className="mt-12 text-center">
           <p className="text-sm text-muted-foreground">
-            Free plan available — up to 3 projects/month. No credit card required.
+            14-day free trial on all plans. All features included. No credit card required.
           </p>
         </motion.div>
       </motion.div>
