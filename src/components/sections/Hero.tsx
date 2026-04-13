@@ -3,7 +3,6 @@
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Play } from 'lucide-react';
-import AnimatedMockup from '@/components/AnimatedMockup';
 import { revealUp, staggerContainer } from '@/lib/utils';
 
 const APP_URL = 'https://app.flowshot.space';
@@ -99,15 +98,6 @@ const Hero = () => {
             </div>
           </motion.div>
 
-          {/* Animated product mockup */}
-          <motion.div
-            variants={revealUp}
-            className="mx-auto mt-14 max-w-5xl"
-          >
-            <div className="overflow-hidden rounded-2xl border border-border/30 shadow-2xl">
-              <AnimatedMockup />
-            </div>
-          </motion.div>
         </motion.div>
       </div>
     </section>
