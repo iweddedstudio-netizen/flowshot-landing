@@ -102,7 +102,7 @@ export default function SupportButton() {
       {isOpen && (
         <div
           id="support-widget-panel"
-          className="fixed bottom-24 right-4 z-50 w-[calc(100vw-2rem)] max-w-md rounded-lg border border-border bg-white/95 p-5 shadow-xl shadow-gray-950/15 backdrop-blur-xl md:bottom-28 md:right-6"
+          className="fixed bottom-28 right-4 z-50 w-[calc(100vw-2rem)] max-w-md rounded-lg border border-border bg-white/95 p-5 shadow-xl shadow-gray-950/15 backdrop-blur-xl md:bottom-32 md:right-6"
         >
           <div className="mb-4 flex items-start justify-between gap-4">
             <div>
@@ -231,7 +231,7 @@ export default function SupportButton() {
         aria-label="Open support form"
         aria-expanded={isOpen}
         aria-controls="support-widget-panel"
-        className="fixed bottom-5 right-5 z-40 rounded-lg bg-primary px-4 py-3 text-white shadow-lg shadow-primary/20 transition-colors duration-300 hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 md:bottom-6 md:right-6"
+        className="fixed bottom-8 right-5 z-40 rounded-lg bg-primary px-4 py-3 text-white shadow-lg shadow-primary/20 transition-colors duration-300 hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 md:bottom-10 md:right-6"
       >
         <span className="relative flex items-center gap-3">
           <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-white/15 backdrop-blur-sm">

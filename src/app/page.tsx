@@ -71,14 +71,14 @@ export default function Home() {
         {/* 1. Hero Section */}
         <Hero />
 
-      {/* 2. Problem -> Solution */}
+      {/* 2. Problem */}
       <ProblemSolution />
 
-      {/* 3. Features */}
-      <Features />
-
-      {/* 4. Who It's For */}
+      {/* 3. Who It's For (cream break) */}
       <Audience />
+
+      {/* 4. Features */}
+      <Features />
 
       {/* 5. Founder Story */}
       <FounderStory />

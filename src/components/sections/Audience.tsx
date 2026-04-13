@@ -30,7 +30,7 @@ const warmGrade =
 
 const Audience = () => {
   return (
-    <section className="relative overflow-hidden bg-cream py-32 text-ink lg:py-48">
+    <section className="relative overflow-hidden bg-cream pt-32 pb-20 text-ink lg:pt-48 lg:pb-28">
       {/* Top hairline */}
       <div
         aria-hidden
@@ -126,7 +126,7 @@ const Audience = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-15% 0px' }}
           transition={{ duration: 0.8 }}
-          className="mx-auto mt-32 max-w-3xl text-center font-heading text-3xl italic leading-snug text-ink/80 md:text-4xl"
+          className="mx-auto mt-16 max-w-3xl text-center font-heading text-3xl italic leading-snug text-ink/80 md:text-4xl"
         >
           Built for teams who want to{' '}
           <span className="text-amber">move fast</span> and{' '}

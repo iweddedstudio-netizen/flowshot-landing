@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Lock, Mail, Youtube, ArrowRight } from 'lucide-react';
-import WaitlistModal from '@/components/modals/WaitlistModal';
 import { motion } from 'framer-motion';
 import {
   Dialog,
@@ -41,12 +40,13 @@ const footerCols = [
   },
 ];
 
+const APP_URL = 'https://app.flowshot.space';
+
 const FinalCTA = () => {
-  const [isWaitlistModalOpen, setIsWaitlistModalOpen] = useState(false);
   const [isSocialDialogOpen, setIsSocialDialogOpen] = useState(false);
 
   return (
-    <section id="cta" className="relative overflow-hidden bg-background py-32 text-foreground lg:py-48">
+    <section id="cta" className="relative overflow-hidden bg-background pt-32 pb-6 text-foreground lg:pt-48 lg:pb-8">
       {/* Amber vignette */}
       <div
         aria-hidden
@@ -98,10 +98,12 @@ const FinalCTA = () => {
             size="lg"
             variant="glow"
             className="animate-pulse-glow rounded-md px-10 py-7 text-base"
-            onClick={() => setIsWaitlistModalOpen(true)}
+            asChild
           >
-            Get Early Access
-            <ArrowRight className="ml-1" />
+            <a href={APP_URL}>
+              Start Free Trial
+              <ArrowRight className="ml-1" />
+            </a>
           </Button>
 
           <div className="mt-5 flex items-center gap-2 text-xs text-foreground/50">
@@ -112,7 +114,7 @@ const FinalCTA = () => {
       </motion.div>
 
       {/* Footer */}
-      <footer className="relative mx-auto mt-32 max-w-6xl border-t border-amber/10 px-4 pt-16">
+      <footer className="relative mx-auto mt-24 max-w-6xl border-t border-amber/10 px-4 pt-12">
         <div className="grid gap-10 md:grid-cols-[1.5fr_1fr_1fr_1fr] md:gap-8">
           {/* Brand */}
           <div>
@@ -174,13 +176,11 @@ const FinalCTA = () => {
           ))}
         </div>
 
-        <div className="mt-16 flex flex-col items-center justify-between gap-4 border-t border-amber/10 pt-8 text-xs text-foreground/40 md:flex-row">
+        <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-amber/10 pt-6 pb-2 text-xs text-foreground/40 md:flex-row">
           <p>&copy; 2026 FlowShot — built with love for creators.</p>
           <p>Made for photo &amp; video creators worldwide.</p>
         </div>
       </footer>
-
-      <WaitlistModal isOpen={isWaitlistModalOpen} onClose={() => setIsWaitlistModalOpen(false)} />
 
       <Dialog open={isSocialDialogOpen} onOpenChange={setIsSocialDialogOpen}>
         <DialogContent className="sm:max-w-md">
