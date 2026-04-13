@@ -1,9 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Lock, Mail, Youtube, ArrowRight } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Mail, Youtube } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -11,7 +9,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { revealUp, viewportOnce, staggerContainer } from '@/lib/utils';
 
 const footerCols = [
   {
@@ -40,79 +37,12 @@ const footerCols = [
   },
 ];
 
-const APP_URL = 'https://app.flowshot.space';
-
 const FinalCTA = () => {
   const [isSocialDialogOpen, setIsSocialDialogOpen] = useState(false);
 
   return (
-    <section id="cta" className="relative overflow-hidden bg-background pt-20 pb-6 text-foreground lg:pt-28 lg:pb-8">
-      {/* Subtle vignette */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,hsl(var(--accent)/0.08),transparent_60%)]"
-      />
-
-      <motion.div
-        initial="hidden"
-        whileInView="visible"
-        viewport={viewportOnce}
-        variants={staggerContainer}
-        className="container relative mx-auto max-w-5xl px-4 text-center"
-      >
-        <motion.div variants={revealUp} className="mb-6 flex items-center justify-center gap-3">
-          <span className="block h-px w-8 bg-amber/60" />
-          <span className="text-xs font-medium uppercase tracking-[0.24em] text-amber">
-            Early access
-          </span>
-          <span className="block h-px w-8 bg-amber/60" />
-        </motion.div>
-
-        <motion.h2
-          variants={revealUp}
-          className="font-heading font-medium text-foreground"
-          style={{
-            fontSize: 'clamp(3rem, 10vw, 9rem)',
-            lineHeight: 0.9,
-            letterSpacing: '-0.02em',
-          }}
-        >
-          Be the first to try{' '}
-          <span className="italic font-light text-amber">FlowShot.</span>
-        </motion.h2>
-
-        <motion.p
-          variants={revealUp}
-          className="mx-auto mt-10 max-w-3xl text-xl leading-relaxed text-muted-foreground md:text-2xl"
-        >
-          Early adopters get an extended free trial and locked-in pricing. No credit card required.
-        </motion.p>
-
-        <motion.div
-          variants={revealUp}
-          className="mt-14 flex flex-col items-center"
-        >
-          <Button
-            size="lg"
-            variant="glow"
-            className="animate-pulse-glow rounded-md px-10 py-7 text-base"
-            asChild
-          >
-            <a href={APP_URL}>
-              Start Free Trial
-              <ArrowRight className="ml-1" />
-            </a>
-          </Button>
-
-          <div className="mt-5 flex items-center gap-2 text-xs text-foreground/50">
-            <Lock className="h-3 w-3" />
-            <span>Cancel anytime · Export data · Built on Google Cloud</span>
-          </div>
-        </motion.div>
-      </motion.div>
-
-      {/* Footer */}
-      <footer className="relative mx-auto mt-24 max-w-6xl border-t border-border/40 px-4 pt-12">
+    <footer className="bg-background px-4 pt-12 pb-6 lg:pb-8">
+      <div className="mx-auto max-w-6xl border-t border-border/40 pt-12">
         <div className="grid gap-10 md:grid-cols-[1.5fr_1fr_1fr_1fr] md:gap-8">
           {/* Brand */}
           <div>
@@ -174,11 +104,11 @@ const FinalCTA = () => {
           ))}
         </div>
 
-        <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-border/40 pt-6 pb-2 text-xs text-foreground/40 md:flex-row">
+        <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-border/40 pt-6 text-xs text-foreground/40 md:flex-row">
           <p>&copy; 2026 FlowShot — built with love for creators.</p>
           <p>Made for photo &amp; video creators worldwide.</p>
         </div>
-      </footer>
+      </div>
 
       <Dialog open={isSocialDialogOpen} onOpenChange={setIsSocialDialogOpen}>
         <DialogContent className="sm:max-w-md">
@@ -190,7 +120,7 @@ const FinalCTA = () => {
           </DialogHeader>
         </DialogContent>
       </Dialog>
-    </section>
+    </footer>
   );
 };
 
